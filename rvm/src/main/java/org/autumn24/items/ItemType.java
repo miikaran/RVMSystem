@@ -17,7 +17,11 @@
 
 package org.autumn24.items;
 
-/** Different types of recyclable items. */
+/**
+ * Different types of recyclable items.
+ * @author evnct
+ * @since 1.0.0
+ */
 public enum ItemType {
     /** Build material is aluminium. */
     CAN,

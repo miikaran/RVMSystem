@@ -17,7 +17,11 @@
 
 package org.autumn24.items;
 
-/** Different materials used to create recyclable items. */
+/** 
+ * Different materials used to create recyclable items.
+ * @author evnct
+ * @since 1.0.0
+ */
 public enum ItemMaterial {
     ALUMINIUM,
     GLASS,
