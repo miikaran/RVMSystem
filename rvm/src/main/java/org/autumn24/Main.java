@@ -17,8 +17,28 @@
 
 package org.autumn24;
 
+import org.autumn24.excpetion.InvalidItemSizeException;
+import org.autumn24.items.PlasticBottle;
+import org.autumn24.items.RecyclableItem;
+
+/**
+ * Holds the execution process
+ * @author evnct
+ * @since 1.0.0
+ */
 public class Main {
     public static void main(String[] args) {
         System.out.println("Return assignment for autumn 2024 object oriented programming course");
+
+        /* Possible process logic
+           1. generate random amount of aluminium cans, glass bottles and plastic bottles (only once).
+           2. generate those objects (having generated sizes and values)
+         */
+
+        try {
+            RecyclableItem plasticBottle = new PlasticBottle();
+        } catch (InvalidItemSizeException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
