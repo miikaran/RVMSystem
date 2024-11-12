@@ -19,7 +19,6 @@ package org.autumn24.items;
 
 /**
  * Used to build different sorts of recyclable items.
- * For example: plastic bottles have unique standard sizes and material
  * @author evnct
  * @since 1.0.0
  */
