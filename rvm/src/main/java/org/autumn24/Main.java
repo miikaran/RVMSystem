@@ -18,8 +18,8 @@
 package org.autumn24;
 
 import org.autumn24.excpetion.InvalidItemSizeException;
-import org.autumn24.items.PlasticBottle;
-import org.autumn24.items.RecyclableItem;
+import org.autumn24.items.ItemCreation;
+import org.autumn24.items.ItemFactory;
 
 /**
  * Holds the execution process
@@ -30,15 +30,15 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Return assignment for autumn 2024 object oriented programming course");
 
-        /* Possible process logic
-           1. generate random amount of aluminium cans, glass bottles and plastic bottles (only once).
-           2. generate those objects (having generated sizes and values)
-         */
+        ItemFactory itemFactory = new ItemFactory();
 
-        try {
-            RecyclableItem plasticBottle = new PlasticBottle();
-        } catch (InvalidItemSizeException e) {
-            throw new RuntimeException(e);
+        for (int i = 0; i < 8; i++) {
+            try {
+                ItemCreation item = itemFactory.createItem();
+                System.out.println(item);
+            } catch (InvalidItemSizeException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
