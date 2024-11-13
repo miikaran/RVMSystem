@@ -24,7 +24,7 @@ import java.util.Random;
  * @author evnct
  * @since 1.0.0
  */
-public interface Item {
+public interface ItemCreation {
     default double selectRandomSize(double[] standardSizes) {
         int rnd = new Random().nextInt(standardSizes.length);
         return standardSizes[rnd];
