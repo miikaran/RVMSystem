@@ -21,7 +21,6 @@ import org.autumn24.excpetion.InvalidItemSizeException;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Random;
 import java.util.stream.DoubleStream;
 
 /**
@@ -29,28 +28,22 @@ import java.util.stream.DoubleStream;
  * @author evnct
  * @since 1.0.0
  */
-public class AluminiumCan extends RecyclableItem implements Item {
+public class AluminiumCan extends RecyclableItem implements ItemCreation {
     private final double[] standardSizes = { 0.25, 0.33, 0.5 };
     private final double VALUE_FOR_ALL_CANS = 0.15;
 
-    private double chosenSize;
+    private final double chosenSize;
     private double determinedValue;
 
     public AluminiumCan() throws InvalidItemSizeException {
         super(ItemType.CAN, ItemMaterial.ALUMINIUM, 0.0);
-        selectRandomSize();
+        chosenSize = selectRandomSize(standardSizes);
 
         if (DoubleStream.of(standardSizes).noneMatch(s -> s == chosenSize)) {
             throw new InvalidItemSizeException("Current size is not in standardSizes array.");
         }
 
         determineItemValue();
-    }
-
-    @Override
-    public void selectRandomSize() {
-        int rnd = new Random().nextInt(standardSizes.length);
-        chosenSize = standardSizes[rnd];
     }
 
     /**

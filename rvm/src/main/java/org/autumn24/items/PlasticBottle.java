@@ -19,7 +19,8 @@ package org.autumn24.items;
 
 import org.autumn24.excpetion.InvalidItemSizeException;
 
-import java.util.Random;
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.stream.DoubleStream;
 
 /**
@@ -32,14 +33,14 @@ public class PlasticBottle extends RecyclableItem implements ItemCreation {
     private final double[] sizeComparisonValues = {0.35, 1.0};
     private final double[] redemptionValue = {0.10, 0.20, 0.40};
 
-    private double size;
-    private double value;
+    private final double chosenSize;
+    private double determinedValue;
 
     public PlasticBottle() throws InvalidItemSizeException {
         super(ItemType.BOTTLE, ItemMaterial.PLASTIC, 0.0);
-        selectRandomSize();
+        chosenSize = selectRandomSize(standardSizes);
 
-        if (DoubleStream.of(standardSizes).noneMatch(s -> s == size)) {
+        if (DoubleStream.of(standardSizes).noneMatch(s -> s == chosenSize)) {
             throw new InvalidItemSizeException("Current size is not in standardSizes array.");
         }
 
@@ -47,33 +48,49 @@ public class PlasticBottle extends RecyclableItem implements ItemCreation {
     }
 
     @Override
-    public void selectRandomSize() {
-        int rnd = new Random().nextInt(standardSizes.length);
-        size = standardSizes[rnd];
-    }
-
-    @Override
     public void determineItemValue() {
-        boolean small = size <= sizeComparisonValues[0];
-        boolean medium = (size > sizeComparisonValues[0]) && (size <= sizeComparisonValues[1]);
-        boolean large = size > sizeComparisonValues[1];
+        boolean small = chosenSize <= sizeComparisonValues[0];
+        boolean medium = (chosenSize > sizeComparisonValues[0]) && (chosenSize <= sizeComparisonValues[1]);
+        boolean large = chosenSize > sizeComparisonValues[1];
 
         if (small) {
-            value = redemptionValue[0];
+            determinedValue = redemptionValue[0];
         } else if (medium) {
-            value = redemptionValue[1];
+            determinedValue = redemptionValue[1];
         } else if (large) {
-            value = redemptionValue[2];
+            determinedValue = redemptionValue[2];
         }
     }
 
     @Override
-    public double getSize() {
-        return size;
+    public String toString() {
+        return "PlasticBottle{" +
+                "standardSizes=" + Arrays.toString(standardSizes) +
+                ", sizeComparisonValues=" + Arrays.toString(sizeComparisonValues) +
+                ", redemptionValue=" + Arrays.toString(redemptionValue) +
+                ", chosenSize=" + chosenSize +
+                ", value=" + determinedValue +
+                '}';
     }
 
     @Override
-    public double getValue() {
-        return value;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PlasticBottle that = (PlasticBottle) o;
+        return Double.compare(chosenSize, that.chosenSize) == 0
+                && Double.compare(determinedValue, that.determinedValue) == 0
+                && Objects.deepEquals(standardSizes, that.standardSizes)
+                && Objects.deepEquals(sizeComparisonValues, that.sizeComparisonValues)
+                && Objects.deepEquals(redemptionValue, that.redemptionValue
+        );
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(Arrays.hashCode(standardSizes),
+                Arrays.hashCode(sizeComparisonValues),
+                Arrays.hashCode(redemptionValue), chosenSize, determinedValue
+        );
     }
 }
