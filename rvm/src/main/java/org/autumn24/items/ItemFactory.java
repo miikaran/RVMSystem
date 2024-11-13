@@ -32,7 +32,7 @@ public class ItemFactory {
      * @return ItemCreation
      * @throws InvalidItemSizeException
      */
-    public ItemCreation createItem() throws InvalidItemSizeException {
+    public Item createItem() throws InvalidItemSizeException {
         Random random = new Random();
         int itemToCreate = random.nextInt(3);
 

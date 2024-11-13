@@ -28,7 +28,7 @@ import java.util.stream.DoubleStream;
  * @author evnct
  * @since 1.0.0
  */
-public class AluminiumCan extends RecyclableItem implements ItemCreation {
+public class AluminiumCan extends RecyclableItem implements Item {
     private final double[] standardSizes = { 0.25, 0.33, 0.5 };
     private final double VALUE_FOR_ALL_CANS = 0.15;
 

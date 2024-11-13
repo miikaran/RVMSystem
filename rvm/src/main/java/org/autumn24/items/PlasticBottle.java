@@ -28,7 +28,7 @@ import java.util.stream.DoubleStream;
  * @author evnct
  * @since 1.0.0
  */
-public class PlasticBottle extends RecyclableItem implements ItemCreation {
+public class PlasticBottle extends RecyclableItem implements Item {
     private final double[] standardSizes = {0.33, 0.5, 0.95, 1.5, 2.0};
     private final double[] sizeComparisonValues = {0.35, 1.0};
     private final double[] redemptionValue = {0.10, 0.20, 0.40};

@@ -18,7 +18,7 @@
 package org.autumn24;
 
 import org.autumn24.excpetion.InvalidItemSizeException;
-import org.autumn24.items.ItemCreation;
+import org.autumn24.items.Item;
 import org.autumn24.items.ItemFactory;
 
 /**
@@ -34,7 +34,7 @@ public class Main {
 
         for (int i = 0; i < 8; i++) {
             try {
-                ItemCreation item = itemFactory.createItem();
+                Item item = itemFactory.createItem();
                 System.out.println(item);
             } catch (InvalidItemSizeException e) {
                 throw new RuntimeException(e);
