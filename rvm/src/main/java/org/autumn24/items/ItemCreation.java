@@ -17,12 +17,17 @@
 
 package org.autumn24.items;
 
+import java.util.Random;
+
 /**
  * Used to build different sorts of recyclable items.
  * @author evnct
  * @since 1.0.0
  */
-public interface ItemCreation {
-    void selectRandomSize();
+public interface Item {
+    default double selectRandomSize(double[] standardSizes) {
+        int rnd = new Random().nextInt(standardSizes.length);
+        return standardSizes[rnd];
+    }
     void determineItemValue();
 }
