@@ -17,8 +17,6 @@
 
 package org.autumn24.items;
 
-import java.util.Random;
-
 /**
  * Represents the base of all types of generated
  * items that are accepted by the rvm.
@@ -31,38 +29,15 @@ public abstract class RecyclableItem {
     private final ItemMaterial itemMaterial;
     private final double itemSize;
 
-    /* EMULATION LIMITATIONS */
-    // So that the demo will not take eternity.
-    private short maxItemsOfSingleType = 10;
-    private short minItemsOfSingleType = 3;
-
     public RecyclableItem(ItemType itemType, ItemMaterial itemMaterial, double itemSize) {
         this.itemType = itemType;
         this.itemMaterial = itemMaterial;
         this.itemSize = itemSize;
     }
 
-    // User could overwrite the default values
-    // Note: Uncertain of the need for these set methods.
-
-    public void setMaxItemsOfSingleType(short maxItemsOfSingleType) {
-        this.maxItemsOfSingleType = maxItemsOfSingleType;
-    }
-
-    public void setMinItemsOfSingleType(short minItemsOfSingleType) {
-        this.minItemsOfSingleType = minItemsOfSingleType;
-    }
-
-    public abstract double getSize();
-    public abstract double getValue();
-
-    /** Generates random number of items from a known range.
-     * For example 3-10 plastic bottles are generated with each
-     * having their own size.
-     * @return int
-     */
-    public int generatedItemCount() {
-        Random random = new Random();
-        return random.nextInt(minItemsOfSingleType, maxItemsOfSingleType);
+    @Override
+    public String toString() {
+        return "RecyclableItem{itemType=%s, itemMaterial=%s, itemSize=%s}"
+                .formatted(itemType, itemMaterial, itemSize);
     }
 }
