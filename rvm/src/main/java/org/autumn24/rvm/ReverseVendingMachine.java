@@ -19,6 +19,8 @@ package org.autumn24.rvm;
 
 import org.autumn24.excpetion.InvalidItemMaterialException;
 import org.autumn24.excpetion.MissingItemMaterialException;
+
+import java.util.Scanner;
 import java.util.UUID;
 
 /**
@@ -32,11 +34,44 @@ public class ReverseVendingMachine {
     public short numberOfGlassBottlesRecycled;
     public short numberOfPlasticBottlesRecycled;
     public double recyclingSessionTotalValue;
-
     public String rvmId;
+
+    public static final Scanner scanner = new Scanner(System.in);
 
     public ReverseVendingMachine(){
         rvmId = UUID.randomUUID().toString();
+        displayRvmMenu();
+    }
+
+    public void displayRvmMenu(){
+        System.out.println("1 ------> INSERT");
+        System.out.println("2 ------> UNWRINKLE");
+        System.out.println("3 ------> RECEIPT");
+        System.out.println("4 ------> DONATE");
+        System.out.println("5 ------> EXIT");
+        while(true){
+            try{
+                System.out.print("=> ");
+                if (!scanner.hasNextInt()) {
+                    scanner.nextLine(); // Clear invalid input
+                    throw new Exception("Invalid input, expected an integer.");
+                }
+                int userInput = scanner.nextInt();
+                scanner.nextLine(); // Clear input buffer for new line
+                switch (userInput){
+                    case 1 -> System.out.println("Inserting");
+                    case 2 -> System.out.println("Unwrinkling");
+                    case 3 -> System.out.println("Receipting");
+                    case 4 -> System.out.println("Donating");
+                    case 5 -> System.exit(0);
+                    default -> throw new Exception("Invalid option...");
+                }
+            } catch(Exception e){
+                System.out.println(e.getMessage());
+                continue;
+            }
+            break;
+        }
     }
 
     public RecyclingPile recycleItem(/*Item item*/) {
