@@ -77,6 +77,7 @@ public class ApplicationManager {
         } catch(Exception e){
             if(rvm.getRvmStatus().equals(Status.IDLE)){
                 System.out.println("\n\uD83D\uDD0B Powering up machine: " + rvm.getRvmId());
+                rvm.setRvmStatus(Status.INUSE);
                 return;
             }
             System.out.println(e.getMessage());
