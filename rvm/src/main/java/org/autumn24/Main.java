@@ -19,8 +19,6 @@ package org.autumn24;
 
 import org.autumn24.rvm.ReverseVendingMachine;
 
-import java.util.ArrayList;
-
 /**
  * Holds the execution process
  * @author evnct
@@ -30,12 +28,11 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Return assignment for autumn 2024 object oriented programming course");
 
-        // Initialize rvm and ui
+        // Initialize rvm
         ReverseVendingMachine rvm = new ReverseVendingMachine();
-        UserInterface ui = new UserInterface();
 
         // Initialize application manager to handle menu actions
-        ApplicationManager AppManager = new ApplicationManager(rvm, ui);
+        ApplicationManager AppManager = new ApplicationManager(rvm);
         AppManager.run();
     }
 

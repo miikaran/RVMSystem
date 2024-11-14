@@ -24,7 +24,7 @@ package org.autumn24;
  */
 public class UserInterface {
 
-    public void displayMenu(){
+    public static void displayMenu(){
         System.out.println();
         System.out.println("1 ------> INSERT");
         System.out.println("2 ------> UNWRINKLE");
@@ -35,9 +35,9 @@ public class UserInterface {
     }
 
     // Possible UI views for later 😊
-    public void displayStats() {} // 📊
-    public void displayEcoTip(){} // ♻️
-    public void displayBottleAnimation(){} //😲
+    public static void displayStats() {} // 📊
+    public static void displayEcoTip(){} // ♻️
+    public static void displayBottleAnimation(){} //😲
 
 
 }
