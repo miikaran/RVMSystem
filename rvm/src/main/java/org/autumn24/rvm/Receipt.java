@@ -17,53 +17,55 @@
 
 package org.autumn24.rvm;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.UUID;
 
 /**
  * A class representing receipt that can be received from a reverse vending machine.
+ *
  * @author miikaran
  * @since 1.0.0
  */
 public class Receipt {
-    public short numberOfProcessedAluminiumCans;
-    public short numberOfProcessedGlassBottles;
-    public short numberOfProcessePlasticBottles;
+	private final BigDecimal totalValue;
+	public short numberOfProcessedAluminiumCans;
+	public short numberOfProcessedGlassBottles;
+	public short numberOfProcessedPlasticBottles;
+	public String receiptId;
 
-    private final double totalValue;
-    public String receiptId;
+	public Receipt(short aluminiumCans, short glassBottles, short plasticBottles, BigDecimal totalValue) {
+		numberOfProcessedAluminiumCans = aluminiumCans;
+		numberOfProcessedGlassBottles = glassBottles;
+		numberOfProcessedPlasticBottles = plasticBottles;
+		this.totalValue = totalValue.setScale(2, RoundingMode.HALF_UP);
+		receiptId = UUID.randomUUID().toString();
+	}
 
-    public Receipt(short aluminiumCans, short glassBottles, short plasticBottles, double totalValue) {
-        numberOfProcessedAluminiumCans = aluminiumCans;
-        numberOfProcessedGlassBottles = glassBottles;
-        numberOfProcessePlasticBottles = plasticBottles;
-        this.totalValue = totalValue;
-        receiptId = UUID.randomUUID().toString();
-    }
+	public BigDecimal getTotalValue() {
+		return totalValue;
+	}
 
-    public double getTotalValue(){ return totalValue; }
+	public void displayReceipt() {
+		Date date = new Date();
+		System.out.println("\nDate:               " + date);
+		System.out.println("Receipt Id:         " + receiptId);
+		System.out.println("===========RECYCLED ITEMS=============");
+		System.out.println("Aluminium Cans:     " + numberOfProcessedAluminiumCans);
+		System.out.println("Glass Bottles:      " + numberOfProcessedGlassBottles);
+		System.out.println("Plastic Bottles:    " + numberOfProcessedPlasticBottles);
+		System.out.println("===========TOTAL VALUE================");
+		System.out.printf("%s €\n", totalValue);
+	}
 
-    public void displayReceipt(){
-        Date date = new Date();
-        System.out.println();
-        System.out.println("Date:               " + date);
-        System.out.println("Receipt Id:         " + receiptId);
-        System.out.println("===========RECYCLED ITEMS=============");
-        System.out.println("Aluminium Cans:     " + numberOfProcessedAluminiumCans);
-        System.out.println("Glass Bottles:      " + numberOfProcessedGlassBottles);
-        System.out.println("Plastic Bottles:    " + numberOfProcessePlasticBottles);
-        System.out.println("===========TOTAL VALUE================");
-        System.out.println(totalValue + " €");
-        System.out.println();
-    }
-
-    @Override
-    public String toString() {
-        return "Receipt{" +
-                "numberOfProcessedAluminiumCans=" + numberOfProcessedAluminiumCans +
-                ", numberOfProcessedGlassBottles=" + numberOfProcessedGlassBottles +
-                ", numberOfProcessePlasticBottles=" + numberOfProcessePlasticBottles +
-                ", totalValue=" + totalValue +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Receipt{" +
+				"numberOfProcessedAluminiumCans=" + numberOfProcessedAluminiumCans +
+				", numberOfProcessedGlassBottles=" + numberOfProcessedGlassBottles +
+				", numberOfProcessedPlasticBottles=" + numberOfProcessedPlasticBottles +
+				", totalValue=" + totalValue +
+				'}';
+	}
 }

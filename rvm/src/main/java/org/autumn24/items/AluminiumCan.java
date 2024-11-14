@@ -19,6 +19,7 @@ package org.autumn24.items;
 
 import org.autumn24.excpetion.InvalidItemSizeException;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -33,14 +34,14 @@ class AluminiumCan extends RecyclableItem implements Item {
 	private final double VALUE_FOR_ALL_CANS = 0.15;
 	private final double chosenSize = selectRandomSize(standardSizes);
 
-	private double determinedValue;
+	private BigDecimal determinedValue;
 
 	public AluminiumCan() throws InvalidItemSizeException {
 		super(ItemType.CAN, ItemMaterial.ALUMINIUM, 0.0);
 		initializeItem(chosenSize, standardSizes);
 	}
 
-	public double getDeterminedValue() {
+	public BigDecimal getDeterminedValue() {
 		return determinedValue;
 	}
 
@@ -50,7 +51,7 @@ class AluminiumCan extends RecyclableItem implements Item {
 	 */
 	@Override
 	public void determineItemValue() {
-		determinedValue = VALUE_FOR_ALL_CANS;
+		determinedValue = BigDecimal.valueOf(VALUE_FOR_ALL_CANS);
 	}
 
 	@Override
@@ -65,12 +66,11 @@ class AluminiumCan extends RecyclableItem implements Item {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		AluminiumCan that = (AluminiumCan) o;
 		return Double.compare(chosenSize, that.chosenSize) == 0
-				&& Double.compare(determinedValue, that.determinedValue) == 0
-				&& Objects.deepEquals(standardSizes, that.standardSizes
+				&& Objects.deepEquals(standardSizes, that.standardSizes)
+				&& Objects.equals(determinedValue, that.determinedValue
 		);
 	}
 

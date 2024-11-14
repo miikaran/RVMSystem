@@ -19,6 +19,7 @@ package org.autumn24.items;
 
 import org.autumn24.excpetion.InvalidItemSizeException;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -34,23 +35,23 @@ class GlassBottle extends RecyclableItem implements Item {
 	private final double[] redemptionValue = {0.10, 0.40};
 	private final double chosenSize = selectRandomSize(standardSizes);
 
-	private double determinedValue;
+	private BigDecimal determinedValue;
 
 	public GlassBottle() throws InvalidItemSizeException {
 		super(ItemType.BOTTLE, ItemMaterial.GLASS, 0.0);
 		initializeItem(chosenSize, standardSizes);
 	}
 
-	public double getDeterminedValue() {
+	public BigDecimal getDeterminedValue() {
 		return determinedValue;
 	}
 
 	@Override
 	public void determineItemValue() {
 		if (chosenSize < litreComparisonValue) {
-			determinedValue = redemptionValue[0];
+			determinedValue = BigDecimal.valueOf(redemptionValue[0]);
 		} else if (chosenSize >= litreComparisonValue) {
-			determinedValue = redemptionValue[1];
+			determinedValue = BigDecimal.valueOf(redemptionValue[1]);
 		}
 	}
 
@@ -67,24 +68,21 @@ class GlassBottle extends RecyclableItem implements Item {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		GlassBottle that = (GlassBottle) o;
 		return Double.compare(chosenSize, that.chosenSize) == 0
-				&& Double.compare(determinedValue, that.determinedValue) == 0
 				&& Objects.deepEquals(standardSizes, that.standardSizes)
-				&& Objects.deepEquals(redemptionValue, that.redemptionValue
+				&& Objects.deepEquals(redemptionValue, that.redemptionValue)
+				&& Objects.equals(determinedValue, that.determinedValue
 		);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(
-				Arrays.hashCode(standardSizes),
+		return Objects.hash(Arrays.hashCode(standardSizes),
 				litreComparisonValue,
 				Arrays.hashCode(redemptionValue),
-				chosenSize,
-				determinedValue
+				chosenSize, determinedValue
 		);
 	}
 }

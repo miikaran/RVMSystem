@@ -19,6 +19,7 @@ package org.autumn24.items;
 
 import org.autumn24.excpetion.InvalidItemSizeException;
 
+import java.math.BigDecimal;
 import java.util.Random;
 import java.util.stream.DoubleStream;
 
@@ -46,7 +47,7 @@ public interface Item {
 		determineItemValue();
 	}
 
-	double getDeterminedValue();
+	BigDecimal getDeterminedValue();
 
 	ItemMaterial getItemMaterial();
 }

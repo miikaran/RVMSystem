@@ -19,6 +19,7 @@ package org.autumn24.items;
 
 import org.autumn24.excpetion.InvalidItemSizeException;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -34,14 +35,14 @@ class PlasticBottle extends RecyclableItem implements Item {
 	private final double[] redemptionValue = {0.10, 0.20, 0.40};
 	private final double chosenSize = selectRandomSize(standardSizes);
 
-	private double determinedValue;
+	private BigDecimal determinedValue;
 
 	public PlasticBottle() throws InvalidItemSizeException {
 		super(ItemType.BOTTLE, ItemMaterial.PLASTIC, 0.0);
 		initializeItem(chosenSize, standardSizes);
 	}
 
-	public double getDeterminedValue() {
+	public BigDecimal getDeterminedValue() {
 		return determinedValue;
 	}
 
@@ -52,11 +53,11 @@ class PlasticBottle extends RecyclableItem implements Item {
 		boolean large = chosenSize > sizeComparisonValues[1];
 
 		if (small) {
-			determinedValue = redemptionValue[0];
+			determinedValue = BigDecimal.valueOf(redemptionValue[0]);
 		} else if (medium) {
-			determinedValue = redemptionValue[1];
+			determinedValue = BigDecimal.valueOf(redemptionValue[1]);
 		} else if (large) {
-			determinedValue = redemptionValue[2];
+			determinedValue = BigDecimal.valueOf(redemptionValue[2]);
 		}
 	}
 
@@ -73,14 +74,13 @@ class PlasticBottle extends RecyclableItem implements Item {
 
 	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		PlasticBottle that = (PlasticBottle) o;
 		return Double.compare(chosenSize, that.chosenSize) == 0
-				&& Double.compare(determinedValue, that.determinedValue) == 0
 				&& Objects.deepEquals(standardSizes, that.standardSizes)
 				&& Objects.deepEquals(sizeComparisonValues, that.sizeComparisonValues)
-				&& Objects.deepEquals(redemptionValue, that.redemptionValue
+				&& Objects.deepEquals(redemptionValue, that.redemptionValue)
+				&& Objects.equals(determinedValue, that.determinedValue
 		);
 	}
 
@@ -88,7 +88,9 @@ class PlasticBottle extends RecyclableItem implements Item {
 	public int hashCode() {
 		return Objects.hash(Arrays.hashCode(standardSizes),
 				Arrays.hashCode(sizeComparisonValues),
-				Arrays.hashCode(redemptionValue), chosenSize, determinedValue
+				Arrays.hashCode(redemptionValue),
+				chosenSize,
+				determinedValue
 		);
 	}
 }
