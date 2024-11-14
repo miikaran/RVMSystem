@@ -24,29 +24,24 @@ import java.util.Random;
 /**
  * Factory used to build different types of items, such as:
  * aluminium cans, glass bottles, plastic bottles.
+ *
  * @author evnct
  * @since 1.0.0
  */
 public class ItemFactory {
-    /** Create new item randomly.
-     * @return ItemCreation
-     * @throws InvalidItemSizeException
-     */
-    public Item createItem() throws InvalidItemSizeException {
-        Random random = new Random();
-        int itemToCreate = random.nextInt(3);
+	/**
+	 * @return Item
+	 * @throws InvalidItemSizeException
+	 */
+	public Item createItem() throws InvalidItemSizeException {
+		Random random = new Random();
+		int itemToCreate = random.nextInt(3);
 
-        switch (itemToCreate) {
-            case 0 -> {
-                return new AluminiumCan();
-            }
-            case 1 -> {
-                return new GlassBottle();
-            }
-            case 2 -> {
-                return new PlasticBottle();
-            }
-        }
-        return null;
-    }
+		return switch (itemToCreate) {
+			case 0 -> new AluminiumCan();
+			case 1 -> new GlassBottle();
+			case 2 -> new PlasticBottle();
+			default -> null;
+		};
+	}
 }
