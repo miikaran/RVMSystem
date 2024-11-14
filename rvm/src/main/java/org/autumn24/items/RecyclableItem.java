@@ -20,26 +20,29 @@ package org.autumn24.items;
 /**
  * Represents the base of all types of generated
  * items that are accepted by the rvm.
+ *
  * @author evnct
  * @since 1.0.0
  */
 public abstract class RecyclableItem {
-    // Used to build an item
-    private final ItemType itemType;
-    private final ItemMaterial itemMaterial;
-    private final double itemSize;
 
-    public RecyclableItem(ItemType itemType, ItemMaterial itemMaterial, double itemSize) {
-        this.itemType = itemType;
-        this.itemMaterial = itemMaterial;
-        this.itemSize = itemSize;
-    }
+	/* USED TO BUILD AN ITEM */
+	private final ItemType itemType;
+	private final ItemMaterial itemMaterial;
+	private final double itemSize;
 
-    public ItemMaterial getItemMaterial() { return itemMaterial; }
+	public RecyclableItem(ItemType itemType, ItemMaterial itemMaterial, double itemSize) {
+		this.itemType = itemType;
+		this.itemMaterial = itemMaterial;
+		this.itemSize = itemSize;
+	}
 
-    @Override
-    public String toString() {
-        return "RecyclableItem{itemType=%s, itemMaterial=%s, itemSize=%s}"
-                .formatted(itemType, itemMaterial, itemSize);
-    }
+	public ItemMaterial getItemMaterial() {
+		return itemMaterial;
+	}
+
+	@Override
+	public String toString() {
+		return "RecyclableItem{itemType=%s, itemMaterial=%s, itemSize=%s}".formatted(itemType, itemMaterial, itemSize);
+	}
 }
