@@ -27,7 +27,6 @@ import java.util.UUID;
 
 /**
  * A class that represents a reverse vending machine.
- *
  * @author miikaran
  * @since 1.0.0
  */
@@ -37,13 +36,31 @@ public class ReverseVendingMachine {
 	public short numberOfGlassBottlesRecycled;
 	public short numberOfPlasticBottlesRecycled;
 	public BigDecimal recyclingSessionTotalValue;
-	public String rvmId;
+	private String rvmId;
+    private Status rvmStatus;
 
 	public ReverseVendingMachine() {
-		rvmId = UUID.randomUUID().toString();
+        rvmId = UUID.randomUUID().toString();
+        rvmStatus = Status.OPERATIONAL;
 	}
 
-	public RecyclingPile recycleItem(Item item) {
+    public void setRvmStatus(Status rvmStatus) {
+        this.rvmStatus = rvmStatus;
+    }
+
+    public Status getRvmStatus() {
+        return rvmStatus;
+    }
+
+    public String getRvmId() {
+        return rvmId;
+    }
+
+    public void setRvmId(String rvmId) {
+        this.rvmId = rvmId;
+    }
+
+    public RecyclingPile recycleItem(Item item) {
 		System.out.println("Recycling item: " + item);
 		ItemMaterial material = item.getItemMaterial();
 		if (material == null) {
@@ -76,7 +93,6 @@ public class ReverseVendingMachine {
 		if (recyclingSessionTotalValue == null) {
 			recyclingSessionTotalValue = BigDecimal.ZERO;
 		}
-
 		recyclingSessionTotalValue = recyclingSessionTotalValue.add(value);
 	}
 
