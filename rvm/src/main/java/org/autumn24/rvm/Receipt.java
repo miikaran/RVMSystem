@@ -30,7 +30,7 @@ public class Receipt {
     public short numberOfProcessedGlassBottles;
     public short numberOfProcessePlasticBottles;
 
-    private double totalValue;
+    private final double totalValue;
     public String receiptId;
 
     public Receipt(short aluminiumCans, short glassBottles, short plasticBottles, double totalValue) {

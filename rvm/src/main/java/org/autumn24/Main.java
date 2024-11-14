@@ -17,9 +17,9 @@
 
 package org.autumn24;
 
-import org.autumn24.excpetion.InvalidItemSizeException;
-import org.autumn24.items.Item;
-import org.autumn24.items.ItemFactory;
+import org.autumn24.rvm.ReverseVendingMachine;
+
+import java.util.ArrayList;
 
 /**
  * Holds the execution process
@@ -30,15 +30,13 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Return assignment for autumn 2024 object oriented programming course");
 
-        ItemFactory itemFactory = new ItemFactory();
+        // Initialize rvm and ui
+        ReverseVendingMachine rvm = new ReverseVendingMachine();
+        UserInterface ui = new UserInterface();
 
-        for (int i = 0; i < 8; i++) {
-            try {
-                Item item = itemFactory.createItem();
-                System.out.println(item);
-            } catch (InvalidItemSizeException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        // Initialize application manager to handle menu actions
+        ApplicationManager AppManager = new ApplicationManager(rvm, ui);
+        AppManager.run();
     }
+
 }

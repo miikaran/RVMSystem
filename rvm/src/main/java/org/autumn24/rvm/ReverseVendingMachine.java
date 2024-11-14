@@ -19,8 +19,8 @@ package org.autumn24.rvm;
 
 import org.autumn24.excpetion.InvalidItemMaterialException;
 import org.autumn24.excpetion.MissingItemMaterialException;
-
-import java.util.Scanner;
+import org.autumn24.items.Item;
+import org.autumn24.items.ItemMaterial;
 import java.util.UUID;
 
 /**
@@ -36,59 +36,27 @@ public class ReverseVendingMachine {
     public double recyclingSessionTotalValue;
     public String rvmId;
 
-    public static final Scanner scanner = new Scanner(System.in);
-
     public ReverseVendingMachine(){
         rvmId = UUID.randomUUID().toString();
-        displayRvmMenu();
     }
 
-    public void displayRvmMenu(){
-        System.out.println("1 ------> INSERT");
-        System.out.println("2 ------> UNWRINKLE");
-        System.out.println("3 ------> RECEIPT");
-        System.out.println("4 ------> DONATE");
-        System.out.println("5 ------> EXIT");
-        while(true){
-            try{
-                System.out.print("=> ");
-                if (!scanner.hasNextInt()) {
-                    scanner.nextLine(); // Clear invalid input
-                    throw new Exception("Invalid input, expected an integer.");
-                }
-                int userInput = scanner.nextInt();
-                scanner.nextLine(); // Clear input buffer for new line
-                switch (userInput){
-                    case 1 -> System.out.println("Inserting");
-                    case 2 -> System.out.println("Unwrinkling");
-                    case 3 -> System.out.println("Receipting");
-                    case 4 -> System.out.println("Donating");
-                    case 5 -> System.exit(0);
-                    default -> throw new Exception("Invalid option...");
-                }
-            } catch(Exception e){
-                System.out.println(e.getMessage());
-                continue;
-            }
-            break;
+    public RecyclingPile recycleItem(Item item) {
+        System.out.println("Recycling item: " + item);
+        ItemMaterial material = item.getItemMaterial();
+        if (material == null) {
+            throw new MissingItemMaterialException("Material is type null, ItemMaterial expected");
         }
-    }
-
-    public RecyclingPile recycleItem(/*Item item*/) {
-        System.out.println("Recycling item...'" + /*item +*/ "'");
-        String material = "hellurei"; //item.getItemMaterial();
-        double value = 50.0; //item.getValue();
-        if (material == null || material.isEmpty()) {
-            throw new MissingItemMaterialException("Material '" + material + "' is either null or empty.");
-        }
-        // Check if provided item's material can be matched to a valid enum.
+        double value = item.getDeterminedValue();
         RecyclingPile pile;
-        try { pile = RecyclingPile.valueOf(material.toUpperCase()); }
-        catch (IllegalArgumentException e){
-            throw new InvalidItemMaterialException("Material'" + material + "' not found in RecyclingPile.", e);
+        switch (material){
+            // Check if provided item's material can be matched to a valid enum.
+            case ALUMINIUM -> pile = RecyclingPile.METAL;
+            case GLASS -> pile = RecyclingPile.GLASS;
+            case PLASTIC -> pile = RecyclingPile.PLASTIC;
+            default -> throw new InvalidItemMaterialException("Material'" + material + "' not found in RecyclingPile.");
         }
         increaseRecycledItemsCounter(pile);
-        recyclingSessionTotalValue += value;
+        increaseSessionTotalValue(value);
         return pile;
     }
 
@@ -99,6 +67,10 @@ public class ReverseVendingMachine {
             case GLASS -> numberOfGlassBottlesRecycled++;
             case PLASTIC -> numberOfPlasticBottlesRecycled++;
         }
+    }
+
+    public void increaseSessionTotalValue(double value){
+        recyclingSessionTotalValue += value;
     }
 
     public Receipt printReceipt(){
