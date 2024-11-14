@@ -21,78 +21,74 @@ import org.autumn24.excpetion.InvalidItemSizeException;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.stream.DoubleStream;
 
 /**
  * Represents a plastic bottle item that can be inserted to the RVM.
+ *
  * @author evnct
  * @since 1.0.0
  */
 public class PlasticBottle extends RecyclableItem implements Item {
-    private final double[] standardSizes = {0.33, 0.5, 0.95, 1.5, 2.0};
-    private final double[] sizeComparisonValues = {0.35, 1.0};
-    private final double[] redemptionValue = {0.10, 0.20, 0.40};
+	private final double[] standardSizes = {0.33, 0.5, 0.95, 1.5, 2.0};
+	private final double[] sizeComparisonValues = {0.35, 1.0};
+	private final double[] redemptionValue = {0.10, 0.20, 0.40};
+	private final double chosenSize = selectRandomSize(standardSizes);
 
-    private final double chosenSize;
-    private double determinedValue;
+	private double determinedValue;
 
-    public PlasticBottle() throws InvalidItemSizeException {
-        super(ItemType.BOTTLE, ItemMaterial.PLASTIC, 0.0);
-        chosenSize = selectRandomSize(standardSizes);
+	public PlasticBottle() throws InvalidItemSizeException {
+		super(ItemType.BOTTLE, ItemMaterial.PLASTIC, 0.0);
+		initializeItem(chosenSize, standardSizes);
+	}
 
-        if (DoubleStream.of(standardSizes).noneMatch(s -> s == chosenSize)) {
-            throw new InvalidItemSizeException("Current size is not in standardSizes array.");
-        }
+	public double getDeterminedValue() {
+		return determinedValue;
+	}
 
-        determineItemValue();
-    }
+	@Override
+	public void determineItemValue() {
+		boolean small = chosenSize <= sizeComparisonValues[0];
+		boolean medium = (chosenSize > sizeComparisonValues[0]) && (chosenSize <= sizeComparisonValues[1]);
+		boolean large = chosenSize > sizeComparisonValues[1];
 
-    public double getDeterminedValue() { return determinedValue; }
+		if (small) {
+			determinedValue = redemptionValue[0];
+		} else if (medium) {
+			determinedValue = redemptionValue[1];
+		} else if (large) {
+			determinedValue = redemptionValue[2];
+		}
+	}
 
-    @Override
-    public void determineItemValue() {
-        boolean small = chosenSize <= sizeComparisonValues[0];
-        boolean medium = (chosenSize > sizeComparisonValues[0]) && (chosenSize <= sizeComparisonValues[1]);
-        boolean large = chosenSize > sizeComparisonValues[1];
+	@Override
+	public String toString() {
+		return "PlasticBottle{" +
+				"standardSizes=" + Arrays.toString(standardSizes) +
+				", sizeComparisonValues=" + Arrays.toString(sizeComparisonValues) +
+				", redemptionValue=" + Arrays.toString(redemptionValue) +
+				", chosenSize=" + chosenSize +
+				", value=" + determinedValue +
+				'}';
+	}
 
-        if (small) {
-            determinedValue = redemptionValue[0];
-        } else if (medium) {
-            determinedValue = redemptionValue[1];
-        } else if (large) {
-            determinedValue = redemptionValue[2];
-        }
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		PlasticBottle that = (PlasticBottle) o;
+		return Double.compare(chosenSize, that.chosenSize) == 0
+				&& Double.compare(determinedValue, that.determinedValue) == 0
+				&& Objects.deepEquals(standardSizes, that.standardSizes)
+				&& Objects.deepEquals(sizeComparisonValues, that.sizeComparisonValues)
+				&& Objects.deepEquals(redemptionValue, that.redemptionValue
+		);
+	}
 
-    @Override
-    public String toString() {
-        return "PlasticBottle{" +
-                "standardSizes=" + Arrays.toString(standardSizes) +
-                ", sizeComparisonValues=" + Arrays.toString(sizeComparisonValues) +
-                ", redemptionValue=" + Arrays.toString(redemptionValue) +
-                ", chosenSize=" + chosenSize +
-                ", value=" + determinedValue +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PlasticBottle that = (PlasticBottle) o;
-        return Double.compare(chosenSize, that.chosenSize) == 0
-                && Double.compare(determinedValue, that.determinedValue) == 0
-                && Objects.deepEquals(standardSizes, that.standardSizes)
-                && Objects.deepEquals(sizeComparisonValues, that.sizeComparisonValues)
-                && Objects.deepEquals(redemptionValue, that.redemptionValue
-        );
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(Arrays.hashCode(standardSizes),
-                Arrays.hashCode(sizeComparisonValues),
-                Arrays.hashCode(redemptionValue), chosenSize, determinedValue
-        );
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(Arrays.hashCode(standardSizes),
+				Arrays.hashCode(sizeComparisonValues),
+				Arrays.hashCode(redemptionValue), chosenSize, determinedValue
+		);
+	}
 }

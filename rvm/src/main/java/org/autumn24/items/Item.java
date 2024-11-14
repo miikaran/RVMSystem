@@ -17,21 +17,36 @@
 
 package org.autumn24.items;
 
+import org.autumn24.excpetion.InvalidItemSizeException;
+
 import java.util.Random;
+import java.util.stream.DoubleStream;
 
 /**
  * All recyclable items implement this interface as long as items are generated
  * randomly. Methods of this interface should be called on their constructors at least
- * in their current implementation. 
+ * in their current implementation.
+ *
  * @author evnct
  * @since 1.0.0
  */
 public interface Item {
-    default double selectRandomSize(double[] standardSizes) {
-        int rnd = new Random().nextInt(standardSizes.length);
-        return standardSizes[rnd];
-    }
-    void determineItemValue();
-    double getDeterminedValue();
-    ItemMaterial getItemMaterial();
+	default double selectRandomSize(double[] standardSizes) {
+		int rnd = new Random().nextInt(standardSizes.length);
+		return standardSizes[rnd];
+	}
+
+	void determineItemValue();
+
+	default void initializeItem(double chosenSize, double[] standardSizes) throws InvalidItemSizeException {
+		if (DoubleStream.of(standardSizes).noneMatch(s -> s == chosenSize)) {
+			throw new InvalidItemSizeException("Current size is not in standardSizes array.");
+		}
+
+		determineItemValue();
+	}
+
+	double getDeterminedValue();
+
+	ItemMaterial getItemMaterial();
 }

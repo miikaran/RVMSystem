@@ -21,61 +21,61 @@ import org.autumn24.excpetion.InvalidItemSizeException;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.stream.DoubleStream;
 
 /**
  * Represents an aluminium can that an RVM can accept.
+ *
  * @author evnct
  * @since 1.0.0
  */
 public class AluminiumCan extends RecyclableItem implements Item {
-    private final double[] standardSizes = { 0.25, 0.33, 0.5 };
-    private final double VALUE_FOR_ALL_CANS = 0.15;
+	private final double[] standardSizes = {0.25, 0.33, 0.5};
+	private final double VALUE_FOR_ALL_CANS = 0.15;
+	private final double chosenSize = selectRandomSize(standardSizes);
 
-    private final double chosenSize;
-    private double determinedValue;
+	private double determinedValue;
 
-    public AluminiumCan() throws InvalidItemSizeException {
-        super(ItemType.CAN, ItemMaterial.ALUMINIUM, 0.0);
-        chosenSize = selectRandomSize(standardSizes);
+	public AluminiumCan() throws InvalidItemSizeException {
+		super(ItemType.CAN, ItemMaterial.ALUMINIUM, 0.0);
+		initializeItem(chosenSize, standardSizes);
+	}
 
-        if (DoubleStream.of(standardSizes).noneMatch(s -> s == chosenSize)) {
-            throw new InvalidItemSizeException("Current size is not in standardSizes array.");
-        }
+	public double getDeterminedValue() {
+		return determinedValue;
+	}
 
-        determineItemValue();
-    }
+	/**
+	 * All aluminium cans are valued as 0.15 €
+	 * No matter the size.
+	 */
+	@Override
+	public void determineItemValue() {
+		determinedValue = VALUE_FOR_ALL_CANS;
+	}
 
-    public double getDeterminedValue() { return determinedValue; }
+	@Override
+	public String toString() {
+		return "AluminiumCan{" +
+				"standardSizes=" + Arrays.toString(standardSizes) +
+				", VALUE_FOR_ALL_CANS=" + VALUE_FOR_ALL_CANS +
+				", chosenSize=" + chosenSize +
+				", determinedValue=" + determinedValue +
+				'}';
+	}
 
-    /**
-     * All aluminium cans are valued as 0.15 €
-     * No matter the size.
-     */
-    @Override
-    public void determineItemValue() {
-        determinedValue = VALUE_FOR_ALL_CANS;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		AluminiumCan that = (AluminiumCan) o;
+		return Double.compare(chosenSize, that.chosenSize) == 0
+				&& Double.compare(determinedValue, that.determinedValue) == 0
+				&& Objects.deepEquals(standardSizes, that.standardSizes
+		);
+	}
 
-    @Override
-    public String toString() {
-        return "AluminiumCan{standardSizes=%s, size=%s, value=%s}"
-                .formatted(Arrays.toString(standardSizes), chosenSize, determinedValue);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AluminiumCan that = (AluminiumCan) o;
-        return Double.compare(chosenSize, that.chosenSize) == 0
-                && Double.compare(determinedValue, that.determinedValue) == 0
-                && Objects.deepEquals(standardSizes, that.standardSizes
-        );
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(Arrays.hashCode(standardSizes), VALUE_FOR_ALL_CANS, chosenSize, determinedValue);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(Arrays.hashCode(standardSizes), VALUE_FOR_ALL_CANS, chosenSize, determinedValue);
+	}
 }
