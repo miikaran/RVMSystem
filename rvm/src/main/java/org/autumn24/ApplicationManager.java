@@ -47,14 +47,14 @@ public class ApplicationManager {
     }
 
     public void run(){
-        if(rvm.getRvmStatus().equals(Status.OPERATIONAL)){
-            System.out.println("\nStarting Machine '" + rvm.getRvmId() + "'...");
-            rvm.setRvmStatus(Status.INUSE);
-        } else {
+        if(!rvm.getRvmStatus().equals(Status.OPERATIONAL)){
             // Tähän ehkä myöhemmin sellane et jos ei oo toiminnassa ni täytyy employeena eli
             // vähän niiku adminina käydä korjaamassa se vika siitä koneesta.
             System.out.println("Machine '" + rvm.getRvmId() + "' is not operational :(");
+            return;
         }
+        System.out.println("\nStarting Machine '" + rvm.getRvmId() + "'...");
+        rvm.setRvmStatus(Status.INUSE);
         while (true){
             UserInterface.displayMenu();
             handleActions();
