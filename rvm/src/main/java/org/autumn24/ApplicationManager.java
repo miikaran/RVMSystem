@@ -72,7 +72,7 @@ public class ApplicationManager {
                 case 3 -> rvm.printReceipt();
                 case 4 -> System.out.println("Donating");
                 case 5 -> System.exit(0);
-                default -> throw new Exception("Invalid user input");
+                default -> throw new Exception("Invalid option");
             }
         } catch(Exception e){
             if(rvm.getRvmStatus().equals(Status.IDLE)){
