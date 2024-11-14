@@ -17,6 +17,7 @@
 
 package org.autumn24.rvm;
 
+import org.autumn24.Recycle;
 import org.autumn24.excpetion.InvalidItemMaterialException;
 import org.autumn24.excpetion.MissingItemMaterialException;
 import org.autumn24.items.Item;
@@ -27,40 +28,42 @@ import java.util.UUID;
 
 /**
  * A class that represents a reverse vending machine.
+ *
  * @author miikaran
  * @since 1.0.0
  */
-public class ReverseVendingMachine {
+public class ReverseVendingMachine implements Recycle {
 
 	public short numberOfAluminiumCansRecycled;
 	public short numberOfGlassBottlesRecycled;
 	public short numberOfPlasticBottlesRecycled;
 	public BigDecimal recyclingSessionTotalValue;
 	private String rvmId;
-    private Status rvmStatus;
+	private Status rvmStatus;
 
 	public ReverseVendingMachine() {
-        rvmId = UUID.randomUUID().toString();
-        rvmStatus = Status.OPERATIONAL;
+		rvmId = UUID.randomUUID().toString();
+		rvmStatus = Status.OPERATIONAL;
 	}
 
-    public void setRvmStatus(Status rvmStatus) {
-        this.rvmStatus = rvmStatus;
-    }
+	public Status getRvmStatus() {
+		return rvmStatus;
+	}
 
-    public Status getRvmStatus() {
-        return rvmStatus;
-    }
+	public void setRvmStatus(Status rvmStatus) {
+		this.rvmStatus = rvmStatus;
+	}
 
-    public String getRvmId() {
-        return rvmId;
-    }
+	public String getRvmId() {
+		return rvmId;
+	}
 
-    public void setRvmId(String rvmId) {
-        this.rvmId = rvmId;
-    }
+	public void setRvmId(String rvmId) {
+		this.rvmId = rvmId;
+	}
 
-    public RecyclingPile recycleItem(Item item) {
+	@Override
+	public void recycleItem(Item item) {
 		System.out.println("Recycling item: " + item);
 		ItemMaterial material = item.getItemMaterial();
 		if (material == null) {
@@ -77,7 +80,6 @@ public class ReverseVendingMachine {
 		}
 		increaseRecycledItemsCounter(pile);
 		increaseSessionTotalValue(value);
-		return pile;
 	}
 
 	public void increaseRecycledItemsCounter(RecyclingPile pile) {
