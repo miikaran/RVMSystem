@@ -30,4 +30,6 @@ public interface Item {
         return standardSizes[rnd];
     }
     void determineItemValue();
+    double getDeterminedValue();
+    ItemMaterial getItemMaterial();
 }

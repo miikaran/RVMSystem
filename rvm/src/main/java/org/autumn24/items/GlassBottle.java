@@ -48,6 +48,8 @@ public class GlassBottle extends RecyclableItem implements Item {
         determineItemValue();
     }
 
+    public double getDeterminedValue() { return determinedValue; }
+
     @Override
     public void determineItemValue() {
         if (chosenSize < litreComparisonValue) {

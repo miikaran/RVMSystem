@@ -47,6 +47,8 @@ public class PlasticBottle extends RecyclableItem implements Item {
         determineItemValue();
     }
 
+    public double getDeterminedValue() { return determinedValue; }
+
     @Override
     public void determineItemValue() {
         boolean small = chosenSize <= sizeComparisonValues[0];

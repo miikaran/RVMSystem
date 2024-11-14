@@ -35,6 +35,8 @@ public abstract class RecyclableItem {
         this.itemSize = itemSize;
     }
 
+    public ItemMaterial getItemMaterial() { return itemMaterial; }
+
     @Override
     public String toString() {
         return "RecyclableItem{itemType=%s, itemMaterial=%s, itemSize=%s}"

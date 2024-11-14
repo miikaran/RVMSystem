@@ -46,6 +46,8 @@ public class AluminiumCan extends RecyclableItem implements Item {
         determineItemValue();
     }
 
+    public double getDeterminedValue() { return determinedValue; }
+
     /**
      * All aluminium cans are valued as 0.15 €
      * No matter the size.
