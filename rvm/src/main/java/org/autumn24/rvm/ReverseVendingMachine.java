@@ -40,6 +40,7 @@ public class ReverseVendingMachine implements Recycle {
 
     private final String rvmId;
     public BigDecimal recyclingSessionTotalValue;
+    public short recyclingSessionRecycledAmount;
 
     // Keeps count of recycled items
     public short numberOfAluminiumCansRecycled;
@@ -92,12 +93,11 @@ public class ReverseVendingMachine implements Recycle {
                 throw new InvalidItemMaterialException("Material'" + material + "' not found in RecyclingPile.");
         }
         if(limitReached){
-            System.out.println(pile.name() + " limit reached.");
             rvmStatus = ReverseVendingMachineStatus.FULL;
             return;
         }
         increaseRecycledItemsCounter(pile);
-        increaseSessionTotalValue(value);
+        increaseSessionCounters(value);
     }
 
     public void increaseRecycledItemsCounter(RecyclingPile pile) {
@@ -106,23 +106,27 @@ public class ReverseVendingMachine implements Recycle {
             case METAL: {
                 numberOfAluminiumCansRecycled++;
                 aluminiumCanLimitCounter++;
+                break;
             }
             case GLASS: {
                 numberOfGlassBottlesRecycled++;
                 glassBottleLimitCounter++;
+                break;
             }
             case PLASTIC: {
                 numberOfPlasticBottlesRecycled++;
                 plasticBottleLimitCounter++;
+                break;
             }
         }
     }
 
-    public void increaseSessionTotalValue(BigDecimal value) {
+    public void increaseSessionCounters(BigDecimal value) {
         if (recyclingSessionTotalValue == null) {
             recyclingSessionTotalValue = BigDecimal.ZERO;
         }
         recyclingSessionTotalValue = recyclingSessionTotalValue.add(value);
+        recyclingSessionRecycledAmount++;
     }
 
     public void exitFromSleepMode() {

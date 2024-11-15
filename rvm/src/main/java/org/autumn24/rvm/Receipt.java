@@ -49,6 +49,7 @@ public class Receipt {
 
 	public void displayReceipt() {
 		Date date = new Date();
+		System.out.println();
 		System.out.println("\nDate:               " + date);
 		System.out.println("Receipt Id:         " + receiptId);
 		System.out.println("===========RECYCLED ITEMS=============");
@@ -57,6 +58,7 @@ public class Receipt {
 		System.out.println("Plastic Bottles:    " + numberOfProcessedPlasticBottles);
 		System.out.println("===========TOTAL VALUE================");
 		System.out.printf("%s €\n", totalValue);
+		System.out.println();
 	}
 
 	@Override

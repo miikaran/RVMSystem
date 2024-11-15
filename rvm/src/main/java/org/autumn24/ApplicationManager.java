@@ -64,6 +64,10 @@ public class ApplicationManager {
                     continue;
                 }
                 if(rvm.rvmStatus.equals(ReverseVendingMachineStatus.FULL)){
+                    if(rvm.recyclingSessionRecycledAmount > 0){
+                        // Print receipt if in middle of recycling the machine is full.
+                        rvm.printReceipt();
+                    }
                     if(rvm.glassBottleLimitReached()){
                         UserInterface.displayMachineNotInUse("Glass Limit Reached");
                     }
@@ -71,9 +75,10 @@ public class ApplicationManager {
                         UserInterface.displayMachineNotInUse("Plastic Limit Reached");
                     }
                     else if(rvm.aluminiumLimitReached()){
-                        UserInterface.displayMachineNotInUse("Aluminium Limit Reached");
+                        UserInterface.displayMachineNotInUse("Metal Limit Reached");
                     }
                     UserInterface.displayErrorMenu();
+                    System.exit(0);
                 }
             } catch (Exception e) {
                 if (rvm.isValidSleepModeException(e)) {
@@ -99,12 +104,30 @@ public class ApplicationManager {
             return;
         }
         switch (userInput) {
-            case 1 -> rvm.recycleItem(items.getFirst());
-            case 2 -> System.out.println("Unwrinkling");
-            case 3 -> rvm.printReceipt();
-            case 4 -> System.out.println("Donating");
-            case 5 -> System.exit(0);
-            default -> throw new IllegalArgumentException("Invalid option...");
+            case 1:
+                rvm.recycleItem(items.getFirst());
+                short itemsLen = (short) items.size();
+                short recyclablesLeft = (short) (itemsLen-rvm.recyclingSessionRecycledAmount);
+                UserInterface.displayRecyclingInfo(
+                        rvm.recyclingSessionTotalValue,
+                        recyclablesLeft,
+                        rvm.recyclingSessionRecycledAmount
+                );
+                break;
+            case 2:
+                System.out.println("Unwrinkling");
+                break;
+            case 3:
+                rvm.printReceipt();
+                break;
+            case 4:
+                System.out.println("Donating");
+                break;
+            case 5:
+                System.exit(0);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid option...");
         }
     }
 
