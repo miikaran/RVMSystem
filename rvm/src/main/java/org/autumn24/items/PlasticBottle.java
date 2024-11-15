@@ -30,67 +30,70 @@ import java.util.Objects;
  * @since 1.0.0
  */
 class PlasticBottle extends RecyclableItem implements Item {
-	private final double[] standardSizes = {0.33, 0.5, 0.95, 1.5, 2.0};
-	private final double[] sizeComparisonValues = {0.35, 1.0};
-	private final double[] redemptionValue = {0.10, 0.20, 0.40};
-	private final double chosenSize = selectRandomSize(standardSizes);
+    private final double[] standardSizes = {0.33, 0.5, 0.95, 1.5, 2.0};
+    private final double[] sizeComparisonValues = {0.35, 1.0};
+    private final double[] redemptionValue = {0.10, 0.20, 0.40};
+    private final double chosenSize = selectRandomSize(standardSizes);
 
-	private BigDecimal determinedValue;
+    private BigDecimal determinedValue;
 
-	public PlasticBottle() throws InvalidItemSizeException {
-		super(ItemType.BOTTLE, ItemMaterial.PLASTIC, 0.0);
-		initializeItem(chosenSize, standardSizes);
-	}
+    public PlasticBottle() throws InvalidItemSizeException {
+        super(ItemType.BOTTLE, ItemMaterial.PLASTIC, 0.0);
+        initializeItem(chosenSize, standardSizes);
+    }
 
-	public BigDecimal getDeterminedValue() {
-		return determinedValue;
-	}
+    public BigDecimal getDeterminedValue() {
+        return determinedValue;
+    }
 
-	@Override
-	public void determineItemValue() {
-		boolean small = chosenSize <= sizeComparisonValues[0];
-		boolean medium = (chosenSize > sizeComparisonValues[0]) && (chosenSize <= sizeComparisonValues[1]);
-		boolean large = chosenSize > sizeComparisonValues[1];
+    @Override
+    public void determineItemValue() {
+        boolean small = chosenSize <= sizeComparisonValues[0];
+        boolean medium = (chosenSize > sizeComparisonValues[0]) && (chosenSize <= sizeComparisonValues[1]);
+        boolean large = chosenSize > sizeComparisonValues[1];
 
-		if (small) {
-			determinedValue = BigDecimal.valueOf(redemptionValue[0]);
-		} else if (medium) {
-			determinedValue = BigDecimal.valueOf(redemptionValue[1]);
-		} else if (large) {
-			determinedValue = BigDecimal.valueOf(redemptionValue[2]);
-		}
-	}
+        if (small) {
+            determinedValue = BigDecimal.valueOf(redemptionValue[0]);
+        } else if (medium) {
+            determinedValue = BigDecimal.valueOf(redemptionValue[1]);
+        } else if (large) {
+            determinedValue = BigDecimal.valueOf(redemptionValue[2]);
+        }
+    }
 
-	@Override
-	public String toString() {
-		return "PlasticBottle{" +
-				"standardSizes=" + Arrays.toString(standardSizes) +
-				", sizeComparisonValues=" + Arrays.toString(sizeComparisonValues) +
-				", redemptionValue=" + Arrays.toString(redemptionValue) +
-				", chosenSize=" + chosenSize +
-				", value=" + determinedValue +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "PlasticBottle{" +
+                "standardSizes=" + Arrays.toString(standardSizes) +
+                ", sizeComparisonValues=" + Arrays.toString(sizeComparisonValues) +
+                ", redemptionValue=" + Arrays.toString(redemptionValue) +
+                ", chosenSize=" + chosenSize +
+                ", value=" + determinedValue +
+                ", itemStatus" + getItemStatus() +
+                '}';
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (o == null || getClass() != o.getClass()) return false;
-		PlasticBottle that = (PlasticBottle) o;
-		return Double.compare(chosenSize, that.chosenSize) == 0
-				&& Objects.deepEquals(standardSizes, that.standardSizes)
-				&& Objects.deepEquals(sizeComparisonValues, that.sizeComparisonValues)
-				&& Objects.deepEquals(redemptionValue, that.redemptionValue)
-				&& Objects.equals(determinedValue, that.determinedValue
-		);
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        PlasticBottle that = (PlasticBottle) o;
+        return Double.compare(chosenSize, that.chosenSize) == 0
+                && Objects.deepEquals(standardSizes, that.standardSizes)
+                && Objects.deepEquals(sizeComparisonValues, that.sizeComparisonValues)
+                && Objects.deepEquals(redemptionValue, that.redemptionValue)
+                && Objects.equals(determinedValue, that.determinedValue)
+                && Objects.equals(getItemStatus(), that.getItemStatus()
+        );
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(Arrays.hashCode(standardSizes),
-				Arrays.hashCode(sizeComparisonValues),
-				Arrays.hashCode(redemptionValue),
-				chosenSize,
-				determinedValue
-		);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(Arrays.hashCode(standardSizes),
+                Arrays.hashCode(sizeComparisonValues),
+                Arrays.hashCode(redemptionValue),
+                chosenSize,
+                determinedValue,
+                getItemStatus()
+        );
+    }
 }
