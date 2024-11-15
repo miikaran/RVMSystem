@@ -17,6 +17,8 @@
 
 package org.autumn24;
 
+import java.math.BigDecimal;
+
 /**
  * A class that is used to display ui views.
  * @author miikaran
@@ -25,13 +27,35 @@ package org.autumn24;
 public class UserInterface {
 
     public static void displayMenu(){
-        System.out.println();
+        System.out.println("===================");
         System.out.println("1 ------> INSERT");
         System.out.println("2 ------> UNWRINKLE");
         System.out.println("3 ------> RECEIPT");
         System.out.println("4 ------> DONATE");
         System.out.println("5 ------> EXIT");
         System.out.println();
+    }
+
+    public static void displayRecyclingInfo(BigDecimal totalValue, short recyclablesLeft, short recycledAmount){
+        System.out.println();
+        System.out.println(totalValue + "€ " + " Recycled: " + recycledAmount + " Recyclables left: " + recyclablesLeft);
+    }
+
+    public static void displayMachineNotInUse(String message){
+        if(message == null || message.isEmpty()){
+            message = "This machine is not in use";
+        }
+        System.out.println();
+        System.out.println("ERROR ⚠ ");
+        System.out.println(message);
+        System.out.println("Employee requested");
+    }
+
+    public static void displayErrorMenu(){
+        System.out.println();
+        System.out.println("==================================");
+        System.out.println("1 ------> FIX AS EMPLOYEE");
+        System.out.println("2 ------> EXIT");
     }
 
     // Possible UI views for later 😊
