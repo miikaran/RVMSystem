@@ -34,80 +34,71 @@ import java.util.UUID;
  */
 public class ReverseVendingMachine implements Recycle {
 
-	public short numberOfAluminiumCansRecycled;
-	public short numberOfGlassBottlesRecycled;
-	public short numberOfPlasticBottlesRecycled;
-	public BigDecimal recyclingSessionTotalValue;
-	private String rvmId;
-	private Status rvmStatus;
+    private final String rvmId;
+    public short numberOfAluminiumCansRecycled;
+    public short numberOfGlassBottlesRecycled;
+    public short numberOfPlasticBottlesRecycled;
+    public BigDecimal recyclingSessionTotalValue;
+    public ReverseVendingMachineStatus rvmStatus;
+    public ReverseVendingMachineFunctionalStatus rvmFnStatus;
+    public ReverseVendingMachinePowerStatus rvmPwStatus;
 
-	public ReverseVendingMachine() {
-		rvmId = UUID.randomUUID().toString();
-		rvmStatus = Status.OPERATIONAL;
-	}
+    public ReverseVendingMachine() {
+        rvmId = UUID.randomUUID().toString();
+        rvmFnStatus = ReverseVendingMachineFunctionalStatus.OPERATIONAL;
+        rvmPwStatus = ReverseVendingMachinePowerStatus.OFF;
+    }
 
-	public Status getRvmStatus() {
-		return rvmStatus;
-	}
+    public String getRvmId() {
+        return rvmId;
+    }
 
-	public void setRvmStatus(Status rvmStatus) {
-		this.rvmStatus = rvmStatus;
-	}
+    @Override
+    public void recycleItem(Item item) {
+        System.out.println("Recycling item: " + item);
+        ItemMaterial material = item.getItemMaterial();
+        if (material == null) {
+            throw new MissingItemMaterialException("Material is type null, ItemMaterial expected");
+        }
+        BigDecimal value = item.getDeterminedValue();
+        RecyclingPile pile;
+        switch (material) {
+            // Check if provided item's material can be matched to a valid enum.
+            case ALUMINIUM -> pile = RecyclingPile.METAL;
+            case GLASS -> pile = RecyclingPile.GLASS;
+            case PLASTIC -> pile = RecyclingPile.PLASTIC;
+            default -> throw new InvalidItemMaterialException("Material'" + material + "' not found in RecyclingPile.");
+        }
+        increaseRecycledItemsCounter(pile);
+        increaseSessionTotalValue(value);
+    }
 
-	public String getRvmId() {
-		return rvmId;
-	}
+    public void increaseRecycledItemsCounter(RecyclingPile pile) {
+        switch (pile) {
+            // Increase number of type X recycled items.
+            case METAL -> numberOfAluminiumCansRecycled++;
+            case GLASS -> numberOfGlassBottlesRecycled++;
+            case PLASTIC -> numberOfPlasticBottlesRecycled++;
+        }
+    }
 
-	public void setRvmId(String rvmId) {
-		this.rvmId = rvmId;
-	}
+    public void increaseSessionTotalValue(BigDecimal value) {
+        if (recyclingSessionTotalValue == null) {
+            recyclingSessionTotalValue = BigDecimal.ZERO;
+        }
+        recyclingSessionTotalValue = recyclingSessionTotalValue.add(value);
+    }
 
-	@Override
-	public void recycleItem(Item item) {
-		System.out.println("Recycling item: " + item);
-		ItemMaterial material = item.getItemMaterial();
-		if (material == null) {
-			throw new MissingItemMaterialException("Material is type null, ItemMaterial expected");
-		}
-		BigDecimal value = item.getDeterminedValue();
-		RecyclingPile pile;
-		switch (material) {
-			// Check if provided item's material can be matched to a valid enum.
-			case ALUMINIUM -> pile = RecyclingPile.METAL;
-			case GLASS -> pile = RecyclingPile.GLASS;
-			case PLASTIC -> pile = RecyclingPile.PLASTIC;
-			default -> throw new InvalidItemMaterialException("Material'" + material + "' not found in RecyclingPile.");
-		}
-		increaseRecycledItemsCounter(pile);
-		increaseSessionTotalValue(value);
-	}
-
-	public void increaseRecycledItemsCounter(RecyclingPile pile) {
-		switch (pile) {
-			// Increase number of type X recycled items.
-			case METAL -> numberOfAluminiumCansRecycled++;
-			case GLASS -> numberOfGlassBottlesRecycled++;
-			case PLASTIC -> numberOfPlasticBottlesRecycled++;
-		}
-	}
-
-	public void increaseSessionTotalValue(BigDecimal value) {
-		if (recyclingSessionTotalValue == null) {
-			recyclingSessionTotalValue = BigDecimal.ZERO;
-		}
-		recyclingSessionTotalValue = recyclingSessionTotalValue.add(value);
-	}
-
-	public Receipt printReceipt() {
-		System.out.println("Printing receipt...");
-		Receipt receipt = new Receipt(
-				numberOfAluminiumCansRecycled,
-				numberOfGlassBottlesRecycled,
-				numberOfPlasticBottlesRecycled,
-				recyclingSessionTotalValue
-		);
-		// Display receipt to terminal
-		receipt.displayReceipt();
-		return receipt;
-	}
+    public Receipt printReceipt() {
+        System.out.println("Printing receipt...");
+        Receipt receipt = new Receipt(
+                numberOfAluminiumCansRecycled,
+                numberOfGlassBottlesRecycled,
+                numberOfPlasticBottlesRecycled,
+                recyclingSessionTotalValue
+        );
+        // Display receipt to terminal
+        receipt.displayReceipt();
+        return receipt;
+    }
 }

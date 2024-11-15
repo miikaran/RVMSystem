@@ -22,24 +22,24 @@ import java.util.TimerTask;
 
 /**
  * A class that represents an inactivity timer that enables idle status aka (sleep-mode) for the target rvm.
+ *
  * @author miikaran
  * @since 1.0.0
  */
 public class InactivityTimer {
 
-    public static int INACTIVITY_TIMEOUT_MS = 10000;
+    public static int INACTIVITY_TIMEOUT_MS = 5000;
     public Timer inactivityTimer;
     public TimerTask inactivityTimerTask;
     public ReverseVendingMachine rvm;
 
-    public InactivityTimer(ReverseVendingMachine rvm){
+    public InactivityTimer(ReverseVendingMachine rvm) {
         inactivityTimer = new Timer(true);
         this.rvm = rvm;
-        resetTimer();
     }
 
-    public void resetTimer(){
-        if(inactivityTimerTask != null){
+    public void resetTimer() {
+        if (inactivityTimerTask != null) {
             inactivityTimerTask.cancel();
         }
         inactivityTimerTask = new TimerTask() {
@@ -51,11 +51,11 @@ public class InactivityTimer {
         inactivityTimer.schedule(inactivityTimerTask, INACTIVITY_TIMEOUT_MS);
     }
 
-    public void onInactivityTimeout(ReverseVendingMachine rvm){
+    public void onInactivityTimeout(ReverseVendingMachine rvm) {
         // This method could later be passed as a parameter to this class, but this is gud for now 😎
         System.out.println("\n\nMachine ID: '" + rvm.getRvmId() + "' - Entering sleep mode \uD83D\uDCA4");
-        rvm.setRvmStatus(Status.IDLE);
-        System.out.println("Press any key to wake it up.");
+        rvm.rvmStatus = ReverseVendingMachineStatus.IDLE;
+        System.out.println("Press any key to wake it back up.");
     }
 
 }
