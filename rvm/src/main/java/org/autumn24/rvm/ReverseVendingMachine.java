@@ -34,11 +34,23 @@ import java.util.UUID;
  */
 public class ReverseVendingMachine implements Recycle {
 
+    public short ALUMINIUM_CANS_LIMIT = 3;
+    public short GLASS_BOTTLES_LIMIT = 3;
+    public short PLASTIC_BOTTLES_LIMIT = 3;
+
     private final String rvmId;
+    public BigDecimal recyclingSessionTotalValue;
+
+    // Keeps count of recycled items
     public short numberOfAluminiumCansRecycled;
     public short numberOfGlassBottlesRecycled;
     public short numberOfPlasticBottlesRecycled;
-    public BigDecimal recyclingSessionTotalValue;
+
+    // Keeps count of recyclable specific limits
+    public short aluminiumCanLimitCounter;
+    public short glassBottleLimitCounter;
+    public short plasticBottleLimitCounter;
+
     public ReverseVendingMachineStatus rvmStatus;
     public ReverseVendingMachineFunctionalStatus rvmFnStatus;
     public ReverseVendingMachinePowerStatus rvmPwStatus;
@@ -62,12 +74,27 @@ public class ReverseVendingMachine implements Recycle {
         }
         BigDecimal value = item.getDeterminedValue();
         RecyclingPile pile;
+        boolean limitReached;
         switch (material) {
-            // Check if provided item's material can be matched to a valid enum.
-            case ALUMINIUM -> pile = RecyclingPile.METAL;
-            case GLASS -> pile = RecyclingPile.GLASS;
-            case PLASTIC -> pile = RecyclingPile.PLASTIC;
-            default -> throw new InvalidItemMaterialException("Material'" + material + "' not found in RecyclingPile.");
+            case ALUMINIUM:
+                limitReached = aluminiumLimitReached();
+                pile = RecyclingPile.METAL;
+                break;
+            case GLASS:
+                limitReached = glassBottleLimitReached();
+                pile = RecyclingPile.GLASS;
+                break;
+            case PLASTIC:
+                limitReached = plasticBottleLimitReached();
+                pile = RecyclingPile.PLASTIC;
+                break;
+            default:
+                throw new InvalidItemMaterialException("Material'" + material + "' not found in RecyclingPile.");
+        }
+        if(limitReached){
+            System.out.println(pile.name() + " limit reached.");
+            rvmStatus = ReverseVendingMachineStatus.FULL;
+            return;
         }
         increaseRecycledItemsCounter(pile);
         increaseSessionTotalValue(value);
@@ -75,10 +102,19 @@ public class ReverseVendingMachine implements Recycle {
 
     public void increaseRecycledItemsCounter(RecyclingPile pile) {
         switch (pile) {
-            // Increase number of type X recycled items.
-            case METAL -> numberOfAluminiumCansRecycled++;
-            case GLASS -> numberOfGlassBottlesRecycled++;
-            case PLASTIC -> numberOfPlasticBottlesRecycled++;
+            // Increase number of type X recycled item counters.
+            case METAL: {
+                numberOfAluminiumCansRecycled++;
+                aluminiumCanLimitCounter++;
+            }
+            case GLASS: {
+                numberOfGlassBottlesRecycled++;
+                glassBottleLimitCounter++;
+            }
+            case PLASTIC: {
+                numberOfPlasticBottlesRecycled++;
+                plasticBottleLimitCounter++;
+            }
         }
     }
 
@@ -87,6 +123,24 @@ public class ReverseVendingMachine implements Recycle {
             recyclingSessionTotalValue = BigDecimal.ZERO;
         }
         recyclingSessionTotalValue = recyclingSessionTotalValue.add(value);
+    }
+
+    public void exitFromSleepMode() {
+        if (rvmStatus.equals(ReverseVendingMachineStatus.IDLE)) {
+            System.out.println("\n\uD83D\uDD0B Machine: " + rvmId + " recovering from sleep mode:");
+            rvmStatus = ReverseVendingMachineStatus.IN_USE;
+        }
+    }
+
+    public boolean isValidSleepModeException(Exception e) {
+        // Used to identify exceptions that can be suppressed when recovering from sleepmode
+        return e instanceof IllegalArgumentException && ReverseVendingMachineStatus.IDLE.equals(rvmStatus);
+    }
+
+    public boolean machineIsUsable() {
+        return (rvmFnStatus.equals(ReverseVendingMachineFunctionalStatus.OPERATIONAL)
+                && rvmPwStatus.equals(ReverseVendingMachinePowerStatus.ON)
+                && !ReverseVendingMachineStatus.FULL.equals(rvmStatus));
     }
 
     public Receipt printReceipt() {
@@ -100,5 +154,18 @@ public class ReverseVendingMachine implements Recycle {
         // Display receipt to terminal
         receipt.displayReceipt();
         return receipt;
+    }
+
+
+    public boolean aluminiumLimitReached(){
+        return ALUMINIUM_CANS_LIMIT == aluminiumCanLimitCounter;
+    }
+
+    public boolean plasticBottleLimitReached(){
+        return PLASTIC_BOTTLES_LIMIT == plasticBottleLimitCounter;
+    }
+
+    public boolean glassBottleLimitReached(){
+        return GLASS_BOTTLES_LIMIT == glassBottleLimitCounter;
     }
 }

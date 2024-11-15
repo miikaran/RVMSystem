@@ -41,13 +41,12 @@ public class ApplicationManager {
     public ApplicationManager(ReverseVendingMachine rvm) {
         this.rvm = rvm;
         this.inactivityTimer = new InactivityTimer(rvm);
-        // Generate random bottles at init
         generateBottles(new ItemFactory());
         inactivityTimer.resetTimer();
     }
 
     public void run() {
-        if (!rvm.rvmStatus.equals(ReverseVendingMachineFunctionalStatus.OPERATIONAL)) {
+        if (!rvm.rvmFnStatus.equals(ReverseVendingMachineFunctionalStatus.OPERATIONAL)) {
             System.out.println("Machine: '" + rvm.getRvmId() + "' not operational.");
             return;
         }
@@ -57,16 +56,32 @@ public class ApplicationManager {
     }
 
     public void mainLoop() {
-        while (machineIsUsable()) {
+        while (true) {
             try {
-                UserInterface.displayMenu();
-                handleMainActions();
-            } catch (Exception e) {
-                if (isValidSleepModeException(e)) {
-                    exitFromSleepMode();
+                if(rvm.machineIsUsable()){
+                    UserInterface.displayMenu();
+                    handleMainActions();
                     continue;
                 }
-                System.out.println(e.getMessage());
+                if(rvm.rvmStatus.equals(ReverseVendingMachineStatus.FULL)){
+                    if(rvm.glassBottleLimitReached()){
+                        UserInterface.displayMachineNotInUse("Glass Limit Reached");
+                    }
+                    else if(rvm.plasticBottleLimitReached()){
+                        UserInterface.displayMachineNotInUse("Plastic Limit Reached");
+                    }
+                    else if(rvm.aluminiumLimitReached()){
+                        UserInterface.displayMachineNotInUse("Aluminium Limit Reached");
+                    }
+                    UserInterface.displayErrorMenu();
+                }
+            } catch (Exception e) {
+                if (rvm.isValidSleepModeException(e)) {
+                    rvm.exitFromSleepMode();
+                    continue;
+                }
+                System.out.println("Error notified: " + e.getMessage());
+                System.out.println("Please try again.");
             } finally {
                 inactivityTimer.resetTimer();
             }
@@ -79,8 +94,8 @@ public class ApplicationManager {
             throw new IllegalArgumentException("Invalid input type, int expected.");
         }
         int userInput = getUserAction();
-        if (rvm.rvmStatus.equals(ReverseVendingMachineStatus.IDLE)) {
-            exitFromSleepMode();
+        if (ReverseVendingMachineStatus.IDLE.equals(rvm.rvmStatus)) {
+            rvm.exitFromSleepMode();
             return;
         }
         switch (userInput) {
@@ -90,13 +105,6 @@ public class ApplicationManager {
             case 4 -> System.out.println("Donating");
             case 5 -> System.exit(0);
             default -> throw new IllegalArgumentException("Invalid option...");
-        }
-    }
-
-    private void exitFromSleepMode() {
-        if (rvm.rvmStatus.equals(ReverseVendingMachineStatus.IDLE)) {
-            System.out.println("\n\uD83D\uDD0B Powering up machine: " + rvm.getRvmId());
-            rvm.rvmStatus = ReverseVendingMachineStatus.IN_USE;
         }
     }
 
@@ -126,14 +134,4 @@ public class ApplicationManager {
             }
         }
     }
-
-    private boolean isValidSleepModeException(Exception e) {
-        return e instanceof IllegalArgumentException && rvm.rvmStatus.equals(ReverseVendingMachineStatus.IDLE);
-    }
-
-    private boolean machineIsUsable() {
-        return (rvm.rvmFnStatus.equals(ReverseVendingMachineFunctionalStatus.OPERATIONAL)
-                && rvm.rvmPwStatus.equals(ReverseVendingMachinePowerStatus.ON));
-    }
-
 }
