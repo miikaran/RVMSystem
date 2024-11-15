@@ -26,23 +26,29 @@ package org.autumn24.items;
  */
 public abstract class RecyclableItem {
 
-	/* USED TO BUILD AN ITEM */
-	private final ItemType itemType;
-	private final ItemMaterial itemMaterial;
-	private final double itemSize;
+    /* USED TO BUILD AN ITEM */
+    private final ItemType itemType;
+    private final ItemMaterial itemMaterial;
+    private final ItemStatus itemStatus;
+    private final double itemSize;
 
-	public RecyclableItem(ItemType itemType, ItemMaterial itemMaterial, double itemSize) {
-		this.itemType = itemType;
-		this.itemMaterial = itemMaterial;
-		this.itemSize = itemSize;
-	}
+    public RecyclableItem(ItemType itemType, ItemMaterial itemMaterial, double itemSize) {
+        this.itemType = itemType;
+        this.itemMaterial = itemMaterial;
+        this.itemStatus = ItemStatus.selectRandomStatus();
+        this.itemSize = itemSize;
+    }
 
-	public ItemMaterial getItemMaterial() {
-		return itemMaterial;
-	}
+    public ItemStatus getItemStatus() {
+        return itemStatus;
+    }
 
-	@Override
-	public String toString() {
-		return "RecyclableItem{itemType=%s, itemMaterial=%s, itemSize=%s}".formatted(itemType, itemMaterial, itemSize);
-	}
+    public ItemMaterial getItemMaterial() {
+        return itemMaterial;
+    }
+
+    @Override
+    public String toString() {
+        return "RecyclableItem{itemType=%s, itemMaterial=%s, itemSize=%s}".formatted(itemType, itemMaterial, itemSize);
+    }
 }
