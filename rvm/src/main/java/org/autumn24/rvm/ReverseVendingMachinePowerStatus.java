@@ -17,13 +17,7 @@
 
 package org.autumn24.rvm;
 
-/**
- * Different statuses a rvm can have
- *
- * @author miikaran
- * @since 1.0.0
- */
-public enum ReverseVendingMachineStatus {
-    IN_USE,
-    IDLE
+public enum ReverseVendingMachinePowerStatus {
+    ON,
+    OFF
 }
