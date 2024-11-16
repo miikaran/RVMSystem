@@ -29,8 +29,8 @@ public abstract class RecyclableItem {
     /* USED TO BUILD AN ITEM */
     private final ItemType itemType;
     private final ItemMaterial itemMaterial;
-    private final ItemStatus itemStatus;
     private final double itemSize;
+    public ItemStatus itemStatus;
 
     public RecyclableItem(ItemType itemType, ItemMaterial itemMaterial, double itemSize) {
         this.itemType = itemType;

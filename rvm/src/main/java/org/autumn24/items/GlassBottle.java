@@ -42,8 +42,19 @@ class GlassBottle extends RecyclableItem implements Item {
         initializeItem(chosenSize, standardSizes);
     }
 
+    @Override
     public BigDecimal getDeterminedValue() {
         return determinedValue;
+    }
+
+    @Override
+    public ItemStatus getItemStatus() {
+        return itemStatus;
+    }
+    
+    @Override
+    public void setItemStatus(ItemStatus itemStatus) {
+        this.itemStatus = itemStatus;
     }
 
     @Override

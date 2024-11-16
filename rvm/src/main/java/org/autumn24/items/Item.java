@@ -63,4 +63,8 @@ public interface Item {
     BigDecimal getDeterminedValue();
 
     ItemMaterial getItemMaterial();
+
+    ItemStatus getItemStatus();
+
+    void setItemStatus(ItemStatus itemStatus);
 }
