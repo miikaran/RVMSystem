@@ -68,36 +68,44 @@ public class ReverseVendingMachine implements Recycle {
 
     @Override
     public void recycleItem(Item item) {
-        System.out.println("Recycling item: " + item);
         ItemMaterial material = item.getItemMaterial();
         if (material == null) {
             throw new MissingItemMaterialException("Material is type null, ItemMaterial expected");
         }
         BigDecimal value = item.getDeterminedValue();
-        RecyclingPile pile;
         boolean limitReached;
-        switch (material) {
-            case ALUMINIUM:
-                limitReached = aluminiumLimitReached();
-                pile = RecyclingPile.METAL;
-                break;
-            case GLASS:
-                limitReached = glassBottleLimitReached();
-                pile = RecyclingPile.GLASS;
-                break;
-            case PLASTIC:
-                limitReached = plasticBottleLimitReached();
-                pile = RecyclingPile.PLASTIC;
-                break;
-            default:
-                throw new InvalidItemMaterialException("Material'" + material + "' not found in RecyclingPile.");
-        }
+        RecyclingPile pile = switch (material) {
+            case ALUMINIUM -> {
+                limitReached = IsAluminiumLimitReached();
+                yield RecyclingPile.METAL;
+            }
+            case GLASS -> {
+                limitReached = IsGlassBottleLimitReached();
+                yield RecyclingPile.GLASS;
+            }
+            case PLASTIC -> {
+                limitReached = IsPlasticBottleLimitReached();
+                yield RecyclingPile.PLASTIC;
+            }
+            default -> throw new InvalidItemMaterialException("Material'" + material + "' not found in RecyclingPile.");
+        };
         if(limitReached){
             rvmStatus = ReverseVendingMachineStatus.FULL;
             return;
         }
         increaseRecycledItemsCounter(pile);
         increaseSessionCounters(value);
+    }
+
+    public Receipt printReceipt() {
+        Receipt receipt = new Receipt(
+                numberOfAluminiumCansRecycled,
+                numberOfGlassBottlesRecycled,
+                numberOfPlasticBottlesRecycled,
+                recyclingSessionTotalValue
+        );
+        receipt.displayReceipt();
+        return receipt;
     }
 
     public void increaseRecycledItemsCounter(RecyclingPile pile) {
@@ -129,6 +137,10 @@ public class ReverseVendingMachine implements Recycle {
         recyclingSessionRecycledAmount++;
     }
 
+    public void startMachine(){
+        rvmPwStatus = ReverseVendingMachinePowerStatus.ON;
+    }
+
     public void exitFromSleepMode() {
         if (rvmStatus.equals(ReverseVendingMachineStatus.IDLE)) {
             System.out.println("\n\uD83D\uDD0B Machine: " + rvmId + " recovering from sleep mode:");
@@ -147,29 +159,30 @@ public class ReverseVendingMachine implements Recycle {
                 && !ReverseVendingMachineStatus.FULL.equals(rvmStatus));
     }
 
-    public Receipt printReceipt() {
-        System.out.println("Printing receipt...");
-        Receipt receipt = new Receipt(
-                numberOfAluminiumCansRecycled,
-                numberOfGlassBottlesRecycled,
-                numberOfPlasticBottlesRecycled,
-                recyclingSessionTotalValue
-        );
-        // Display receipt to terminal
-        receipt.displayReceipt();
-        return receipt;
+    public boolean IsMachineFull(){
+        return rvmStatus.equals(ReverseVendingMachineStatus.FULL);
     }
 
+    public String getFullPile(){
+        if(IsAluminiumLimitReached()){
+            return RecyclingPile.METAL.name();
+        } else if(IsPlasticBottleLimitReached()){
+            return RecyclingPile.PLASTIC.name();
+        } else if(IsGlassBottleLimitReached()){
+            return RecyclingPile.GLASS.name();
+        }
+        return "";
+    }
 
-    public boolean aluminiumLimitReached(){
+    public boolean IsAluminiumLimitReached(){
         return ALUMINIUM_CANS_LIMIT == aluminiumCanLimitCounter;
     }
 
-    public boolean plasticBottleLimitReached(){
+    public boolean IsPlasticBottleLimitReached(){
         return PLASTIC_BOTTLES_LIMIT == plasticBottleLimitCounter;
     }
 
-    public boolean glassBottleLimitReached(){
+    public boolean IsGlassBottleLimitReached(){
         return GLASS_BOTTLES_LIMIT == glassBottleLimitCounter;
     }
 }

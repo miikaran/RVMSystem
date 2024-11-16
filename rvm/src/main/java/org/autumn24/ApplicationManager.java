@@ -37,6 +37,7 @@ public class ApplicationManager {
     private final ReverseVendingMachine rvm;
     private final InactivityTimer inactivityTimer;
     private final ArrayList<Item> items = new ArrayList<>();
+    public boolean appRunning = false;
 
     public ApplicationManager(ReverseVendingMachine rvm) {
         this.rvm = rvm;
@@ -46,47 +47,21 @@ public class ApplicationManager {
     }
 
     public void run() {
-        if (!rvm.rvmFnStatus.equals(ReverseVendingMachineFunctionalStatus.OPERATIONAL)) {
-            System.out.println("Machine: '" + rvm.getRvmId() + "' not operational.");
-            return;
-        }
+        appRunning = true;
         System.out.println("\n\uD83D\uDD0B Starting machine: " + rvm.getRvmId());
-        rvm.rvmPwStatus = ReverseVendingMachinePowerStatus.ON;
+        rvm.startMachine();
         mainLoop();
     }
 
     public void mainLoop() {
-        while (true) {
+        while (appRunning) {
             try {
                 if(rvm.machineIsUsable()){
                     UserInterface.displayMenu();
                     handleMainActions();
-                    continue;
-                }
-                if(rvm.rvmStatus.equals(ReverseVendingMachineStatus.FULL)){
-                    if(rvm.recyclingSessionRecycledAmount > 0){
-                        // Print receipt if in middle of recycling the machine is full.
-                        rvm.printReceipt();
-                    }
-                    if(rvm.glassBottleLimitReached()){
-                        UserInterface.displayMachineNotInUse("Glass Limit Reached");
-                    }
-                    else if(rvm.plasticBottleLimitReached()){
-                        UserInterface.displayMachineNotInUse("Plastic Limit Reached");
-                    }
-                    else if(rvm.aluminiumLimitReached()){
-                        UserInterface.displayMachineNotInUse("Metal Limit Reached");
-                    }
-                    UserInterface.displayErrorMenu();
-                    System.exit(0);
                 }
             } catch (Exception e) {
-                if (rvm.isValidSleepModeException(e)) {
-                    rvm.exitFromSleepMode();
-                    continue;
-                }
-                System.out.println("Error notified: " + e.getMessage());
-                System.out.println("Please try again.");
+                handleAppException(e);
             } finally {
                 inactivityTimer.resetTimer();
             }
@@ -94,7 +69,6 @@ public class ApplicationManager {
     }
 
     private void handleMainActions() {
-        System.out.print("=> ");
         if (!validateUserActionInputType()) {
             throw new IllegalArgumentException("Invalid input type, int expected.");
         }
@@ -103,9 +77,18 @@ public class ApplicationManager {
             rvm.exitFromSleepMode();
             return;
         }
+        // Gotta put these actions to their own methods later 😊
         switch (userInput) {
             case 1:
-                rvm.recycleItem(items.getFirst());
+                rvm.rvmStatus = ReverseVendingMachineStatus.IN_USE;
+                Item itemToRecycle = items.getFirst();
+                System.out.println("Recycling item: " + itemToRecycle);
+                rvm.recycleItem(itemToRecycle);
+                if(rvm.IsMachineFull()){
+                    String fullPile = rvm.getFullPile();
+                    handleFullMachine(fullPile);
+                    break;
+                }
                 short itemsLen = (short) items.size();
                 short recyclablesLeft = (short) (itemsLen-rvm.recyclingSessionRecycledAmount);
                 UserInterface.displayRecyclingInfo(
@@ -113,11 +96,13 @@ public class ApplicationManager {
                         recyclablesLeft,
                         rvm.recyclingSessionRecycledAmount
                 );
+                items.remove(itemToRecycle);
                 break;
             case 2:
                 System.out.println("Unwrinkling");
                 break;
             case 3:
+                System.out.println("Printing receipt...");
                 rvm.printReceipt();
                 break;
             case 4:
@@ -129,6 +114,25 @@ public class ApplicationManager {
             default:
                 throw new IllegalArgumentException("Invalid option...");
         }
+    }
+
+    private void handleFullMachine(String pile){
+        UserInterface.displayMachineNotInUse(pile + " Limit Reached");
+        UserInterface.displayErrorMenu();
+        if(rvm.recyclingSessionRecycledAmount > 0){
+            // Print receipt if in middle of recycling the machine is full.
+            rvm.printReceipt();
+        }
+        System.exit(0); // Remove this later for action handler
+    }
+
+    private void handleAppException(Exception e){
+        if (rvm.isValidSleepModeException(e)) {
+            rvm.exitFromSleepMode();
+            return;
+        }
+        System.out.println("Error notified: " + e.getMessage());
+        System.out.println("Please try again.");
     }
 
     private boolean validateUserActionInputType() {

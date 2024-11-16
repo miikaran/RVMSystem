@@ -34,6 +34,7 @@ public class UserInterface {
         System.out.println("4 ------> DONATE");
         System.out.println("5 ------> EXIT");
         System.out.println();
+        System.out.print("=> ");
     }
 
     public static void displayRecyclingInfo(BigDecimal totalValue, short recyclablesLeft, short recycledAmount){
