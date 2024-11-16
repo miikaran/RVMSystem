@@ -17,37 +17,11 @@
 
 package org.autumn24.charity;
 
-import java.util.Objects;
-
 /**
  * Represents the base of all charities to which can be donated to
  */
-public abstract class Charity {
-	private final String charityName;
-	private final String charityCause;
+public interface Charity {
+	String name();
 
-	public Charity(String charityName, String charityCause) {
-		this.charityName = charityName;
-		this.charityCause = charityCause;
-	}
-
-	public String getCharityName() {
-		return charityName;
-	}
-
-	public String getCharityCause() {
-		return charityCause;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (o == null || getClass() != o.getClass()) return false;
-		Charity charity = (Charity) o;
-		return Objects.equals(charityName, charity.charityName) && Objects.equals(charityCause, charity.charityCause);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(charityName, charityCause);
-	}
+	String cause();
 }
