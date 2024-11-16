@@ -19,13 +19,11 @@ package org.autumn24.charity.charities;
 
 import org.autumn24.charity.Charity;
 
-public class AmnestyInternational extends Charity {
-	public AmnestyInternational() {
-		super("Amnesty International", "Helps to fight against human right abuses worldwide.");
-	}
-
-	@Override
-	public String toString() {
-		return "AmnestyInternational{} " + super.toString();
+public record AmnestyInternational(String name, String cause) implements Charity {
+	public static AmnestyInternational createAmnestyInternational() {
+		return new AmnestyInternational(
+				"Amnesty International",
+				"Helps to fight against human right abuses worldwide."
+		);
 	}
 }

@@ -19,13 +19,11 @@ package org.autumn24.charity.charities;
 
 import org.autumn24.charity.Charity;
 
-public class AlzheimerAssociation extends Charity {
-	public AlzheimerAssociation() {
-		super("Alzheimer's Association", "Fights against Alzheimer and oll other dementia through global research.");
-	}
-
-	@Override
-	public String toString() {
-		return "AmnestyInternational{} " + super.toString();
+public record AlzheimerAssociation(String name, String cause) implements Charity {
+	public static AlzheimerAssociation createAlzheimerAssociation() {
+		return new AlzheimerAssociation(
+				"Alzheimer's Association",
+				"Fights against Alzheimer and oll other dementia through global research."
+		);
 	}
 }

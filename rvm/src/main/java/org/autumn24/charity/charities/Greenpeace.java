@@ -19,13 +19,11 @@ package org.autumn24.charity.charities;
 
 import org.autumn24.charity.Charity;
 
-public class Greenpeace extends Charity {
-	public Greenpeace() {
-		super("Greenpeace Fund", "Fight for environmental justice and protecting our planet.");
-	}
-
-	@Override
-	public String toString() {
-		return "Greenpeace{} " + super.toString();
+public record Greenpeace(String name, String cause) implements Charity {
+	public static Greenpeace createGreenpeace() {
+		return new Greenpeace(
+				"Greenpeace Fund",
+				"Fights for environmental justice and for our planet."
+		);
 	}
 }
