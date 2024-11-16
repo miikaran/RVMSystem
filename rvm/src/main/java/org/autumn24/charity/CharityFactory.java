@@ -26,9 +26,9 @@ public class CharityFactory {
 	public Charity createCharity() {
 		int chosenCharity = ApplicationManager.getUserAction();
 		return switch (chosenCharity) {
-			case 1 -> new Greenpeace();
-			case 2 -> new AmnestyInternational();
-			case 3 -> new AlzheimerAssociation();
+			case 1 -> Greenpeace.createGreenpeace();
+			case 2 -> AmnestyInternational.createAmnestyInternational();
+			case 3 -> AlzheimerAssociation.createAlzheimerAssociation();
 			default -> throw new IllegalArgumentException("Unexpected value: " + chosenCharity);
 		};
 	}
