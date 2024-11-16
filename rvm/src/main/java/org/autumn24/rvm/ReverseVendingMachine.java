@@ -22,6 +22,7 @@ import org.autumn24.excpetion.InvalidItemMaterialException;
 import org.autumn24.excpetion.MissingItemMaterialException;
 import org.autumn24.items.Item;
 import org.autumn24.items.ItemMaterial;
+import org.autumn24.items.ItemStatus;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -34,11 +35,10 @@ import java.util.UUID;
  */
 public class ReverseVendingMachine implements Recycle {
 
+    private final String rvmId;
     public short ALUMINIUM_CANS_LIMIT = 3;
     public short GLASS_BOTTLES_LIMIT = 3;
     public short PLASTIC_BOTTLES_LIMIT = 3;
-
-    private final String rvmId;
     public BigDecimal recyclingSessionTotalValue;
     public short recyclingSessionRecycledAmount;
 
@@ -67,10 +67,11 @@ public class ReverseVendingMachine implements Recycle {
     }
 
     @Override
-    public void recycleItem(Item item) {
+    public boolean recycleItem(Item item) {
+        ItemStatus status = item.getItemStatus();
         ItemMaterial material = item.getItemMaterial();
-        if (material == null) {
-            throw new MissingItemMaterialException("Material is type null, ItemMaterial expected");
+        if (!validateRecyclableItem(status, material)) {
+            return false;
         }
         BigDecimal value = item.getDeterminedValue();
         boolean limitReached;
@@ -89,12 +90,13 @@ public class ReverseVendingMachine implements Recycle {
             }
             default -> throw new InvalidItemMaterialException("Material'" + material + "' not found in RecyclingPile.");
         };
-        if(limitReached){
+        if (limitReached) {
             rvmStatus = ReverseVendingMachineStatus.FULL;
-            return;
+            return false;
         }
         increaseRecycledItemsCounter(pile);
         increaseSessionCounters(value);
+        return true;
     }
 
     public Receipt printReceipt() {
@@ -106,6 +108,13 @@ public class ReverseVendingMachine implements Recycle {
         );
         receipt.displayReceipt();
         return receipt;
+    }
+
+    public boolean validateRecyclableItem(ItemStatus status, ItemMaterial material) {
+        if (material == null) {
+            throw new MissingItemMaterialException("Material is type null, ItemMaterial expected");
+        }
+        return !status.equals(ItemStatus.WRINKLED);
     }
 
     public void increaseRecycledItemsCounter(RecyclingPile pile) {
@@ -137,7 +146,7 @@ public class ReverseVendingMachine implements Recycle {
         recyclingSessionRecycledAmount++;
     }
 
-    public void startMachine(){
+    public void startMachine() {
         rvmPwStatus = ReverseVendingMachinePowerStatus.ON;
     }
 
@@ -154,35 +163,39 @@ public class ReverseVendingMachine implements Recycle {
     }
 
     public boolean machineIsUsable() {
-        return (rvmFnStatus.equals(ReverseVendingMachineFunctionalStatus.OPERATIONAL)
-                && rvmPwStatus.equals(ReverseVendingMachinePowerStatus.ON)
+        return (ReverseVendingMachineFunctionalStatus.OPERATIONAL.equals(rvmFnStatus)
+                && ReverseVendingMachinePowerStatus.ON.equals(rvmPwStatus)
                 && !ReverseVendingMachineStatus.FULL.equals(rvmStatus));
     }
 
-    public boolean IsMachineFull(){
-        return rvmStatus.equals(ReverseVendingMachineStatus.FULL);
+    public boolean IsMachineFull() {
+        return ReverseVendingMachineStatus.FULL.equals(rvmStatus);
     }
 
-    public String getFullPile(){
-        if(IsAluminiumLimitReached()){
+    public String getFullPile() {
+        if (IsAluminiumLimitReached()) {
             return RecyclingPile.METAL.name();
-        } else if(IsPlasticBottleLimitReached()){
+        } else if (IsPlasticBottleLimitReached()) {
             return RecyclingPile.PLASTIC.name();
-        } else if(IsGlassBottleLimitReached()){
+        } else if (IsGlassBottleLimitReached()) {
             return RecyclingPile.GLASS.name();
         }
         return "";
     }
 
-    public boolean IsAluminiumLimitReached(){
+    public boolean IsAluminiumLimitReached() {
         return ALUMINIUM_CANS_LIMIT == aluminiumCanLimitCounter;
     }
 
-    public boolean IsPlasticBottleLimitReached(){
+    public boolean IsPlasticBottleLimitReached() {
         return PLASTIC_BOTTLES_LIMIT == plasticBottleLimitCounter;
     }
 
-    public boolean IsGlassBottleLimitReached(){
+    public boolean IsGlassBottleLimitReached() {
         return GLASS_BOTTLES_LIMIT == glassBottleLimitCounter;
+    }
+
+    public boolean wrinkledItemDetected(Item item) {
+        return ItemStatus.WRINKLED.equals(item.getItemStatus());
     }
 }

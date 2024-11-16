@@ -20,7 +20,10 @@ package org.autumn24;
 import org.autumn24.excpetion.InvalidItemSizeException;
 import org.autumn24.items.Item;
 import org.autumn24.items.ItemFactory;
-import org.autumn24.rvm.*;
+import org.autumn24.items.ItemStatus;
+import org.autumn24.rvm.InactivityTimer;
+import org.autumn24.rvm.ReverseVendingMachine;
+import org.autumn24.rvm.ReverseVendingMachineStatus;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -56,9 +59,12 @@ public class ApplicationManager {
     public void mainLoop() {
         while (appRunning) {
             try {
-                if(rvm.machineIsUsable()){
+                if (rvm.IsMachineFull()) {
+                    handleFullMachine(rvm.getFullPile());
+                }
+                if (rvm.machineIsUsable()) {
                     UserInterface.displayMenu();
-                    handleMainActions();
+                    handleMainMenuActions();
                 }
             } catch (Exception e) {
                 handleAppException(e);
@@ -68,29 +74,23 @@ public class ApplicationManager {
         }
     }
 
-    private void handleMainActions() {
-        if (!validateUserActionInputType()) {
-            throw new IllegalArgumentException("Invalid input type, int expected.");
-        }
+    private void handleMainMenuActions() {
         int userInput = getUserAction();
-        if (ReverseVendingMachineStatus.IDLE.equals(rvm.rvmStatus)) {
-            rvm.exitFromSleepMode();
-            return;
-        }
         // Gotta put these actions to their own methods later 😊
         switch (userInput) {
             case 1:
-                rvm.rvmStatus = ReverseVendingMachineStatus.IN_USE;
+                if (rvm.wrinkledItemDetected(items.getFirst())) {
+                    handleWrinkledItem(items.getFirst());
+                    break;
+                }
                 Item itemToRecycle = items.getFirst();
                 System.out.println("Recycling item: " + itemToRecycle);
-                rvm.recycleItem(itemToRecycle);
-                if(rvm.IsMachineFull()){
-                    String fullPile = rvm.getFullPile();
-                    handleFullMachine(fullPile);
+                boolean successfullyRecycled = rvm.recycleItem(itemToRecycle);
+                if (!successfullyRecycled) {
                     break;
                 }
                 short itemsLen = (short) items.size();
-                short recyclablesLeft = (short) (itemsLen-rvm.recyclingSessionRecycledAmount);
+                short recyclablesLeft = (short) (itemsLen - rvm.recyclingSessionRecycledAmount);
                 UserInterface.displayRecyclingInfo(
                         rvm.recyclingSessionTotalValue,
                         recyclablesLeft,
@@ -99,16 +99,12 @@ public class ApplicationManager {
                 items.remove(itemToRecycle);
                 break;
             case 2:
-                System.out.println("Unwrinkling");
-                break;
-            case 3:
-                System.out.println("Printing receipt...");
                 rvm.printReceipt();
                 break;
-            case 4:
+            case 3:
                 System.out.println("Donating");
                 break;
-            case 5:
+            case 4:
                 System.exit(0);
                 break;
             default:
@@ -116,17 +112,44 @@ public class ApplicationManager {
         }
     }
 
-    private void handleFullMachine(String pile){
-        UserInterface.displayMachineNotInUse(pile + " Limit Reached");
-        UserInterface.displayErrorMenu();
-        if(rvm.recyclingSessionRecycledAmount > 0){
+    private void handleFullMachine(String pile) {
+        inactivityTimer.resetTimer();
+        UserInterface.displayMachineError(pile + " Limit Reached");
+        if (rvm.recyclingSessionRecycledAmount > 0) {
             // Print receipt if in middle of recycling the machine is full.
             rvm.printReceipt();
         }
-        System.exit(0); // Remove this later for action handler
+        UserInterface.displayExceptionMenu();
+        int userInput = getUserAction();
+        switch (userInput) {
+            case 1:
+                System.out.println("Fixing....");
+                break;
+            case 2:
+                System.exit(0);
+            default:
+                throw new IllegalArgumentException("Invalid option...");
+        }
     }
 
-    private void handleAppException(Exception e){
+    private void handleWrinkledItem(Item item) {
+        inactivityTimer.resetTimer();
+        UserInterface.displayMachineError("Can't insert an wrinkled item.");
+        UserInterface.displayWrinkledItemMenu();
+        int userInput = getUserAction();
+        switch (userInput) {
+            case 1:
+                item.setItemStatus(ItemStatus.UNWRINKLED);
+                break;
+            case 2:
+                System.out.println("Resuming...");
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid option...");
+        }
+    }
+
+    private void handleAppException(Exception e) {
         if (rvm.isValidSleepModeException(e)) {
             rvm.exitFromSleepMode();
             return;
@@ -135,17 +158,20 @@ public class ApplicationManager {
         System.out.println("Please try again.");
     }
 
-    private boolean validateUserActionInputType() {
+    private int getUserAction() {
         if (!scanner.hasNextInt()) {
             scanner.nextLine(); // Clear invalid input
-            return false;
+            return 0;
         }
-        return true;
-    }
-
-    private int getUserAction() throws IllegalArgumentException {
         int choice = scanner.nextInt();
         scanner.nextLine(); // Clear input buffer for new line
+        if (ReverseVendingMachineStatus.IDLE.equals(rvm.rvmStatus)) {
+            /*
+            If RVM has gone to sleep mode while waiting on user action,
+            return invalid option to wake activate sleep-mode recovery.
+            */
+            return 0;
+        }
         return choice;
     }
 
