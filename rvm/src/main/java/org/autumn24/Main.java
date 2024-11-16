@@ -17,23 +17,19 @@
 
 package org.autumn24;
 
-import org.autumn24.rvm.ReverseVendingMachine;
-
 /**
  * Holds the execution process
+ *
  * @author evnct
  * @since 1.0.0
  */
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("Return assignment for autumn 2024 object oriented programming course");
+	public static void main(String[] args) {
+		System.out.println("Return assignment for autumn 2024 object oriented programming course");
 
-        // Initialize rvm
-        ReverseVendingMachine rvm = new ReverseVendingMachine();
-
-        // Initialize application manager to handle menu actions
-        ApplicationManager AppManager = new ApplicationManager(rvm);
-        AppManager.run();
-    }
+		// Initialize application manager to handle menu actions
+		ApplicationManager AppManager = new ApplicationManager();
+		AppManager.run();
+	}
 
 }
