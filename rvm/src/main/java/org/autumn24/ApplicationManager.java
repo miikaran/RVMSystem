@@ -131,7 +131,11 @@ public class ApplicationManager {
 				rvm.printReceipt();
 				break;
 			case 3:
-				System.out.println("Donating...");
+				if (rvm.recyclingSessionTotalValue == null) {
+					System.out.println("Nothing to donate!\nPlease recycle something in order to donate.");
+					return;
+				}
+				UserInterface.displayCharitySelectionMenu();
 				break;
 			case 4:
 				System.exit(0);
