@@ -24,5 +24,5 @@ import org.autumn24.items.Item;
  * therefore they both implement this interface
  */
 public interface Recycle {
-	void recycleItem(Item item);
+    boolean recycleItem(Item item);
 }
