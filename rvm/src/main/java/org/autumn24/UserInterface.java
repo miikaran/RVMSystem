@@ -17,6 +17,11 @@
 
 package org.autumn24;
 
+import org.autumn24.charity.Charity;
+import org.autumn24.charity.charities.AlzheimerAssociation;
+import org.autumn24.charity.charities.AmnestyInternational;
+import org.autumn24.charity.charities.Greenpeace;
+
 import java.math.BigDecimal;
 
 /**
@@ -27,57 +32,71 @@ import java.math.BigDecimal;
  */
 public class UserInterface {
 
-    public static void displayMenu() {
-        System.out.println("===================");
-        System.out.println("1 ------> INSERT");
-        System.out.println("3 ------> RECEIPT");
-        System.out.println("4 ------> DONATE");
-        System.out.println("5 ------> EXIT");
-        System.out.println();
-        System.out.print("=> ");
-    }
+	public static void displayMenu() {
+		System.out.println("===================");
+		System.out.println("1 ------> INSERT");
+		System.out.println("2 ------> RECEIPT");
+		System.out.println("3 ------> DONATE");
+		System.out.println("4 ------> EXIT");
+		System.out.println();
+		System.out.print("=> ");
+	}
 
-    public static void displayRecyclingInfo(BigDecimal totalValue, short recyclablesLeft, short recycledAmount) {
-        System.out.println();
-        System.out.println(totalValue + "€ " + " Recycled: " + recycledAmount + " Recyclables left: " + recyclablesLeft);
-    }
+	public static void displayRecyclingInfo(BigDecimal totalValue, short recyclablesLeft, short recycledAmount) {
+		System.out.println();
+		System.out.println(totalValue + "€ " + " Recycled: " + recycledAmount + " Recyclables left: " + recyclablesLeft);
+	}
 
-    public static void displayMachineError(String message) {
-        if (message == null || message.isEmpty()) {
-            message = "This machine is not in use";
-        }
-        System.out.println();
-        System.out.println("ERROR ⚠ ");
-        System.out.println(message);
-    }
+	public static void displayMachineError(String message) {
+		if (message == null || message.isEmpty()) {
+			message = "This machine is not in use";
+		}
+		System.out.println();
+		System.out.println("ERROR ⚠ ");
+		System.out.println(message);
+	}
 
-    public static void displayExceptionMenu() {
-        System.out.println();
-        System.out.println("============ERROR MENU================");
-        System.out.println("1 ------> FIX AS EMPLOYEE");
-        System.out.println("2 ------> EXIT");
-        System.out.println();
-        System.out.print("=> ");
-    }
+	public static void displayExceptionMenu() {
+		System.out.println();
+		System.out.println("============ERROR MENU================");
+		System.out.println("1 ------> FIX AS EMPLOYEE");
+		System.out.println("2 ------> EXIT");
+		System.out.println();
+		System.out.print("=> ");
+	}
 
-    public static void displayWrinkledItemMenu() {
-        System.out.println();
-        System.out.println("======================================");
-        System.out.println("1 ------> UNWRINKLE ITEM");
-        System.out.println("2 ------> CONTINUE");
-        System.out.println();
-        System.out.print("=> ");
-    }
+	public static void displayWrinkledItemMenu() {
+		System.out.println();
+		System.out.println("======================================");
+		System.out.println("1 ------> UNWRINKLE ITEM");
+		System.out.println("2 ------> CONTINUE");
+		System.out.println();
+		System.out.print("=> ");
+	}
 
-    // Possible UI views for later 😊
-    public static void displayStats() {
-    } // 📊
+	public static void displayCharitySelectionMenu() {
+		System.out.println("\nSelect a charity you want donate to: ");
+		Charity[] charities = {
+				Greenpeace.createGreenpeace(),
+				AmnestyInternational.createAmnestyInternational(),
+				AlzheimerAssociation.createAlzheimerAssociation()
+		};
+		for (int i = 0; i < charities.length; i++) {
+			Charity charity = charities[0];
+			int placement = i + 1;
+			System.out.printf("%s : %s | %s%n", placement, charity.name(), charity.cause());
+		}
+	}
 
-    public static void displayEcoTip() {
-    } // ♻️
+	// Possible UI views for later 😊
+	public static void displayStats() {
+	} // 📊
 
-    public static void displayBottleAnimation() {
-    } //😲
+	public static void displayEcoTip() {
+	} // ♻️
+
+	public static void displayBottleAnimation() {
+	} //😲
 
 
 }
