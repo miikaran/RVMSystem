@@ -29,7 +29,7 @@ import java.util.Objects;
  * @author evnct
  * @since 1.0.0
  */
-class PlasticBottle extends RecyclableItem implements Item {
+public class PlasticBottle extends RecyclableItem implements Item {
 	private final double[] standardSizes = {0.33, 0.5, 0.95, 1.5, 2.0};
 	private final double[] sizeComparisonValues = {0.35, 1.0};
 	private final double[] redemptionValue = {0.10, 0.20, 0.40};
@@ -37,7 +37,7 @@ class PlasticBottle extends RecyclableItem implements Item {
 
 	private BigDecimal determinedValue;
 
-	public PlasticBottle() throws InvalidItemSizeException {
+	protected PlasticBottle() throws InvalidItemSizeException {
 		super(ItemType.BOTTLE, ItemMaterial.PLASTIC, 0.0);
 		initializeItem(chosenSize, standardSizes);
 	}
