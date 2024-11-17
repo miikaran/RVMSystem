@@ -18,6 +18,8 @@
 package org.autumn24.rvm;
 
 import org.autumn24.Recycle;
+import org.autumn24.charity.Charity;
+import org.autumn24.charity.CharityFactory;
 import org.autumn24.excpetion.InvalidItemMaterialException;
 import org.autumn24.excpetion.MissingItemMaterialException;
 import org.autumn24.items.Item;
@@ -94,6 +96,9 @@ public class ReverseVendingMachine implements Recycle {
             rvmStatus = ReverseVendingMachineStatus.FULL;
             return false;
         }
+        if (wrinkledItemDetected(item)) {
+            return false;
+        }
         increaseRecycledItemsCounter(pile);
         increaseSessionCounters(value);
         return true;
@@ -108,6 +113,13 @@ public class ReverseVendingMachine implements Recycle {
         );
         receipt.displayReceipt();
         return receipt;
+    }
+
+    public Charity donateToCharity(int charityIndex) {
+        Charity charity = CharityFactory.createCharity(charityIndex);
+        System.out.println("Donating " + recyclingSessionTotalValue + "€ to " + charity.name());
+        System.out.println("Thank you for choosing us!");
+        return charity;
     }
 
     public boolean validateRecyclableItem(ItemStatus status, ItemMaterial material) {
@@ -163,9 +175,9 @@ public class ReverseVendingMachine implements Recycle {
     }
 
     public boolean machineIsUsable() {
-        return (ReverseVendingMachineFunctionalStatus.OPERATIONAL.equals(rvmFnStatus)
+        return ReverseVendingMachineFunctionalStatus.OPERATIONAL.equals(rvmFnStatus)
                 && ReverseVendingMachinePowerStatus.ON.equals(rvmPwStatus)
-                && !ReverseVendingMachineStatus.FULL.equals(rvmStatus));
+                && !ReverseVendingMachineStatus.FULL.equals(rvmStatus);
     }
 
     public boolean IsMachineFull() {
@@ -196,6 +208,9 @@ public class ReverseVendingMachine implements Recycle {
     }
 
     public boolean wrinkledItemDetected(Item item) {
+        if (item == null) {
+            return false;
+        }
         return ItemStatus.WRINKLED.equals(item.getItemStatus());
     }
 }

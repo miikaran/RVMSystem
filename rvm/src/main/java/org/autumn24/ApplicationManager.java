@@ -36,158 +36,174 @@ import java.util.Scanner;
  */
 public class ApplicationManager {
 
-	public static final Scanner scanner = new Scanner(System.in);
-	private static final ReverseVendingMachine rvm = new ReverseVendingMachine();
-	private final InactivityTimer inactivityTimer;
-	private final ArrayList<Item> items = new ArrayList<>();
-	public boolean appRunning = false;
+    public static final Scanner scanner = new Scanner(System.in);
+    private static final ReverseVendingMachine rvm = new ReverseVendingMachine();
+    private final InactivityTimer inactivityTimer;
+    private final ArrayList<Item> items = new ArrayList<>();
+    public boolean appRunning = false;
 
-	public ApplicationManager() {
-		this.inactivityTimer = new InactivityTimer(rvm);
-		generateBottles(new ItemFactory());
-		inactivityTimer.resetTimer();
-	}
+    public ApplicationManager() {
+        this.inactivityTimer = new InactivityTimer(rvm);
+        generateBottles(new ItemFactory());
+        inactivityTimer.resetTimer();
+    }
 
-	public static int getUserAction() {
-		if (!scanner.hasNextInt()) {
-			scanner.nextLine(); // Clear invalid input
-			return 0;
-		}
-		int choice = scanner.nextInt();
-		scanner.nextLine(); // Clear input buffer for new line
-		if (ReverseVendingMachineStatus.IDLE.equals(rvm.rvmStatus)) {
+    public static int getUserAction() {
+        if (!scanner.hasNextInt()) {
+            scanner.nextLine(); // Clear invalid input
+            return 0;
+        }
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // Clear input buffer for new line
+        if (ReverseVendingMachineStatus.IDLE.equals(rvm.rvmStatus)) {
             /*
             If RVM has gone to sleep mode while waiting on user action,
-            return invalid option to wake activate sleep-mode recovery.
+            return invalid option to activate sleep-mode recovery.
             */
-			return 0;
-		}
-		return choice;
-	}
+            return 0;
+        }
 
-	public void generateBottles(ItemFactory itemFactory) {
-		System.out.println("\nGenerated bottles: ");
-		for (int i = 0; i < 8; i++) {
-			try {
-				Item item = itemFactory.createItem();
-				System.out.println(item);
-				items.add(item);
-			} catch (InvalidItemSizeException e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
+        return choice;
+    }
 
-	public void run() {
-		appRunning = true;
-		System.out.println("\n\uD83D\uDD0B Starting machine: " + rvm.getRvmId());
-		rvm.startMachine();
-		mainLoop();
-	}
+    public void run() {
+        appRunning = true;
+        System.out.println("\n\uD83D\uDD0B Starting machine: " + rvm.getRvmId());
+        rvm.startMachine();
+        mainLoop();
+    }
 
-	public void mainLoop() {
-		while (appRunning) {
-			try {
-				if (rvm.IsMachineFull()) {
-					handleFullMachine(rvm.getFullPile());
-				}
-				if (rvm.machineIsUsable()) {
-					UserInterface.displayMenu();
-					handleMainMenuActions();
-				}
-			} catch (Exception e) {
-				handleAppException(e);
-			} finally {
-				inactivityTimer.resetTimer();
-			}
-		}
-	}
+    private void mainLoop() {
+        while (appRunning) {
+            try {
+                machineStateToHandler();
+            } catch (Exception e) {
+                handleAppException(e);
+            } finally {
+                inactivityTimer.resetTimer();
+            }
+        }
+    }
 
-	private void handleMainMenuActions() {
-		int userInput = getUserAction();
-		// Gotta put these actions to their own methods later 😊
-		switch (userInput) {
-			case 1:
-				if (rvm.wrinkledItemDetected(items.getFirst())) {
-					handleWrinkledItem(items.getFirst());
-					break;
-				}
-				Item itemToRecycle = items.getFirst();
-				System.out.println("Recycling item: " + itemToRecycle);
-				boolean successfullyRecycled = rvm.recycleItem(itemToRecycle);
-				if (!successfullyRecycled) {
-					break;
-				}
-				short itemsLen = (short) items.size();
-				short recyclablesLeft = (short) (itemsLen - rvm.recyclingSessionRecycledAmount);
-				UserInterface.displayRecyclingInfo(
-						rvm.recyclingSessionTotalValue,
-						recyclablesLeft,
-						rvm.recyclingSessionRecycledAmount
-				);
-				items.remove(itemToRecycle);
-				break;
-			case 2:
-				rvm.printReceipt();
-				break;
-			case 3:
-				if (rvm.recyclingSessionTotalValue == null) {
-					System.out.println("Nothing to donate!\nPlease recycle something in order to donate.");
-					return;
-				}
-				UserInterface.displayCharitySelectionMenu();
-				break;
-			case 4:
-				System.exit(0);
-				break;
-			default:
-				throw new IllegalArgumentException("Invalid option...");
-		}
-	}
+    private void machineStateToHandler() {
+        if (rvm.machineIsUsable()) {
+            handleMainMenuActions();
+        } else if (rvm.IsMachineFull()) {
+            handleFullMachine(rvm.getFullPile());
+        }
+    }
 
-	private void handleFullMachine(String pile) {
-		inactivityTimer.resetTimer();
-		UserInterface.displayMachineError(pile + " Limit Reached");
-		if (rvm.recyclingSessionRecycledAmount > 0) {
-			// Print receipt if in middle of recycling the machine is full.
-			rvm.printReceipt();
-		}
-		UserInterface.displayExceptionMenu();
-		int userInput = getUserAction();
-		switch (userInput) {
-			case 1:
-				System.out.println("Fixing....");
-				break;
-			case 2:
-				System.exit(0);
-			default:
-				throw new IllegalArgumentException("Invalid option...");
-		}
-	}
+    public void generateBottles(ItemFactory itemFactory) {
+        System.out.println("\nGenerated bottles: ");
+        for (int i = 0; i < 8; i++) {
+            try {
+                Item item = itemFactory.createItem();
+                System.out.println(item);
+                items.add(item);
+            } catch (InvalidItemSizeException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
-	private void handleWrinkledItem(Item item) {
-		inactivityTimer.resetTimer();
-		UserInterface.displayMachineError("Can't insert an wrinkled item.");
-		UserInterface.displayWrinkledItemMenu();
-		int userInput = getUserAction();
-		switch (userInput) {
-			case 1:
-				item.setItemStatus(ItemStatus.UNWRINKLED);
-				break;
-			case 2:
-				System.out.println("Resuming...");
-				break;
-			default:
-				throw new IllegalArgumentException("Invalid option...");
-		}
-	}
+    private void handleMainMenuActions() {
+        UserInterface.displayMenu(
+                rvm.recyclingSessionTotalValue,
+                (short) items.size(),
+                rvm.recyclingSessionRecycledAmount
+        );
+        int userInput = getUserAction();
+        switch (userInput) {
+            case 1 -> handleInsert();
+            case 2 -> handleReceipt();
+            case 3 -> handleDonation();
+            case 4 -> appRunning = false;
+            default -> throw new IllegalArgumentException("Invalid option...");
+        }
+    }
 
-	private void handleAppException(Exception e) {
-		if (rvm.isValidSleepModeException(e)) {
-			rvm.exitFromSleepMode();
-			return;
-		}
-		System.out.println("Error notified: " + e.getMessage());
-		System.out.println("Please try again.");
-	}
+    private void handleInsert() {
+        if (items.isEmpty()) {
+            System.out.println("You have recycle all of our bottles!");
+            System.out.println("Choose receipt or donation");
+            return;
+        }
+        Item itemToRecycle = items.getFirst();
+        System.out.println("Inserting item: " + itemToRecycle);
+        if (rvm.wrinkledItemDetected(itemToRecycle)) {
+            handleWrinkledItem(itemToRecycle);
+        }
+        boolean successfullyRecycled = rvm.recycleItem(itemToRecycle);
+        if (!successfullyRecycled) {
+            return;
+        }
+        items.remove(itemToRecycle);
+    }
+
+    private void handleReceipt() {
+        if (rvm.recyclingSessionTotalValue == null) {
+            System.out.println("Recycle something to print a receipt!");
+            return;
+        }
+        rvm.printReceipt();
+    }
+
+    private void handleDonation() {
+        if (rvm.recyclingSessionTotalValue == null) {
+            System.out.println("Nothing to donate!\nPlease recycle something in order to donate.");
+            return;
+        }
+        UserInterface.displayCharitySelectionMenu();
+        int userInput = getUserAction();
+        switch (userInput) {
+            case 1, 2, 3 -> rvm.donateToCharity(userInput);
+            default -> throw new IllegalArgumentException("Invalid option...");
+        }
+    }
+
+    private void handleFullMachine(String pile) {
+        inactivityTimer.resetTimer();
+        UserInterface.displayMachineError(pile + " Limit Reached");
+        if (rvm.recyclingSessionRecycledAmount > 0) {
+            // Print receipt if in middle of recycling the machine is full.
+            rvm.printReceipt();
+        }
+        UserInterface.displayExceptionMenu();
+        int userInput = getUserAction();
+        switch (userInput) {
+            case 1:
+                System.out.println("Fixing....");
+                break;
+            case 2:
+                appRunning = false;
+            default:
+                throw new IllegalArgumentException("Invalid option...");
+        }
+    }
+
+    private void handleWrinkledItem(Item item) {
+        inactivityTimer.resetTimer();
+        UserInterface.displayMachineError("Can't insert an wrinkled item.");
+        UserInterface.displayWrinkledItemMenu();
+        int userInput = getUserAction();
+        switch (userInput) {
+            case 1:
+                item.setItemStatus(ItemStatus.UNWRINKLED);
+                break;
+            case 2:
+                System.out.println("Resuming...");
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid option...");
+        }
+    }
+
+    private void handleAppException(Exception e) {
+        if (rvm.isValidSleepModeException(e)) {
+            rvm.exitFromSleepMode();
+            return;
+        }
+        System.out.println("Error notified: " + e.getMessage());
+        System.out.println("Please try again.");
+    }
 }
