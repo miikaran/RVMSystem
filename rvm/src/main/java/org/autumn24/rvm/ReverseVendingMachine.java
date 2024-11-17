@@ -17,6 +17,7 @@
 
 package org.autumn24.rvm;
 
+import org.autumn24.Donate;
 import org.autumn24.Recycle;
 import org.autumn24.charity.Charity;
 import org.autumn24.charity.CharityFactory;
@@ -35,7 +36,7 @@ import java.util.UUID;
  * @author miikaran
  * @since 1.0.0
  */
-public class ReverseVendingMachine implements Recycle {
+public class ReverseVendingMachine implements Recycle, Donate {
 
     private final String rvmId;
     public short ALUMINIUM_CANS_LIMIT = 3;
@@ -103,6 +104,11 @@ public class ReverseVendingMachine implements Recycle {
         increaseSessionCounters(value);
         return true;
     }
+
+	@Override
+	public void donateToChosenCharity(Charity charity) {
+		System.out.printf("Donated %s to %s%n", recyclingSessionTotalValue, charity.name());
+	}
 
     public Receipt printReceipt() {
         Receipt receipt = new Receipt(

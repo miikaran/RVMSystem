@@ -17,6 +17,8 @@
 
 package org.autumn24;
 
+import org.autumn24.charity.Charity;
+import org.autumn24.charity.CharityFactory;
 import org.autumn24.excpetion.InvalidItemSizeException;
 import org.autumn24.items.Item;
 import org.autumn24.items.ItemFactory;
