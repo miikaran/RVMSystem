@@ -17,6 +17,8 @@
 
 package org.autumn24;
 
+import org.autumn24.charity.Charity;
+import org.autumn24.charity.CharityFactory;
 import org.autumn24.excpetion.InvalidItemSizeException;
 import org.autumn24.items.Item;
 import org.autumn24.items.ItemFactory;
@@ -136,6 +138,11 @@ public class ApplicationManager {
 					return;
 				}
 				UserInterface.displayCharitySelectionMenu();
+				rvm.donateToChosenCharity(handleDonation());
+				/* TODO: Reset stats, but keep the same items that were created if they still exist, for example:
+				    After 1 insert, user decided to donate, he still has those items that are not inserted
+				    but other rvm counters start from their initial value (0).
+				*/
 				break;
 			case 4:
 				System.exit(0);
@@ -143,6 +150,11 @@ public class ApplicationManager {
 			default:
 				throw new IllegalArgumentException("Invalid option...");
 		}
+	}
+
+	private Charity handleDonation() {
+		CharityFactory charityFactory = new CharityFactory();
+		return charityFactory.createCharity();
 	}
 
 	private void handleFullMachine(String pile) {
