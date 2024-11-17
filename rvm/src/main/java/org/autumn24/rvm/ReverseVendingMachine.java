@@ -38,185 +38,185 @@ import java.util.UUID;
  */
 public class ReverseVendingMachine implements Recycle, Donate {
 
-    private final String rvmId;
-    public short ALUMINIUM_CANS_LIMIT = 3;
-    public short GLASS_BOTTLES_LIMIT = 3;
-    public short PLASTIC_BOTTLES_LIMIT = 3;
-    public BigDecimal recyclingSessionTotalValue;
-    public short recyclingSessionRecycledAmount;
+	private final String rvmId;
+	public short ALUMINIUM_CANS_LIMIT = 3;
+	public short GLASS_BOTTLES_LIMIT = 3;
+	public short PLASTIC_BOTTLES_LIMIT = 3;
+	public BigDecimal recyclingSessionTotalValue;
+	public short recyclingSessionRecycledAmount;
 
-    // Keeps count of recycled items
-    public short numberOfAluminiumCansRecycled;
-    public short numberOfGlassBottlesRecycled;
-    public short numberOfPlasticBottlesRecycled;
+	// Keeps count of recycled items
+	public short numberOfAluminiumCansRecycled;
+	public short numberOfGlassBottlesRecycled;
+	public short numberOfPlasticBottlesRecycled;
 
-    // Keeps count of recyclable specific limits
-    public short aluminiumCanLimitCounter;
-    public short glassBottleLimitCounter;
-    public short plasticBottleLimitCounter;
+	// Keeps count of recyclable specific limits
+	public short aluminiumCanLimitCounter;
+	public short glassBottleLimitCounter;
+	public short plasticBottleLimitCounter;
 
-    public ReverseVendingMachineStatus rvmStatus;
-    public ReverseVendingMachineFunctionalStatus rvmFnStatus;
-    public ReverseVendingMachinePowerStatus rvmPwStatus;
+	public ReverseVendingMachineStatus rvmStatus;
+	public ReverseVendingMachineFunctionalStatus rvmFnStatus;
+	public ReverseVendingMachinePowerStatus rvmPwStatus;
 
-    public ReverseVendingMachine() {
-        rvmId = UUID.randomUUID().toString();
-        rvmFnStatus = ReverseVendingMachineFunctionalStatus.OPERATIONAL;
-        rvmPwStatus = ReverseVendingMachinePowerStatus.OFF;
-    }
+	public ReverseVendingMachine() {
+		rvmId = UUID.randomUUID().toString();
+		rvmFnStatus = ReverseVendingMachineFunctionalStatus.OPERATIONAL;
+		rvmPwStatus = ReverseVendingMachinePowerStatus.OFF;
+	}
 
-    public String getRvmId() {
-        return rvmId;
-    }
+	public String getRvmId() {
+		return rvmId;
+	}
 
-    @Override
-    public boolean recycleItem(Item item) {
-        ItemStatus status = item.getItemStatus();
-        ItemMaterial material = item.getItemMaterial();
-        if (!validateRecyclableItem(status, material)) {
-            return false;
-        }
-        BigDecimal value = item.getDeterminedValue();
-        boolean limitReached;
-        RecyclingPile pile = switch (material) {
-            case ALUMINIUM -> {
-                limitReached = IsAluminiumLimitReached();
-                yield RecyclingPile.METAL;
-            }
-            case GLASS -> {
-                limitReached = IsGlassBottleLimitReached();
-                yield RecyclingPile.GLASS;
-            }
-            case PLASTIC -> {
-                limitReached = IsPlasticBottleLimitReached();
-                yield RecyclingPile.PLASTIC;
-            }
-            default -> throw new InvalidItemMaterialException("Material'" + material + "' not found in RecyclingPile.");
-        };
-        if (limitReached) {
-            rvmStatus = ReverseVendingMachineStatus.FULL;
-            return false;
-        }
-        if (wrinkledItemDetected(item)) {
-            return false;
-        }
-        increaseRecycledItemsCounter(pile);
-        increaseSessionCounters(value);
-        return true;
-    }
+	@Override
+	public boolean recycleItem(Item item) {
+		ItemStatus status = item.getItemStatus();
+		ItemMaterial material = item.getItemMaterial();
+		if (!validateRecyclableItem(status, material)) {
+			return false;
+		}
+		BigDecimal value = item.getDeterminedValue();
+		boolean limitReached;
+		RecyclingPile pile = switch (material) {
+			case ALUMINIUM -> {
+				limitReached = IsAluminiumLimitReached();
+				yield RecyclingPile.METAL;
+			}
+			case GLASS -> {
+				limitReached = IsGlassBottleLimitReached();
+				yield RecyclingPile.GLASS;
+			}
+			case PLASTIC -> {
+				limitReached = IsPlasticBottleLimitReached();
+				yield RecyclingPile.PLASTIC;
+			}
+			default -> throw new InvalidItemMaterialException("Material'" + material + "' not found in RecyclingPile.");
+		};
+		if (limitReached) {
+			rvmStatus = ReverseVendingMachineStatus.FULL;
+			return false;
+		}
+		if (wrinkledItemDetected(item)) {
+			return false;
+		}
+		increaseRecycledItemsCounter(pile);
+		increaseSessionCounters(value);
+		return true;
+	}
 
 	@Override
 	public void donateToChosenCharity(Charity charity) {
 		System.out.printf("Donated %s to %s%n", recyclingSessionTotalValue, charity.name());
 	}
 
-    public Receipt printReceipt() {
-        Receipt receipt = new Receipt(
-                numberOfAluminiumCansRecycled,
-                numberOfGlassBottlesRecycled,
-                numberOfPlasticBottlesRecycled,
-                recyclingSessionTotalValue
-        );
-        receipt.displayReceipt();
-        return receipt;
-    }
+	public Receipt printReceipt() {
+		Receipt receipt = new Receipt(
+				numberOfAluminiumCansRecycled,
+				numberOfGlassBottlesRecycled,
+				numberOfPlasticBottlesRecycled,
+				recyclingSessionTotalValue
+		);
+		receipt.displayReceipt();
+		return receipt;
+	}
 
-    public Charity donateToCharity(int charityIndex) {
-        Charity charity = CharityFactory.createCharity(charityIndex);
-        System.out.println("Donating " + recyclingSessionTotalValue + "€ to " + charity.name());
-        System.out.println("Thank you for choosing us!");
-        return charity;
-    }
+	public Charity donateToCharity(int charityIndex) {
+		Charity charity = CharityFactory.createCharity(charityIndex);
+		System.out.println("Donating " + recyclingSessionTotalValue + "€ to " + charity.name());
+		System.out.println("Thank you for choosing us!");
+		return charity;
+	}
 
-    public boolean validateRecyclableItem(ItemStatus status, ItemMaterial material) {
-        if (material == null) {
-            throw new MissingItemMaterialException("Material is type null, ItemMaterial expected");
-        }
-        return !status.equals(ItemStatus.WRINKLED);
-    }
+	public boolean validateRecyclableItem(ItemStatus status, ItemMaterial material) {
+		if (material == null) {
+			throw new MissingItemMaterialException("Material is type null, ItemMaterial expected");
+		}
+		return !status.equals(ItemStatus.WRINKLED);
+	}
 
-    public void increaseRecycledItemsCounter(RecyclingPile pile) {
-        switch (pile) {
-            // Increase number of type X recycled item counters.
-            case METAL: {
-                numberOfAluminiumCansRecycled++;
-                aluminiumCanLimitCounter++;
-                break;
-            }
-            case GLASS: {
-                numberOfGlassBottlesRecycled++;
-                glassBottleLimitCounter++;
-                break;
-            }
-            case PLASTIC: {
-                numberOfPlasticBottlesRecycled++;
-                plasticBottleLimitCounter++;
-                break;
-            }
-        }
-    }
+	public void increaseRecycledItemsCounter(RecyclingPile pile) {
+		switch (pile) {
+			// Increase number of type X recycled item counters.
+			case METAL: {
+				numberOfAluminiumCansRecycled++;
+				aluminiumCanLimitCounter++;
+				break;
+			}
+			case GLASS: {
+				numberOfGlassBottlesRecycled++;
+				glassBottleLimitCounter++;
+				break;
+			}
+			case PLASTIC: {
+				numberOfPlasticBottlesRecycled++;
+				plasticBottleLimitCounter++;
+				break;
+			}
+		}
+	}
 
-    public void increaseSessionCounters(BigDecimal value) {
-        if (recyclingSessionTotalValue == null) {
-            recyclingSessionTotalValue = BigDecimal.ZERO;
-        }
-        recyclingSessionTotalValue = recyclingSessionTotalValue.add(value);
-        recyclingSessionRecycledAmount++;
-    }
+	public void increaseSessionCounters(BigDecimal value) {
+		if (recyclingSessionTotalValue == null) {
+			recyclingSessionTotalValue = BigDecimal.ZERO;
+		}
+		recyclingSessionTotalValue = recyclingSessionTotalValue.add(value);
+		recyclingSessionRecycledAmount++;
+	}
 
-    public void startMachine() {
-        rvmPwStatus = ReverseVendingMachinePowerStatus.ON;
-    }
+	public void startMachine() {
+		rvmPwStatus = ReverseVendingMachinePowerStatus.ON;
+	}
 
-    public void exitFromSleepMode() {
-        if (rvmStatus.equals(ReverseVendingMachineStatus.IDLE)) {
-            System.out.println("\n\uD83D\uDD0B Machine: " + rvmId + " recovering from sleep mode:");
-            rvmStatus = ReverseVendingMachineStatus.IN_USE;
-        }
-    }
+	public void exitFromSleepMode() {
+		if (rvmStatus.equals(ReverseVendingMachineStatus.IDLE)) {
+			System.out.println("\n\uD83D\uDD0B Machine: " + rvmId + " recovering from sleep mode:");
+			rvmStatus = ReverseVendingMachineStatus.IN_USE;
+		}
+	}
 
-    public boolean isValidSleepModeException(Exception e) {
-        // Used to identify exceptions that can be suppressed when recovering from sleepmode
-        return e instanceof IllegalArgumentException && ReverseVendingMachineStatus.IDLE.equals(rvmStatus);
-    }
+	public boolean isValidSleepModeException(Exception e) {
+		// Used to identify exceptions that can be suppressed when recovering from sleepmode
+		return e instanceof IllegalArgumentException && ReverseVendingMachineStatus.IDLE.equals(rvmStatus);
+	}
 
-    public boolean machineIsUsable() {
-        return ReverseVendingMachineFunctionalStatus.OPERATIONAL.equals(rvmFnStatus)
-                && ReverseVendingMachinePowerStatus.ON.equals(rvmPwStatus)
-                && !ReverseVendingMachineStatus.FULL.equals(rvmStatus);
-    }
+	public boolean machineIsUsable() {
+		return ReverseVendingMachineFunctionalStatus.OPERATIONAL.equals(rvmFnStatus)
+				&& ReverseVendingMachinePowerStatus.ON.equals(rvmPwStatus)
+				&& !ReverseVendingMachineStatus.FULL.equals(rvmStatus);
+	}
 
-    public boolean IsMachineFull() {
-        return ReverseVendingMachineStatus.FULL.equals(rvmStatus);
-    }
+	public boolean IsMachineFull() {
+		return ReverseVendingMachineStatus.FULL.equals(rvmStatus);
+	}
 
-    public String getFullPile() {
-        if (IsAluminiumLimitReached()) {
-            return RecyclingPile.METAL.name();
-        } else if (IsPlasticBottleLimitReached()) {
-            return RecyclingPile.PLASTIC.name();
-        } else if (IsGlassBottleLimitReached()) {
-            return RecyclingPile.GLASS.name();
-        }
-        return "";
-    }
+	public String getFullPile() {
+		if (IsAluminiumLimitReached()) {
+			return RecyclingPile.METAL.name();
+		} else if (IsPlasticBottleLimitReached()) {
+			return RecyclingPile.PLASTIC.name();
+		} else if (IsGlassBottleLimitReached()) {
+			return RecyclingPile.GLASS.name();
+		}
+		return "";
+	}
 
-    public boolean IsAluminiumLimitReached() {
-        return ALUMINIUM_CANS_LIMIT == aluminiumCanLimitCounter;
-    }
+	public boolean IsAluminiumLimitReached() {
+		return ALUMINIUM_CANS_LIMIT == aluminiumCanLimitCounter;
+	}
 
-    public boolean IsPlasticBottleLimitReached() {
-        return PLASTIC_BOTTLES_LIMIT == plasticBottleLimitCounter;
-    }
+	public boolean IsPlasticBottleLimitReached() {
+		return PLASTIC_BOTTLES_LIMIT == plasticBottleLimitCounter;
+	}
 
-    public boolean IsGlassBottleLimitReached() {
-        return GLASS_BOTTLES_LIMIT == glassBottleLimitCounter;
-    }
+	public boolean IsGlassBottleLimitReached() {
+		return GLASS_BOTTLES_LIMIT == glassBottleLimitCounter;
+	}
 
-    public boolean wrinkledItemDetected(Item item) {
-        if (item == null) {
-            return false;
-        }
-        return ItemStatus.WRINKLED.equals(item.getItemStatus());
-    }
+	public boolean wrinkledItemDetected(Item item) {
+		if (item == null) {
+			return false;
+		}
+		return ItemStatus.WRINKLED.equals(item.getItemStatus());
+	}
 }

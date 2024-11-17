@@ -22,12 +22,12 @@ import org.autumn24.charity.charities.AmnestyInternational;
 import org.autumn24.charity.charities.Greenpeace;
 
 public class CharityFactory {
-    public static Charity createCharity(int charityIndex) {
-        return switch (charityIndex) {
-            case 1 -> Greenpeace.createGreenpeace();
-            case 2 -> AmnestyInternational.createAmnestyInternational();
-            case 3 -> AlzheimerAssociation.createAlzheimerAssociation();
-            default -> throw new IllegalArgumentException("Unexpected value: " + charityIndex);
-        };
-    }
+	public static Charity createCharity(int charityIndex) {
+		return switch (charityIndex) {
+			case 1 -> Greenpeace.createGreenpeace();
+			case 2 -> AmnestyInternational.createAmnestyInternational();
+			case 3 -> AlzheimerAssociation.createAlzheimerAssociation();
+			default -> throw new IllegalArgumentException("Unexpected value: " + charityIndex);
+		};
+	}
 }

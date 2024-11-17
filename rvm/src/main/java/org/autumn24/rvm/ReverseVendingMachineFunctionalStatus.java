@@ -24,6 +24,6 @@ package org.autumn24.rvm;
  * @since 1.0.0
  */
 public enum ReverseVendingMachineFunctionalStatus {
-    BROKEN,
-    OPERATIONAL
+	BROKEN,
+	OPERATIONAL
 }

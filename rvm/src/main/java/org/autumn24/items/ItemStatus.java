@@ -24,10 +24,10 @@ import java.util.Random;
  * Recycler should unwrinkle it, in order for RVM to handle it.
  */
 public enum ItemStatus {
-    WRINKLED,
-    UNWRINKLED;
+	WRINKLED,
+	UNWRINKLED;
 
-    public static ItemStatus selectRandomStatus() {
-        return ItemStatus.values()[new Random().nextInt(ItemStatus.values().length)];
-    }
+	public static ItemStatus selectRandomStatus() {
+		return ItemStatus.values()[new Random().nextInt(ItemStatus.values().length)];
+	}
 }

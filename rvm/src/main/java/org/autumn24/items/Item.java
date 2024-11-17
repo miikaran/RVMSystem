@@ -32,39 +32,39 @@ import java.util.stream.DoubleStream;
  * @since 1.0.0
  */
 public interface Item {
-    /**
-     * Select random size from standard sizes array
-     *
-     * @param standardSizes double[]
-     * @return double
-     */
-    default double selectRandomSize(double[] standardSizes) {
-        int rnd = new Random().nextInt(standardSizes.length);
-        return standardSizes[rnd];
-    }
+	/**
+	 * Select random size from standard sizes array
+	 *
+	 * @param standardSizes double[]
+	 * @return double
+	 */
+	default double selectRandomSize(double[] standardSizes) {
+		int rnd = new Random().nextInt(standardSizes.length);
+		return standardSizes[rnd];
+	}
 
-    void determineItemValue();
+	void determineItemValue();
 
-    /**
-     * Initializes item with select size and use it to determine the value of the deposited item
-     *
-     * @param chosenSize    double
-     * @param standardSizes double[]
-     * @throws InvalidItemSizeException Throwable
-     */
-    default void initializeItem(double chosenSize, double[] standardSizes) throws InvalidItemSizeException {
-        if (DoubleStream.of(standardSizes).noneMatch(s -> s == chosenSize)) {
-            throw new InvalidItemSizeException("Current size is not in standardSizes array.");
-        }
+	/**
+	 * Initializes item with select size and use it to determine the value of the deposited item
+	 *
+	 * @param chosenSize    double
+	 * @param standardSizes double[]
+	 * @throws InvalidItemSizeException Throwable
+	 */
+	default void initializeItem(double chosenSize, double[] standardSizes) throws InvalidItemSizeException {
+		if (DoubleStream.of(standardSizes).noneMatch(s -> s == chosenSize)) {
+			throw new InvalidItemSizeException("Current size is not in standardSizes array.");
+		}
 
-        determineItemValue();
-    }
+		determineItemValue();
+	}
 
-    BigDecimal getDeterminedValue();
+	BigDecimal getDeterminedValue();
 
-    ItemMaterial getItemMaterial();
+	ItemMaterial getItemMaterial();
 
-    ItemStatus getItemStatus();
+	ItemStatus getItemStatus();
 
-    void setItemStatus(ItemStatus itemStatus);
+	void setItemStatus(ItemStatus itemStatus);
 }

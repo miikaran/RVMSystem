@@ -32,80 +32,80 @@ import java.math.BigDecimal;
  */
 public class UserInterface {
 
-    public static void displayMenu(BigDecimal totalValue, short recyclablesLeft, short recycledAmount) {
-        if (totalValue == null) totalValue = BigDecimal.ZERO;
-        System.out.println();
-        System.out.println(totalValue + "€ " + " Recycled: " + recycledAmount + " Recyclables left: " + recyclablesLeft);
-        System.out.println("===================");
-        System.out.println("1 ------> INSERT");
-        System.out.println("2 ------> RECEIPT");
-        System.out.println("3 ------> DONATE");
-        System.out.println("4 ------> EXIT");
-        System.out.println();
-        System.out.print("=> ");
-    }
+	public static void displayMenu(BigDecimal totalValue, short recyclablesLeft, short recycledAmount) {
+		if (totalValue == null) totalValue = BigDecimal.ZERO;
+		System.out.println();
+		System.out.println(totalValue + "€ " + " Recycled: " + recycledAmount + " Recyclables left: " + recyclablesLeft);
+		System.out.println("===================");
+		System.out.println("1 ------> INSERT");
+		System.out.println("2 ------> RECEIPT");
+		System.out.println("3 ------> DONATE");
+		System.out.println("4 ------> EXIT");
+		System.out.println();
+		System.out.print("=> ");
+	}
 
-    public static void displayMachineError(String message) {
-        if (message == null || message.isEmpty()) {
-            message = "This machine is not in use";
-        }
-        System.out.println();
-        System.out.println("ERROR ⚠ ");
-        System.out.println(message);
-    }
+	public static void displayMachineError(String message) {
+		if (message == null || message.isEmpty()) {
+			message = "This machine is not in use";
+		}
+		System.out.println();
+		System.out.println("ERROR ⚠ ");
+		System.out.println(message);
+	}
 
-    public static void displayExceptionMenu() {
-        System.out.println();
-        System.out.println("============ERROR MENU================");
-        System.out.println("1 ------> FIX AS EMPLOYEE");
-        System.out.println("2 ------> EXIT");
-        System.out.println();
-        System.out.print("=> ");
-    }
+	public static void displayExceptionMenu() {
+		System.out.println();
+		System.out.println("============ERROR MENU================");
+		System.out.println("1 ------> FIX AS EMPLOYEE");
+		System.out.println("2 ------> EXIT");
+		System.out.println();
+		System.out.print("=> ");
+	}
 
-    public static void displayWrinkledItemMenu() {
-        System.out.println();
-        System.out.println("======================================");
-        System.out.println("1 ------> UNWRINKLE ITEM");
-        System.out.println("2 ------> CONTINUE");
-        System.out.println();
-        System.out.print("=> ");
-    }
+	public static void displayWrinkledItemMenu() {
+		System.out.println();
+		System.out.println("======================================");
+		System.out.println("1 ------> UNWRINKLE ITEM");
+		System.out.println("2 ------> CONTINUE");
+		System.out.println();
+		System.out.print("=> ");
+	}
 
-    public static void displayCharitySelectionMenu() {
-        System.out.println();
-        System.out.println("Select a charity you want donate to: ");
-        Charity[] charities = {
-                Greenpeace.createGreenpeace(),
-                AmnestyInternational.createAmnestyInternational(),
-                AlzheimerAssociation.createAlzheimerAssociation()
-        };
-        for (int i = 0; i < charities.length; i++) {
-            Charity charity = charities[i];
-            int placement = i + 1;
-            System.out.printf("%s : %s | %s%n", placement, charity.name(), charity.cause());
-        }
-        System.out.println();
-        System.out.print("=> ");
-    }
+	public static void displayCharitySelectionMenu() {
+		System.out.println();
+		System.out.println("Select a charity you want donate to: ");
+		Charity[] charities = {
+				Greenpeace.createGreenpeace(),
+				AmnestyInternational.createAmnestyInternational(),
+				AlzheimerAssociation.createAlzheimerAssociation()
+		};
+		for (int i = 0; i < charities.length; i++) {
+			Charity charity = charities[i];
+			int placement = i + 1;
+			System.out.printf("%s : %s | %s%n", placement, charity.name(), charity.cause());
+		}
+		System.out.println();
+		System.out.print("=> ");
+	}
 
-    public static void clearScreen() {
+	public static void clearScreen() {
         /*
         (tää toimii mul vaan jos suorittaa eri terminaalis tän ohjelman)
         System.out.println("\033[H\033[2J");
         System.out.flush();
         */
-    }
+	}
 
-    // Possible UI views for later 😊
-    public static void displayStats() {
-    } // 📊
+	// Possible UI views for later 😊
+	public static void displayStats() {
+	} // 📊
 
-    public static void displayEcoTip() {
-    } // ♻️
+	public static void displayEcoTip() {
+	} // ♻️
 
-    public static void displayBottleAnimation() {
-    } //😲
+	public static void displayBottleAnimation() {
+	} //😲
 
 
 }

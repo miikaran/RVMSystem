@@ -30,68 +30,68 @@ import java.util.Objects;
  * @since 1.0.0
  */
 class AluminiumCan extends RecyclableItem implements Item {
-    private final double[] standardSizes = {0.25, 0.33, 0.5};
-    private final double VALUE_FOR_ALL_CANS = 0.15;
-    private final double chosenSize = selectRandomSize(standardSizes);
+	private final double[] standardSizes = {0.25, 0.33, 0.5};
+	private final double VALUE_FOR_ALL_CANS = 0.15;
+	private final double chosenSize = selectRandomSize(standardSizes);
 
-    private BigDecimal determinedValue;
+	private BigDecimal determinedValue;
 
-    public AluminiumCan() throws InvalidItemSizeException {
-        super(ItemType.CAN, ItemMaterial.ALUMINIUM, 0.0);
-        initializeItem(chosenSize, standardSizes);
-    }
+	public AluminiumCan() throws InvalidItemSizeException {
+		super(ItemType.CAN, ItemMaterial.ALUMINIUM, 0.0);
+		initializeItem(chosenSize, standardSizes);
+	}
 
-    @Override
-    public BigDecimal getDeterminedValue() {
-        return determinedValue;
-    }
+	@Override
+	public BigDecimal getDeterminedValue() {
+		return determinedValue;
+	}
 
-    @Override
-    public ItemStatus getItemStatus() {
-        return itemStatus;
-    }
+	@Override
+	public ItemStatus getItemStatus() {
+		return itemStatus;
+	}
 
-    @Override
-    public void setItemStatus(ItemStatus itemStatus) {
-        this.itemStatus = itemStatus;
-    }
+	@Override
+	public void setItemStatus(ItemStatus itemStatus) {
+		this.itemStatus = itemStatus;
+	}
 
-    /**
-     * All aluminium cans are valued as 0.15 €
-     * No matter the size.
-     */
-    @Override
-    public void determineItemValue() {
-        determinedValue = BigDecimal.valueOf(VALUE_FOR_ALL_CANS);
-    }
+	/**
+	 * All aluminium cans are valued as 0.15 €
+	 * No matter the size.
+	 */
+	@Override
+	public void determineItemValue() {
+		determinedValue = BigDecimal.valueOf(VALUE_FOR_ALL_CANS);
+	}
 
-    @Override
-    public String toString() {
-        return "AluminiumCan{" +
-                "standardSizes=" + Arrays.toString(standardSizes) +
-                ", VALUE_FOR_ALL_CANS=" + VALUE_FOR_ALL_CANS +
-                ", chosenSize=" + chosenSize +
-                ", determinedValue=" + determinedValue +
-                ", itemStatus=" + this.getItemStatus() +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "AluminiumCan{" +
+				"standardSizes=" + Arrays.toString(standardSizes) +
+				", VALUE_FOR_ALL_CANS=" + VALUE_FOR_ALL_CANS +
+				", chosenSize=" + chosenSize +
+				", determinedValue=" + determinedValue +
+				", itemStatus=" + this.getItemStatus() +
+				'}';
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        AluminiumCan that = (AluminiumCan) o;
-        return Double.compare(chosenSize, that.chosenSize) == 0
-                && Objects.deepEquals(standardSizes, that.standardSizes)
-                && Objects.equals(determinedValue, that.determinedValue)
-                && Objects.equals(getItemStatus(), that.getItemStatus()
-        );
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (o == null || getClass() != o.getClass()) return false;
+		AluminiumCan that = (AluminiumCan) o;
+		return Double.compare(chosenSize, that.chosenSize) == 0
+				&& Objects.deepEquals(standardSizes, that.standardSizes)
+				&& Objects.equals(determinedValue, that.determinedValue)
+				&& Objects.equals(getItemStatus(), that.getItemStatus()
+		);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(
-                Arrays.hashCode(standardSizes),
-                VALUE_FOR_ALL_CANS, chosenSize, determinedValue, getItemStatus()
-        );
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(
+				Arrays.hashCode(standardSizes),
+				VALUE_FOR_ALL_CANS, chosenSize, determinedValue, getItemStatus()
+		);
+	}
 }

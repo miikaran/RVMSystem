@@ -24,7 +24,7 @@ package org.autumn24.rvm;
  * @since 1.0.0
  */
 public enum ReverseVendingMachineStatus {
-    IN_USE,
-    IDLE,
-    FULL
+	IN_USE,
+	IDLE,
+	FULL
 }

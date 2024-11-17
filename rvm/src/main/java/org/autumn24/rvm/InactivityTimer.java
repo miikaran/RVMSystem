@@ -28,34 +28,34 @@ import java.util.TimerTask;
  */
 public class InactivityTimer {
 
-    public static int INACTIVITY_TIMEOUT_MS = 5000;
-    public Timer inactivityTimer;
-    public TimerTask inactivityTimerTask;
-    public ReverseVendingMachine rvm;
+	public static int INACTIVITY_TIMEOUT_MS = 10000;
+	public Timer inactivityTimer;
+	public TimerTask inactivityTimerTask;
+	public ReverseVendingMachine rvm;
 
-    public InactivityTimer(ReverseVendingMachine rvm) {
-        inactivityTimer = new Timer(true);
-        this.rvm = rvm;
-    }
+	public InactivityTimer(ReverseVendingMachine rvm) {
+		inactivityTimer = new Timer(true);
+		this.rvm = rvm;
+	}
 
-    public void resetTimer() {
-        if (inactivityTimerTask != null) {
-            inactivityTimerTask.cancel();
-        }
-        inactivityTimerTask = new TimerTask() {
-            @Override
-            public void run() {
-                onInactivityTimeout(rvm);
-            }
-        };
-        inactivityTimer.schedule(inactivityTimerTask, INACTIVITY_TIMEOUT_MS);
-    }
+	public void resetTimer() {
+		if (inactivityTimerTask != null) {
+			inactivityTimerTask.cancel();
+		}
+		inactivityTimerTask = new TimerTask() {
+			@Override
+			public void run() {
+				onInactivityTimeout(rvm);
+			}
+		};
+		inactivityTimer.schedule(inactivityTimerTask, INACTIVITY_TIMEOUT_MS);
+	}
 
-    public void onInactivityTimeout(ReverseVendingMachine rvm) {
-        // This method could later be passed as a parameter to this class, but this is gud for now 😎
-        System.out.println("\n\nMachine ID: '" + rvm.getRvmId() + "' - Entering sleep mode \uD83D\uDCA4");
-        rvm.rvmStatus = ReverseVendingMachineStatus.IDLE;
-        System.out.println("Press any key to wake it back up.");
-    }
+	public void onInactivityTimeout(ReverseVendingMachine rvm) {
+		// This method could later be passed as a parameter to this class, but this is gud for now 😎
+		System.out.println("\n\nMachine ID: '" + rvm.getRvmId() + "' - Entering sleep mode \uD83D\uDCA4");
+		rvm.rvmStatus = ReverseVendingMachineStatus.IDLE;
+		System.out.println("Press any key to wake it back up.");
+	}
 
 }
