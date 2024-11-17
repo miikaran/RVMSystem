@@ -17,19 +17,17 @@
 
 package org.autumn24.charity;
 
-import org.autumn24.ApplicationManager;
 import org.autumn24.charity.charities.AlzheimerAssociation;
 import org.autumn24.charity.charities.AmnestyInternational;
 import org.autumn24.charity.charities.Greenpeace;
 
 public class CharityFactory {
-	public Charity createCharity() {
-		int chosenCharity = ApplicationManager.getUserAction();
-		return switch (chosenCharity) {
-			case 1 -> Greenpeace.createGreenpeace();
-			case 2 -> AmnestyInternational.createAmnestyInternational();
-			case 3 -> AlzheimerAssociation.createAlzheimerAssociation();
-			default -> throw new IllegalArgumentException("Unexpected value: " + chosenCharity);
-		};
-	}
+    public static Charity createCharity(int charityIndex) {
+        return switch (charityIndex) {
+            case 1 -> Greenpeace.createGreenpeace();
+            case 2 -> AmnestyInternational.createAmnestyInternational();
+            case 3 -> AlzheimerAssociation.createAlzheimerAssociation();
+            default -> throw new IllegalArgumentException("Unexpected value: " + charityIndex);
+        };
+    }
 }
