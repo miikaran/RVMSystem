@@ -21,4 +21,9 @@ public class GuestRecycler extends User implements Recycler {
 	public GuestRecycler() {
 		super("Guest", "Guest", "guest");
 	}
+
+	@Override
+	public String toString() {
+		return "GuestRecycler{}";
+	}
 }

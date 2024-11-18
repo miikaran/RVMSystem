@@ -42,4 +42,12 @@ public class RegisteredRecycler extends User implements Recycler {
 	public void setRedeemedTotalValue(short redeemedTotalValue) {
 		this.redeemedTotalValue = redeemedTotalValue;
 	}
+
+	@Override
+	public String toString() {
+		return "RegisteredRecycler{" +
+				"totalBottlesRecycled=" + totalBottlesRecycled +
+				", redeemedTotalValue=" + redeemedTotalValue +
+				'}';
+	}
 }

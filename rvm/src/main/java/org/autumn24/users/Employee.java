@@ -36,4 +36,12 @@ public class Employee extends User {
 	public String getEmployeeId() {
 		return employeeId;
 	}
+
+	@Override
+	public String toString() {
+		return "Employee{" +
+				"employeeId='" + employeeId + '\'' +
+				", canRepairRvm=" + canRepairRvm +
+				'}';
+	}
 }
