@@ -1,0 +1,17 @@
+{
+  "userData": [
+    {
+      "userName": "Miihael",
+      "userId": "123",
+      "userRole": "guest"
+    },
+    {
+      "userName": "Juuppelis",
+      "userId": "456",
+      "userRole": "recycler",
+      "totalBottlesRecycled": 5,
+      "redemeedTotalValue": 50
+    }
+  ],
+  "rvmData": {}
+}
