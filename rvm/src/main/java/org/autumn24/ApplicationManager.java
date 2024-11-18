@@ -195,10 +195,11 @@ public class ApplicationManager {
 		}
 		boolean userAuthenticated = authManager.authenticateUser(userId);
 		if (userAuthenticated) {
-			User authUser = authManager.getUserById(userId);
-			System.out.println("User " + authUser.getUserName() + " authenticated successfully.");
 			user = authManager.getUserById(userId);
+			System.out.println("User " + user.getUserName() + " authenticated successfully.");
+			return;
 		}
+		System.out.println("User authentication failed...");
 	}
 
 	private void handleFullMachine(String pile) {

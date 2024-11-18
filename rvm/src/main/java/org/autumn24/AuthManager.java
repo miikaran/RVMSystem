@@ -30,21 +30,11 @@ public class AuthManager {
 
 	public boolean authenticateUser(String userId) {
 		ArrayList<User> userData = appDataManager.appData.getUserData();
-		for (User user : userData) {
-			if (user.getUserId().equals(userId)) {
-				return true;
-			}
-		}
-		return false;
+		return userData.stream().anyMatch(user -> user.getUserId().equals(userId));
 	}
 
 	public User getUserById(String userId) {
 		ArrayList<User> userData = appDataManager.appData.getUserData();
-		for (User user : userData) {
-			if (user.getUserId().equals(userId)) {
-				return user;
-			}
-		}
-		return null;
+		return userData.stream().filter(user -> user.getUserId().equals(userId)).findFirst().get();
 	}
 }
