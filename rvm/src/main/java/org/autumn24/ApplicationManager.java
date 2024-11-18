@@ -24,13 +24,10 @@ import org.autumn24.items.ItemStatus;
 import org.autumn24.rvm.InactivityTimer;
 import org.autumn24.rvm.ReverseVendingMachine;
 import org.autumn24.rvm.enums.ReverseVendingMachineStatus;
-import org.autumn24.users.Employee;
 import org.autumn24.users.GuestRecycler;
-import org.autumn24.users.RegisteredRecycler;
 import org.autumn24.users.User;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -42,14 +39,19 @@ import java.util.Scanner;
 public class ApplicationManager {
 
 	public static final Scanner scanner = new Scanner(System.in);
-	public static final ReverseVendingMachine rvm = new ReverseVendingMachine();
+	private static final ArrayList<Item> items = new ArrayList<>();
+	private static ReverseVendingMachine rvm;
+	private static AppDataManager appDataManager;
+	private static AuthManager authManager;
 	private final InactivityTimer inactivityTimer;
-	private final ArrayList<Item> items = new ArrayList<>();
 	public boolean appRunning = false;
 	private User user = new GuestRecycler();
 
 	public ApplicationManager() {
-		this.inactivityTimer = new InactivityTimer(rvm);
+		rvm = new ReverseVendingMachine();
+		inactivityTimer = new InactivityTimer(rvm);
+		appDataManager = new AppDataManager("appData.json");
+		authManager = new AuthManager(appDataManager);
 		generateBottles(new ItemFactory());
 	}
 
@@ -67,16 +69,15 @@ public class ApplicationManager {
             */
 			return 0;
 		}
-
 		return choice;
 	}
 
 	public void run() {
-		appRunning = true;
-		System.out.println("\n\uD83D\uDD0B Starting machine: " + rvm.getRvmId());
-		rvm.startMachine();
-		inactivityTimer.resetTimer();
-		mainLoop();
+		appRunning = true;                      // 1. Set app running
+		rvm.startMachine();                     // 2. Start reverse vending machine
+		appDataManager.loadAppData();           // 3. Read application data (user, rvm)
+		inactivityTimer.resetTimer();           // 4. Start inactivity timer
+		mainLoop();                             // 5. Start main loop of the application to allow user actions
 	}
 
 	private void mainLoop() {
@@ -178,39 +179,12 @@ public class ApplicationManager {
 			System.out.print("=> ");
 			userId = scanner.nextLine();
 		}
-		HashMap<String, Object> authData = new HashMap<>(); // UserManager.isAuthenticated(userId)
-		authData.put("success", true);
-		authData.put("role", "recycler");
-		boolean success = (boolean) authData.get("success");
-		String role = (String) authData.get("role");
-		if (!success) {
-			System.out.println("User authentication failed :(");
-			return;
+		boolean userAuthenticated = authManager.authenticateUser(userId);
+		if (userAuthenticated) {
+			User authUser = authManager.getUserById(userId);
+			System.out.println("User " + authUser.getUserName() + " authenticated successfully.");
+			user = authManager.getUserById(userId);
 		}
-		if (role.isEmpty()) {
-			System.out.println("Role not found for user id: " + userId);
-			return;
-		}
-		switch (role) {
-			case "guest":
-				// user = gson.fromJson(reader, Employee.class)
-				user = new GuestRecycler();
-				System.out.println("Guest authenticated successfully!");
-				break;
-			case "recycler":
-				// user = gson.fromJson(reader, RegisteredRecycler.class)
-				user = new RegisteredRecycler("miihael", userId, "recycler", (short) 123, (short) 123);
-				System.out.println("Recycler authenticated successfully!");
-				break;
-			case "admin":
-				// user = gson.fromJson(reader, Employee.class)
-				user = new Employee(userId, true, "Juuso", "Jepulis");
-				System.out.println("Admin authenticated successfully!");
-				break;
-			default:
-				throw new IllegalArgumentException("Invalid role: " + role);
-		}
-
 	}
 
 	private void handleFullMachine(String pile) {
@@ -257,5 +231,6 @@ public class ApplicationManager {
 		}
 		System.out.println("Error notified: " + e.getMessage());
 		System.out.println("Please try again.");
+		System.exit(0);
 	}
 }
