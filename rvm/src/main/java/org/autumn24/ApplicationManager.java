@@ -17,7 +17,7 @@
 
 package org.autumn24;
 
-import org.autumn24.excpetion.InvalidItemSizeException;
+import org.autumn24.exceptions.InvalidItemSizeException;
 import org.autumn24.items.Item;
 import org.autumn24.items.ItemFactory;
 import org.autumn24.items.ItemStatus;

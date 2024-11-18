@@ -17,7 +17,7 @@
 
 package org.autumn24.items;
 
-import org.autumn24.excpetion.InvalidItemSizeException;
+import org.autumn24.exceptions.InvalidItemSizeException;
 
 import java.util.Random;
 
