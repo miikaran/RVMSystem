@@ -17,7 +17,7 @@
 
 package org.autumn24.items;
 
-import org.autumn24.excpetion.InvalidItemSizeException;
+import org.autumn24.exceptions.InvalidItemSizeException;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -29,7 +29,7 @@ import java.util.Objects;
  * @author evnct
  * @since 1.0.0
  */
-class GlassBottle extends RecyclableItem implements Item {
+public class GlassBottle extends RecyclableItem implements Item {
 	private final double[] standardSizes = {0.25, 0.33, 0.5, 0.75, 1.0, 1.5, 2.0};
 	private final double litreComparisonValue = 1.0;
 	private final double[] redemptionValue = {0.10, 0.40};
@@ -37,7 +37,7 @@ class GlassBottle extends RecyclableItem implements Item {
 
 	private BigDecimal determinedValue;
 
-	public GlassBottle() throws InvalidItemSizeException {
+	protected GlassBottle() throws InvalidItemSizeException {
 		super(ItemType.BOTTLE, ItemMaterial.GLASS, 0.0);
 		initializeItem(chosenSize, standardSizes);
 	}

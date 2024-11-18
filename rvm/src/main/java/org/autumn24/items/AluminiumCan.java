@@ -17,7 +17,7 @@
 
 package org.autumn24.items;
 
-import org.autumn24.excpetion.InvalidItemSizeException;
+import org.autumn24.exceptions.InvalidItemSizeException;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -29,14 +29,14 @@ import java.util.Objects;
  * @author evnct
  * @since 1.0.0
  */
-class AluminiumCan extends RecyclableItem implements Item {
+public class AluminiumCan extends RecyclableItem implements Item {
 	private final double[] standardSizes = {0.25, 0.33, 0.5};
 	private final double VALUE_FOR_ALL_CANS = 0.15;
 	private final double chosenSize = selectRandomSize(standardSizes);
 
 	private BigDecimal determinedValue;
 
-	public AluminiumCan() throws InvalidItemSizeException {
+	protected AluminiumCan() throws InvalidItemSizeException {
 		super(ItemType.CAN, ItemMaterial.ALUMINIUM, 0.0);
 		initializeItem(chosenSize, standardSizes);
 	}

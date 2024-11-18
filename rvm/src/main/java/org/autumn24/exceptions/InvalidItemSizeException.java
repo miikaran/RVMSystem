@@ -15,20 +15,17 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.autumn24.excpetion;
+package org.autumn24.exceptions;
 
 /**
- * Thrown when recycled item material is not found in RecyclingPile enum.
+ * Thrown when generated random size chosen from the standardSizes array is not
+ * from the array or has unpredictable size which will affect the whole program.
  *
- * @author miikaran
+ * @author evnct
  * @since 1.0.0
  */
-public class InvalidItemMaterialException extends RuntimeException {
-	public InvalidItemMaterialException(String message) {
+public class InvalidItemSizeException extends Throwable {
+	public InvalidItemSizeException(String message) {
 		super(message);
-	}
-
-	public InvalidItemMaterialException(String message, Throwable cause) {
-		super(message, cause);
 	}
 }

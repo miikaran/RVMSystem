@@ -15,16 +15,20 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.autumn24.excpetion;
+package org.autumn24.exceptions;
 
 /**
- * Thrown when recycled item material is null or empty.
+ * Thrown when recycled item material is not found in RecyclingPile enum.
  *
  * @author miikaran
  * @since 1.0.0
  */
-public class MissingItemMaterialException extends RuntimeException {
-	public MissingItemMaterialException(String message) {
+public class InvalidItemMaterialException extends RuntimeException {
+	public InvalidItemMaterialException(String message) {
 		super(message);
+	}
+
+	public InvalidItemMaterialException(String message, Throwable cause) {
+		super(message, cause);
 	}
 }

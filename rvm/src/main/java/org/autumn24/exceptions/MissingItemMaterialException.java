@@ -15,17 +15,16 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.autumn24.excpetion;
+package org.autumn24.exceptions;
 
 /**
- * Thrown when generated random size chosen from the standardSizes array is not
- * from the array or has unpredictable size which will affect the whole program.
+ * Thrown when recycled item material is null or empty.
  *
- * @author evnct
+ * @author miikaran
  * @since 1.0.0
  */
-public class InvalidItemSizeException extends Throwable {
-	public InvalidItemSizeException(String message) {
+public class MissingItemMaterialException extends RuntimeException {
+	public MissingItemMaterialException(String message) {
 		super(message);
 	}
 }

@@ -17,7 +17,7 @@
 
 package org.autumn24.items;
 
-import org.autumn24.excpetion.InvalidItemSizeException;
+import org.autumn24.exceptions.InvalidItemSizeException;
 
 import java.util.Random;
 
@@ -29,18 +29,30 @@ import java.util.Random;
  * @since 1.0.0
  */
 public class ItemFactory {
+	public static AluminiumCan createAluminiumCan() throws InvalidItemSizeException {
+		return new AluminiumCan();
+	}
+
+	public static GlassBottle createGlassBottle() throws InvalidItemSizeException {
+		return new GlassBottle();
+	}
+
+	public static PlasticBottle createPlasticBottle() throws InvalidItemSizeException {
+		return new PlasticBottle();
+	}
+
 	/**
 	 * @return Item
-	 * @throws InvalidItemSizeException
+	 * @throws InvalidItemSizeException when size of an item is not a standard size.
 	 */
 	public Item createItem() throws InvalidItemSizeException {
 		Random random = new Random();
 		int itemToCreate = random.nextInt(3);
 
 		return switch (itemToCreate) {
-			case 0 -> new AluminiumCan();
-			case 1 -> new GlassBottle();
-			case 2 -> new PlasticBottle();
+			case 0 -> createAluminiumCan();
+			case 1 -> createGlassBottle();
+			case 2 -> createPlasticBottle();
 			default -> null;
 		};
 	}
