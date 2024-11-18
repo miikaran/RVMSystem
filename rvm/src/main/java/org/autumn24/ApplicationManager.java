@@ -27,6 +27,7 @@ import org.autumn24.rvm.enums.ReverseVendingMachineStatus;
 import org.autumn24.users.GuestRecycler;
 import org.autumn24.users.User;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -149,25 +150,38 @@ public class ApplicationManager {
 	}
 
 	private void handleReceipt() {
-		if (rvm.recyclingSessionTotalValue == null) {
+		if (notValidSessionTotal()) {
 			System.out.println("Recycle something to print a receipt!");
 			return;
 		}
 		rvm.printReceipt();
+		totalValueResetAfterProcessing();
 	}
 
 	private void handleDonation() {
-		inactivityTimer.resetTimer();
-		if (rvm.recyclingSessionTotalValue == null) {
+		if (notValidSessionTotal()) {
 			System.out.println("Nothing to donate!\nPlease recycle something in order to donate.");
 			return;
 		}
+
+		inactivityTimer.resetTimer();
 		UserInterface.displayCharitySelectionMenu();
 		int userInput = getUserAction();
 		switch (userInput) {
 			case 1, 2, 3 -> rvm.donateToCharity(userInput);
 			default -> throw new IllegalArgumentException("Invalid option...");
 		}
+		totalValueResetAfterProcessing();
+	}
+
+	private void totalValueResetAfterProcessing() {
+		rvm.recyclingSessionTotalValue = BigDecimal.valueOf(0.0);
+	}
+
+	private boolean notValidSessionTotal() {
+		return rvm.recyclingSessionTotalValue == null
+				|| rvm.recyclingSessionTotalValue.equals(BigDecimal.valueOf(0.0)
+		);
 	}
 
 	private void handleUserAuth() {

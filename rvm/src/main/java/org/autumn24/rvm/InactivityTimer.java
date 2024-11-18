@@ -17,6 +17,8 @@
 
 package org.autumn24.rvm;
 
+import org.autumn24.rvm.enums.ReverseVendingMachineStatus;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
