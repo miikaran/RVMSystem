@@ -40,6 +40,7 @@ public class UserInterface {
 		System.out.println("1 ------> INSERT");
 		System.out.println("2 ------> RECEIPT");
 		System.out.println("3 ------> DONATE");
+		System.out.println("4 ------> SCAN USER ID");
 		System.out.println("4 ------> EXIT");
 		System.out.println();
 		System.out.print("=> ");
