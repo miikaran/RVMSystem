@@ -23,9 +23,14 @@ import org.autumn24.items.ItemFactory;
 import org.autumn24.items.ItemStatus;
 import org.autumn24.rvm.InactivityTimer;
 import org.autumn24.rvm.ReverseVendingMachine;
-import org.autumn24.rvm.ReverseVendingMachineStatus;
+import org.autumn24.rvm.enums.ReverseVendingMachineStatus;
+import org.autumn24.users.Employee;
+import org.autumn24.users.GuestRecycler;
+import org.autumn24.users.RegisteredRecycler;
+import org.autumn24.users.User;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 /**
@@ -37,15 +42,15 @@ import java.util.Scanner;
 public class ApplicationManager {
 
 	public static final Scanner scanner = new Scanner(System.in);
-	private static final ReverseVendingMachine rvm = new ReverseVendingMachine();
+	public static final ReverseVendingMachine rvm = new ReverseVendingMachine();
 	private final InactivityTimer inactivityTimer;
 	private final ArrayList<Item> items = new ArrayList<>();
 	public boolean appRunning = false;
+	private User user = new GuestRecycler();
 
 	public ApplicationManager() {
 		this.inactivityTimer = new InactivityTimer(rvm);
 		generateBottles(new ItemFactory());
-		inactivityTimer.resetTimer();
 	}
 
 	public static int getUserAction() {
@@ -70,6 +75,7 @@ public class ApplicationManager {
 		appRunning = true;
 		System.out.println("\n\uD83D\uDD0B Starting machine: " + rvm.getRvmId());
 		rvm.startMachine();
+		inactivityTimer.resetTimer();
 		mainLoop();
 	}
 
@@ -117,7 +123,8 @@ public class ApplicationManager {
 			case 1 -> handleInsert();
 			case 2 -> handleReceipt();
 			case 3 -> handleDonation();
-			case 4 -> appRunning = false;
+			case 4 -> handleUserAuth();
+			case 5 -> appRunning = false;
 			default -> throw new IllegalArgumentException("Invalid option...");
 		}
 	}
@@ -149,6 +156,7 @@ public class ApplicationManager {
 	}
 
 	private void handleDonation() {
+		inactivityTimer.resetTimer();
 		if (rvm.recyclingSessionTotalValue == null) {
 			System.out.println("Nothing to donate!\nPlease recycle something in order to donate.");
 			return;
@@ -159,6 +167,50 @@ public class ApplicationManager {
 			case 1, 2, 3 -> rvm.donateToCharity(userInput);
 			default -> throw new IllegalArgumentException("Invalid option...");
 		}
+	}
+
+	private void handleUserAuth() {
+		inactivityTimer.resetTimer();
+		System.out.print("Enter user id: ");
+		String userId = scanner.nextLine();
+		while (userId.isEmpty()) {
+			System.out.println("Try again...");
+			System.out.print("=> ");
+			userId = scanner.nextLine();
+		}
+		HashMap<String, Object> authData = new HashMap<>(); // UserManager.isAuthenticated(userId)
+		authData.put("success", true);
+		authData.put("role", "recycler");
+		boolean success = (boolean) authData.get("success");
+		String role = (String) authData.get("role");
+		if (!success) {
+			System.out.println("User authentication failed :(");
+			return;
+		}
+		if (role.isEmpty()) {
+			System.out.println("Role not found for user id: " + userId);
+			return;
+		}
+		switch (role) {
+			case "guest":
+				// user = gson.fromJson(reader, Employee.class)
+				user = new GuestRecycler();
+				System.out.println("Guest authenticated successfully!");
+				break;
+			case "recycler":
+				// user = gson.fromJson(reader, RegisteredRecycler.class)
+				user = new RegisteredRecycler("miihael", userId, "recycler", (short) 123, (short) 123);
+				System.out.println("Recycler authenticated successfully!");
+				break;
+			case "admin":
+				// user = gson.fromJson(reader, Employee.class)
+				user = new Employee(userId, true, "Juuso", "Jepulis");
+				System.out.println("Admin authenticated successfully!");
+				break;
+			default:
+				throw new IllegalArgumentException("Invalid role: " + role);
+		}
+
 	}
 
 	private void handleFullMachine(String pile) {
