@@ -30,6 +30,18 @@ public class User {
 		this.userRole = userRole;
 	}
 
+	public String getUserName() {
+		return userName;
+	}
+
+	public String getUserRole() {
+		return userRole;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -41,5 +53,14 @@ public class User {
 	@Override
 	public int hashCode() {
 		return Objects.hash(userName, userId, userRole);
+	}
+
+	@Override
+	public String toString() {
+		return "User{" +
+				"userName='" + userName + '\'' +
+				", userId='" + userId + '\'' +
+				", userRole='" + userRole + '\'' +
+				'}';
 	}
 }
