@@ -26,6 +26,10 @@ import org.autumn24.excpetion.MissingItemMaterialException;
 import org.autumn24.items.Item;
 import org.autumn24.items.ItemMaterial;
 import org.autumn24.items.ItemStatus;
+import org.autumn24.rvm.enums.ReverseVendingMachineAuthStatus;
+import org.autumn24.rvm.enums.ReverseVendingMachineFunctionalStatus;
+import org.autumn24.rvm.enums.ReverseVendingMachinePowerStatus;
+import org.autumn24.rvm.enums.ReverseVendingMachineStatus;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -58,11 +62,13 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	public ReverseVendingMachineStatus rvmStatus;
 	public ReverseVendingMachineFunctionalStatus rvmFnStatus;
 	public ReverseVendingMachinePowerStatus rvmPwStatus;
+	public ReverseVendingMachineAuthStatus rvmAuthStatus;
 
 	public ReverseVendingMachine() {
 		rvmId = UUID.randomUUID().toString();
 		rvmFnStatus = ReverseVendingMachineFunctionalStatus.OPERATIONAL;
 		rvmPwStatus = ReverseVendingMachinePowerStatus.OFF;
+		rvmAuthStatus = ReverseVendingMachineAuthStatus.GUEST;
 	}
 
 	public String getRvmId() {
