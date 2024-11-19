@@ -53,9 +53,9 @@ public class ReverseVendingMachine implements Recycle, Donate {
 			ItemMaterial.ALUMINIUM, RecyclingPile.METAL,
 			ItemMaterial.PLASTIC, RecyclingPile.PLASTIC
 	);
-	public transient ReverseVendingMachineStatus rvmStatus;
 	public ReverseVendingMachineFunctionalStatus rvmFnStatus;
 	public ReverseVendingMachinePowerStatus rvmPwStatus;
+	private transient ReverseVendingMachineStatus rvmStatus;
 
 	public ReverseVendingMachine() {
 		rvmId = UUID.randomUUID().toString();
@@ -79,7 +79,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 		RecyclableData recyclableData = recyclables.get(material);
 		boolean limitReached = recyclableData.isLimitReached();
 		if (limitReached) {
-			rvmStatus = ReverseVendingMachineStatus.FULL;
+			setRvmStatus(ReverseVendingMachineStatus.FULL);
 			return false;
 		}
 		RecyclingPile pile = switch (material) {
@@ -147,25 +147,25 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	}
 
 	public void exitFromSleepMode() {
-		if (rvmStatus.equals(ReverseVendingMachineStatus.IDLE)) {
+		if (getRvmStatus().equals(ReverseVendingMachineStatus.IDLE)) {
 			System.out.println("\n\uD83D\uDD0B Machine: " + rvmId + " recovering from sleep mode:");
-			rvmStatus = ReverseVendingMachineStatus.IN_USE;
+			setRvmStatus(ReverseVendingMachineStatus.IN_USE);
 		}
 	}
 
 	public boolean isValidSleepModeException(Exception e) {
 		// Used to identify exceptions that can be suppressed when recovering from sleepmode
-		return e instanceof InvalidOptionException && ReverseVendingMachineStatus.IDLE.equals(rvmStatus);
+		return e instanceof InvalidOptionException && ReverseVendingMachineStatus.IDLE.equals(getRvmStatus());
 	}
 
 	public boolean machineIsUsable() {
 		return ReverseVendingMachineFunctionalStatus.OPERATIONAL.equals(rvmFnStatus)
 				&& ReverseVendingMachinePowerStatus.ON.equals(rvmPwStatus)
-				&& !ReverseVendingMachineStatus.FULL.equals(rvmStatus);
+				&& !ReverseVendingMachineStatus.FULL.equals(getRvmStatus());
 	}
 
 	public boolean IsMachineFull() {
-		return ReverseVendingMachineStatus.FULL.equals(rvmStatus);
+		return ReverseVendingMachineStatus.FULL.equals(getRvmStatus());
 	}
 
 	public String getFullPile() {
@@ -199,9 +199,17 @@ public class ReverseVendingMachine implements Recycle, Donate {
 				", recyclingSession=" + recyclingSession +
 				", rvmId='" + rvmId + '\'' +
 				", materialToPileMap=" + materialToPileMap +
-				", rvmStatus=" + rvmStatus +
+				", rvmStatus=" + getRvmStatus() +
 				", rvmFnStatus=" + rvmFnStatus +
 				", rvmPwStatus=" + rvmPwStatus +
 				'}';
+	}
+
+	public ReverseVendingMachineStatus getRvmStatus() {
+		return rvmStatus;
+	}
+
+	public void setRvmStatus(ReverseVendingMachineStatus rvmStatus) {
+		this.rvmStatus = rvmStatus;
 	}
 }
