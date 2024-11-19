@@ -40,32 +40,28 @@ public class AppDataManager {
 		this.userDatabase = userDatabase;
 	}
 
-	public boolean updateAppDataToJson() {
+	public void updateAppDataToJson() {
 		try (FileWriter writer = new FileWriter(userDatabase)) {
 			gson.toJson(appData, writer);
-			return true;
 		} catch (FileNotFoundException e) {
 			System.out.println("Database not found: " + userDatabase);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		return false;
 	}
 
-	public boolean loadJsonAppData() {
+	public void loadJsonAppData() {
 		try (FileReader reader = new FileReader(userDatabase)) {
 			AppData appDataObj = gson.fromJson(reader, AppData.class);
 			if (appDataObj == null) {
 				System.out.println("Required data not found...");
-				return false;
+				return;
 			}
 			appData = appDataObj;
-			return true;
 		} catch (FileNotFoundException e) {
 			System.out.println("Database not found: " + userDatabase);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
-		return false;
 	}
 }
