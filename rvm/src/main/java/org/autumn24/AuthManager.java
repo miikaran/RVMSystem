@@ -17,24 +17,54 @@
 
 package org.autumn24;
 
+import org.autumn24.users.Employee;
+import org.autumn24.users.RegisteredRecycler;
 import org.autumn24.users.User;
 
 import java.util.ArrayList;
 
 public class AuthManager {
 	private final AppDataManager appDataManager;
+	private AuthStatus authStatus;
 
 	public AuthManager(AppDataManager appDataManager) {
 		this.appDataManager = appDataManager;
+		this.authStatus = AuthStatus.GUEST;
 	}
 
 	public boolean authenticateUser(String userId) {
 		ArrayList<User> userData = appDataManager.appData.getUserData();
-		return userData.stream().anyMatch(user -> user.getUserId().equals(userId));
+		// Check if user exists
+		boolean authSuccess = userData.stream().anyMatch(user -> user.getUserId().equals(userId));
+		if (!authSuccess) {
+			return false;
+		}
+		// Update auth status
+		User authUser = getUserById(userId);
+		if (authUser instanceof Employee) {
+			authStatus = AuthStatus.ADMIN;
+		} else if (authUser instanceof RegisteredRecycler) {
+			authStatus = AuthStatus.RECYCLER;
+		} else {
+			authStatus = AuthStatus.GUEST;
+		}
+		return true;
 	}
 
 	public User getUserById(String userId) {
 		ArrayList<User> userData = appDataManager.appData.getUserData();
 		return userData.stream().filter(user -> user.getUserId().equals(userId)).findFirst().get();
+	}
+
+	public boolean isLoggedInAsEmployee() {
+		return authStatus.equals(AuthStatus.ADMIN);
+	}
+
+	public boolean isLoggedInAsRecycler() {
+		return authStatus.equals(AuthStatus.RECYCLER);
+	}
+	
+	public void setAuthStatus(AuthStatus authStatus) {
+		this.authStatus = authStatus;
 	}
 }
