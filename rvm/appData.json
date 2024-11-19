@@ -4,22 +4,21 @@
     "ALUMINIUM_CANS_LIMIT": 3,
     "GLASS_BOTTLES_LIMIT": 3,
     "PLASTIC_BOTTLES_LIMIT": 3,
-    "recyclingSessionTotalValue": 0.70,
-    "recyclingSessionRecycledAmount": 4,
-    "numberOfAluminiumCansRecycled": 2,
-    "numberOfGlassBottlesRecycled": 0,
-    "numberOfPlasticBottlesRecycled": 2,
-    "aluminiumCanLimitCounter": 2,
+    "recyclingSessionTotalValue": 0,
+    "recyclingSessionRecycledAmount": 0,
+    "numberOfAluminiumCansRecycled": 9,
+    "numberOfGlassBottlesRecycled": 5,
+    "numberOfPlasticBottlesRecycled": 9,
+    "aluminiumCanLimitCounter": 0,
     "glassBottleLimitCounter": 0,
-    "plasticBottleLimitCounter": 2,
+    "plasticBottleLimitCounter": 0,
     "rvmFnStatus": "OPERATIONAL",
-    "rvmPwStatus": "ON",
-    "rvmAuthStatus": "GUEST"
+    "rvmPwStatus": "ON"
   },
   "userData": [
     {
-      "userName": "Miihael",
-      "userId": "123",
+      "userName": "Guest",
+      "userId": "Guest",
       "userRole": "guest"
     },
     {
@@ -28,6 +27,12 @@
       "userName": "Juuppelis",
       "userId": "456",
       "userRole": "recycler"
+    },
+    {
+      "canRepairRvm": false,
+      "userName": "Jjesse",
+      "userId": "789",
+      "userRole": "admin"
     }
   ]
 }
