@@ -96,7 +96,6 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	@Override
 	public void donateToChosenCharity(Charity charity) {
 		System.out.printf("Donated %s to %s%n", recyclingSession.getTotalValue(), charity.name());
-		resetSessionCounters();
 	}
 
 	public Receipt printReceipt() {
