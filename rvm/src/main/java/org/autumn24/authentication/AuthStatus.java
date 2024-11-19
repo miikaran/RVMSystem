@@ -17,8 +17,20 @@
 
 package org.autumn24.authentication;
 
+/**
+ * This enum represents different users who can interact with the RVM.
+ */
 public enum AuthStatus {
-	ADMIN,      // Indicates that admin is authenticated
-	GUEST,      // Indicates that the rvm is running on the guest (default) user
-	RECYCLER    // Indicates that the recycler has authenticated
+	/**
+	 * Indicates that admin is authenticated
+	 */
+	ADMIN,
+	/**
+	 * Indicates that the rvm is running on the guest (default) user
+	 */
+	GUEST,
+	/**
+	 * Indicates that the recycler has authenticated
+	 */
+	RECYCLER
 }
