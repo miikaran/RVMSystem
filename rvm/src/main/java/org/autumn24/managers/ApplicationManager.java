@@ -173,7 +173,6 @@ public class ApplicationManager {
 			return;
 		}
 		rvm.printReceipt();
-		totalValueResetAfterProcessing();
 		updateAppData();
 	}
 
@@ -189,16 +188,11 @@ public class ApplicationManager {
 			case 1, 2, 3 -> rvm.donateToCharity(userInput);
 			default -> throw new InvalidOptionException();
 		}
-		totalValueResetAfterProcessing();
 		updateAppData();
 	}
 
 	private boolean notValidSessionTotal() {
 		return rvm.getRecyclingSessionTotalValue().equals(BigDecimal.ZERO);
-	}
-
-	private void totalValueResetAfterProcessing() {
-		rvm.setRecyclingSessionTotalValue(BigDecimal.ZERO);
 	}
 
 	private void handleUserAuth() {
