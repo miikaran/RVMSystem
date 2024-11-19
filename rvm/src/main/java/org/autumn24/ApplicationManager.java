@@ -189,9 +189,7 @@ public class ApplicationManager {
 	}
 
 	private boolean notValidSessionTotal() {
-		return (rvm.getRecyclingSessionTotalValue() == null)
-				|| (rvm.getRecyclingSessionTotalValue().equals(BigDecimal.ZERO)
-		);
+		return rvm.getRecyclingSessionTotalValue().equals(BigDecimal.ZERO);
 	}
 
 	private void totalValueResetAfterProcessing() {
