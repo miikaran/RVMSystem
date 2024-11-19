@@ -45,22 +45,19 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	public short ALUMINIUM_CANS_LIMIT = 3;
 	public short GLASS_BOTTLES_LIMIT = 3;
 	public short PLASTIC_BOTTLES_LIMIT = 3;
-	public BigDecimal recyclingSessionTotalValue;
 	public short recyclingSessionRecycledAmount;
-
 	// Keeps count of recycled items
 	public short numberOfAluminiumCansRecycled;
 	public short numberOfGlassBottlesRecycled;
 	public short numberOfPlasticBottlesRecycled;
-
 	// Keeps count of recyclable specific limits
 	public short aluminiumCanLimitCounter;
 	public short glassBottleLimitCounter;
 	public short plasticBottleLimitCounter;
-
 	public ReverseVendingMachineStatus rvmStatus;
 	public ReverseVendingMachineFunctionalStatus rvmFnStatus;
 	public ReverseVendingMachinePowerStatus rvmPwStatus;
+	private BigDecimal recyclingSessionTotalValue;
 
 	public ReverseVendingMachine() {
 		rvmId = UUID.randomUUID().toString();
@@ -70,6 +67,14 @@ public class ReverseVendingMachine implements Recycle, Donate {
 
 	public String getRvmId() {
 		return rvmId;
+	}
+
+	public BigDecimal getRecyclingSessionTotalValue() {
+		return recyclingSessionTotalValue;
+	}
+
+	public void setRecyclingSessionTotalValue(BigDecimal recyclingSessionTotalValue) {
+		this.recyclingSessionTotalValue = recyclingSessionTotalValue;
 	}
 
 	@Override
@@ -110,7 +115,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 
 	@Override
 	public void donateToChosenCharity(Charity charity) {
-		System.out.printf("Donated %s to %s%n", recyclingSessionTotalValue, charity.name());
+		System.out.printf("Donated %s to %s%n", getRecyclingSessionTotalValue(), charity.name());
 		resetSessionCounters();
 	}
 
@@ -119,7 +124,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 				numberOfAluminiumCansRecycled,
 				numberOfGlassBottlesRecycled,
 				numberOfPlasticBottlesRecycled,
-				recyclingSessionTotalValue
+				getRecyclingSessionTotalValue()
 		);
 		receipt.displayReceipt();
 		resetSessionCounters();
@@ -128,7 +133,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 
 	public Charity donateToCharity(int charityIndex) {
 		Charity charity = CharityFactory.createCharity(charityIndex);
-		System.out.println("Donating " + recyclingSessionTotalValue + "€ to " + charity.name());
+		System.out.println("Donating " + getRecyclingSessionTotalValue() + "€ to " + charity.name());
 		System.out.println("Thank you for choosing us!");
 		return charity;
 	}
@@ -162,10 +167,10 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	}
 
 	public void increaseSessionCounters(BigDecimal value) {
-		if (recyclingSessionTotalValue == null) {
-			recyclingSessionTotalValue = BigDecimal.ZERO;
+		if (getRecyclingSessionTotalValue() == null) {
+			setRecyclingSessionTotalValue(BigDecimal.ZERO);
 		}
-		recyclingSessionTotalValue = recyclingSessionTotalValue.add(value);
+		setRecyclingSessionTotalValue(getRecyclingSessionTotalValue().add(value));
 		recyclingSessionRecycledAmount++;
 	}
 
@@ -227,7 +232,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	}
 
 	public void resetSessionCounters() {
-		recyclingSessionTotalValue = BigDecimal.ZERO;
+		setRecyclingSessionTotalValue(BigDecimal.ZERO);
 		recyclingSessionRecycledAmount = 0;
 	}
 }
