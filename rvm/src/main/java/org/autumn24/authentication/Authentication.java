@@ -25,7 +25,16 @@ import org.autumn24.users.User;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * Used to authenticate users with enums that represents
+ * different users who can interact with the RVM.
+ */
 public class Authentication {
+	/**
+	 * Authenticates the user. By default, user is a guest.
+	 *
+	 * @param userId String
+	 */
 	public static void authenticateUser(String userId) {
 		User authUser = AuthManager.getUserById(userId);
 		AuthManager.setAuthStatus(switch (Objects.requireNonNull(authUser)) {
@@ -35,6 +44,10 @@ public class Authentication {
 		});
 	}
 
+	/**
+	 * @param userId the userId to check
+	 * @return whether the given userId exists
+	 */
 	public static boolean userExists(String userId) {
 		ArrayList<User> userData = AuthManager.appDataManager.appData.getUserData();
 		return userData.stream().anyMatch(user -> user.getUserId().equals(userId));
