@@ -43,6 +43,10 @@ public class RecyclableData {
 		return sessionRecycled;
 	}
 
+	public void setSessionRecycled(short sessionRecycled) {
+		this.sessionRecycled = sessionRecycled;
+	}
+
 	public short getRecyclingLimitCounter() {
 		return recyclingLimitCounter;
 	}

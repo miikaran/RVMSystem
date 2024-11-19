@@ -46,7 +46,8 @@ public class UserInterface {
 
 	public static void displayMenu(BigDecimal totalValue, short recyclablesLeft, short recycledAmount) {
 		if (totalValue == null) totalValue = BigDecimal.ZERO;
-		System.out.println("\n");
+		System.out.println();
+		System.out.println(BOLD + BLUE + "‖═════════MAIN MENU══════════‖" + RESET);
 		System.out.printf(YELLOW + "💰 Total Value: " + WHITE + "%.2f€" + RESET + "\n", totalValue);
 		System.out.println(GREEN + "♻️ Recycled: " + WHITE + recycledAmount + " items" + RESET);
 		System.out.println(CYAN + "🔄 Recyclables Left: " + WHITE + recyclablesLeft + " items" + RESET);

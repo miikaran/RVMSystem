@@ -45,9 +45,6 @@ import java.util.UUID;
  */
 public class ReverseVendingMachine implements Recycle, Donate {
 
-	public static short ALUMINIUM_CANS_LIMIT = 3;
-	public static short GLASS_BOTTLES_LIMIT = 3;
-	public static short PLASTIC_BOTTLES_LIMIT = 3;
 	public final Map<ItemMaterial, RecyclableData> recyclables = new EnumMap<>(ItemMaterial.class);
 	public transient final RecyclingSessionData recyclingSession;
 	private final String rvmId;
@@ -90,7 +87,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 			case GLASS -> RecyclingPile.GLASS;
 			case PLASTIC -> RecyclingPile.PLASTIC;
 		};
-		System.out.println("Item sorted to " + pile.name());
+		System.out.println("Sorting item to " + pile.name());
 		increaseRecycledItemsCounter(material);
 		increaseSessionCounters(material, value);
 		return true;
@@ -188,9 +185,12 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	}
 
 	public void resetSessionCounters() {
-		recyclingSession.setTotalValue(BigDecimal.valueOf(0.0));
+		recyclingSession.setTotalValue(BigDecimal.ZERO);
 		recyclingSession.setTotalSessionRecycledAmount((short) 0);
 		recyclingSession.getSessionRecycledAmounts().clear();
+		recyclables.get(ItemMaterial.ALUMINIUM).setSessionRecycled((short) 0);
+		recyclables.get(ItemMaterial.PLASTIC).setSessionRecycled((short) 0);
+		recyclables.get(ItemMaterial.GLASS).setSessionRecycled((short) 0);
 	}
 
 	@Override
@@ -198,9 +198,6 @@ public class ReverseVendingMachine implements Recycle, Donate {
 		return "ReverseVendingMachine{" +
 				"recyclables=" + recyclables +
 				", recyclingSession=" + recyclingSession +
-				", ALUMINIUM_CANS_LIMIT=" + ALUMINIUM_CANS_LIMIT +
-				", GLASS_BOTTLES_LIMIT=" + GLASS_BOTTLES_LIMIT +
-				", PLASTIC_BOTTLES_LIMIT=" + PLASTIC_BOTTLES_LIMIT +
 				", rvmId='" + rvmId + '\'' +
 				", materialToPileMap=" + materialToPileMap +
 				", rvmStatus=" + rvmStatus +

@@ -190,6 +190,7 @@ public class ApplicationManager {
 			default -> throw new InvalidOptionException();
 		}
 		updateAllUserAppData();
+		rvm.resetSessionCounters();
 	}
 
 	private boolean notValidSessionTotal() {
