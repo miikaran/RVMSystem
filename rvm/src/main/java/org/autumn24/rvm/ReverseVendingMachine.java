@@ -53,8 +53,8 @@ public class ReverseVendingMachine implements Recycle, Donate {
 			ItemMaterial.ALUMINIUM, RecyclingPile.METAL,
 			ItemMaterial.PLASTIC, RecyclingPile.PLASTIC
 	);
-	public ReverseVendingMachineFunctionalStatus rvmFnStatus;
-	public ReverseVendingMachinePowerStatus rvmPwStatus;
+	private final transient ReverseVendingMachineFunctionalStatus rvmFnStatus;
+	private transient ReverseVendingMachinePowerStatus rvmPwStatus;
 	private transient ReverseVendingMachineStatus rvmStatus;
 
 	public ReverseVendingMachine() {
