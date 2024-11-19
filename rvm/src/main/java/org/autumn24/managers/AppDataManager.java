@@ -19,6 +19,8 @@ package org.autumn24.managers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
 import org.autumn24.data.AppData;
 import org.autumn24.users.User;
 import org.autumn24.utils.UserDeserializer;
@@ -26,6 +28,7 @@ import org.autumn24.utils.UserDeserializer;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 public class AppDataManager {
 	public static Gson gson = new GsonBuilder()
@@ -43,9 +46,7 @@ public class AppDataManager {
 	public void updateAppDataToJson() {
 		try (FileWriter writer = new FileWriter(userDatabase)) {
 			gson.toJson(appData, writer);
-		} catch (FileNotFoundException e) {
-			System.out.println("Database not found: " + userDatabase);
-		} catch (Exception e) {
+		} catch (JsonIOException | IOException e) {
 			System.out.println(e.getMessage());
 		}
 	}
@@ -60,7 +61,7 @@ public class AppDataManager {
 			appData = appDataObj;
 		} catch (FileNotFoundException e) {
 			System.out.println("Database not found: " + userDatabase);
-		} catch (Exception e) {
+		} catch (JsonIOException | JsonSyntaxException | IOException e) {
 			System.out.println(e.getMessage());
 		}
 	}
