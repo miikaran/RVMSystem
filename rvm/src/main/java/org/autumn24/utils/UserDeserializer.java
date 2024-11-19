@@ -34,14 +34,18 @@ import java.lang.reflect.Type;
  */
 public class UserDeserializer implements JsonDeserializer<User> {
 	@Override
-	public User deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+	public User deserialize(
+			JsonElement jsonElement,
+			Type type,
+			JsonDeserializationContext jsonDeserializationContext
+	) throws JsonParseException {
 		JsonObject jsonObject = jsonElement.getAsJsonObject();
 		String userRole = jsonObject.get("userRole").getAsString();
-		return switch (userRole) {
-			case "admin" -> jsonDeserializationContext.deserialize(jsonObject, Employee.class);
-			case "guest" -> jsonDeserializationContext.deserialize(jsonObject, GuestRecycler.class);
-			case "recycler" -> jsonDeserializationContext.deserialize(jsonObject, RegisteredRecycler.class);
+		return jsonDeserializationContext.deserialize(jsonObject, switch (userRole) {
+			case "admin" -> Employee.class;
+			case "guest" -> GuestRecycler.class;
+			case "recycler" -> RegisteredRecycler.class;
 			default -> throw new JsonParseException("Invalid user role: " + userRole);
-		};
+		});
 	}
 }
