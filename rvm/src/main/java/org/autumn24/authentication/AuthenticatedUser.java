@@ -15,23 +15,22 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.autumn24;
-
-import org.autumn24.managers.ApplicationManager;
+package org.autumn24.authentication;
 
 /**
- * Holds the execution process
- *
- * @author evnct
- * @since 1.0.0
+ * This enum represents different users who can interact with the RVM.
  */
-public class Main {
-	public static void main(String[] args) {
-		System.out.println("Return assignment for autumn 2024 object oriented programming course");
-
-		// Initialize application manager to handle menu actions
-		ApplicationManager AppManager = new ApplicationManager();
-		AppManager.run();
-	}
-
+public enum AuthenticatedUser {
+	/**
+	 * Indicates that admin is authenticated
+	 */
+	ADMIN,
+	/**
+	 * Indicates that the rvm is running on the guest (default) user
+	 */
+	GUEST,
+	/**
+	 * Indicates that the recycler has authenticated
+	 */
+	RECYCLER
 }

@@ -21,6 +21,8 @@ import org.autumn24.charity.Charity;
 import org.autumn24.charity.CharityFactory;
 import org.autumn24.data.RecyclableData;
 import org.autumn24.data.RecyclingSessionData;
+import org.autumn24.exceptions.InvalidItemMaterialException;
+import org.autumn24.exceptions.InvalidOptionException;
 import org.autumn24.exceptions.MissingItemMaterialException;
 import org.autumn24.extra.Donate;
 import org.autumn24.extra.Recycle;
@@ -58,6 +60,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	public transient ReverseVendingMachineStatus rvmStatus;
 	public ReverseVendingMachineFunctionalStatus rvmFnStatus;
 	public ReverseVendingMachinePowerStatus rvmPwStatus;
+	private BigDecimal recyclingSessionTotalValue = BigDecimal.ZERO;
 
 	public ReverseVendingMachine() {
 		rvmId = UUID.randomUUID().toString();
@@ -68,6 +71,14 @@ public class ReverseVendingMachine implements Recycle, Donate {
 
 	public String getRvmId() {
 		return rvmId;
+	}
+
+	public BigDecimal getRecyclingSessionTotalValue() {
+		return recyclingSessionTotalValue;
+	}
+
+	public void setRecyclingSessionTotalValue(BigDecimal recyclingSessionTotalValue) {
+		this.recyclingSessionTotalValue = recyclingSessionTotalValue;
 	}
 
 	@Override
@@ -158,7 +169,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 
 	public boolean isValidSleepModeException(Exception e) {
 		// Used to identify exceptions that can be suppressed when recovering from sleepmode
-		return e instanceof IllegalArgumentException && ReverseVendingMachineStatus.IDLE.equals(rvmStatus);
+		return e instanceof InvalidOptionException && ReverseVendingMachineStatus.IDLE.equals(rvmStatus);
 	}
 
 	public boolean machineIsUsable() {

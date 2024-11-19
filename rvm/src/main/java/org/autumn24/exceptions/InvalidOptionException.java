@@ -15,10 +15,17 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.autumn24;
+package org.autumn24.exceptions;
 
-public enum AuthStatus {
-	ADMIN,      // Indicates that admin is authenticated
-	GUEST,      // Indicates that the rvm is running on the guest (default) user
-	RECYCLER    // Indicates that the recycler has authenticated
+/**
+ * Used when input is expected to be some listed predetermined value.
+ */
+public class InvalidOptionException extends IllegalArgumentException {
+	public InvalidOptionException(String message) {
+		super(message);
+	}
+
+	public InvalidOptionException() {
+		super("invalid option...");
+	}
 }

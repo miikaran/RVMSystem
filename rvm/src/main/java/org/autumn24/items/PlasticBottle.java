@@ -35,7 +35,7 @@ public class PlasticBottle extends RecyclableItem implements Item {
 	private final double[] redemptionValue = {0.10, 0.20, 0.40};
 	private final double chosenSize = selectRandomSize(standardSizes);
 
-	private BigDecimal determinedValue;
+	private BigDecimal determinedValue = BigDecimal.ZERO;
 
 	protected PlasticBottle() throws InvalidItemSizeException {
 		super(ItemType.BOTTLE, ItemMaterial.PLASTIC, 0.0);

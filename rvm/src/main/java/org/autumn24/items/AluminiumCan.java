@@ -34,7 +34,7 @@ public class AluminiumCan extends RecyclableItem implements Item {
 	private final double VALUE_FOR_ALL_CANS = 0.15;
 	private final double chosenSize = selectRandomSize(standardSizes);
 
-	private BigDecimal determinedValue;
+	private BigDecimal determinedValue = BigDecimal.ZERO;
 
 	protected AluminiumCan() throws InvalidItemSizeException {
 		super(ItemType.CAN, ItemMaterial.ALUMINIUM, 0.0);

@@ -35,7 +35,7 @@ public class GlassBottle extends RecyclableItem implements Item {
 	private final double[] redemptionValue = {0.10, 0.40};
 	private final double chosenSize = selectRandomSize(standardSizes);
 
-	private BigDecimal determinedValue;
+	private BigDecimal determinedValue = BigDecimal.ZERO;
 
 	protected GlassBottle() throws InvalidItemSizeException {
 		super(ItemType.BOTTLE, ItemMaterial.GLASS, 0.0);

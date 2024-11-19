@@ -15,9 +15,13 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.autumn24;
+package org.autumn24.managers;
 
+import org.autumn24.UserInterface;
+import org.autumn24.authentication.AuthenticatedUser;
+import org.autumn24.authentication.Authentication;
 import org.autumn24.exceptions.InvalidItemSizeException;
+import org.autumn24.exceptions.InvalidOptionException;
 import org.autumn24.items.Item;
 import org.autumn24.items.ItemFactory;
 import org.autumn24.items.ItemStatus;
@@ -29,6 +33,7 @@ import org.autumn24.users.User;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -54,7 +59,7 @@ public class ApplicationManager {
 		generateBottles(new ItemFactory());
 	}
 
-	public static int getUserAction() {
+	private static int getUserAction() {
 		if (!scanner.hasNextInt()) {
 			scanner.nextLine(); // Clear invalid input
 			return 0;
@@ -76,7 +81,7 @@ public class ApplicationManager {
 		appDataManager.loadJsonAppData();
 		rvm = appDataManager.appData.getRvm();
 		rvm.startMachine();
-		user = authManager.getUserById("Guest");
+		user = AuthManager.getUserById("Guest");
 		inactivityTimer = new InactivityTimer(rvm);
 		inactivityTimer.resetTimer();
 		mainLoop();
@@ -104,7 +109,7 @@ public class ApplicationManager {
 		}
 	}
 
-	public void generateBottles(ItemFactory itemFactory) {
+	private void generateBottles(ItemFactory itemFactory) {
 		System.out.println("\nGenerated bottles: ");
 		for (int i = 0; i < 8; i++) {
 			try {
@@ -118,7 +123,7 @@ public class ApplicationManager {
 	}
 
 	private void handleMainMenuActions() {
-		authStatusToMenu();
+		authenticatedUserToMenu();
 		int userInput = getUserAction();
 		switch (userInput) {
 			case 1 -> handleInsert();
@@ -126,20 +131,20 @@ public class ApplicationManager {
 			case 3 -> handleDonation();
 			case 4 -> handleUserAuth();
 			case 5 -> appRunning = false;
-			default -> throw new IllegalArgumentException("Invalid option...");
+			default -> throw new InvalidOptionException();
 		}
 	}
 
 	private void handleAdminMenuActions() {
-		authStatusToMenu();
+		authenticatedUserToMenu();
 		int userInput = getUserAction();
 		switch (userInput) {
 			case 1 -> handleRvmEmptying();
 			case 2 -> {
-				user = authManager.getUserById("Guest");
-				authManager.setAuthStatus(AuthStatus.GUEST);
+				user = AuthManager.getUserById("Guest");
+				AuthManager.setAuthenticatedUser(AuthenticatedUser.GUEST);
 			}
-			default -> throw new IllegalArgumentException("Invalid option...");
+			default -> throw new InvalidOptionException();
 		}
 	}
 
@@ -182,16 +187,13 @@ public class ApplicationManager {
 		int userInput = getUserAction();
 		switch (userInput) {
 			case 1, 2, 3 -> rvm.donateToCharity(userInput);
-			default -> throw new IllegalArgumentException("Invalid option...");
+			default -> throw new InvalidOptionException();
 		}
-
-		rvm.resetSessionCounters();
+		updateAppData();
 	}
 
 	private boolean notValidSessionTotal() {
-		return rvm.recyclingSession.getTotalValue() == null
-				|| rvm.recyclingSession.getTotalValue().equals(BigDecimal.valueOf(0.0)
-		);
+		return rvm.getRecyclingSessionTotalValue().equals(BigDecimal.ZERO);
 	}
 
 	private void handleUserAuth() {
@@ -203,13 +205,14 @@ public class ApplicationManager {
 			System.out.print("=> ");
 			userId = scanner.nextLine();
 		}
-		boolean userAuthenticated = authManager.authenticateUser(userId);
-		if (userAuthenticated) {
-			user = authManager.getUserById(userId);
-			System.out.println("User " + user.getUserName() + " authenticated successfully.");
+		boolean validUser = Authentication.userExists(userId);
+		if (!validUser) {
+			System.out.println("User authentication failed...");
 			return;
 		}
-		System.out.println("User authentication failed...");
+		Authentication.authenticateUser(userId);
+		user = AuthManager.getUserById(userId);
+		System.out.println("User " + Objects.requireNonNull(user).getUserName() + " authenticated successfully.");
 	}
 
 	private void handleFullMachine() {
@@ -225,7 +228,6 @@ public class ApplicationManager {
 		switch (userInput) {
 			case 1 -> handleUserAuth();
 			case 2 -> appRunning = false;
-			default -> throw new IllegalArgumentException("Invalid option...");
 		}
 	}
 
@@ -254,7 +256,7 @@ public class ApplicationManager {
 				System.out.println("Resuming...");
 				break;
 			default:
-				throw new IllegalArgumentException("Invalid option...");
+				throw new InvalidOptionException();
 		}
 	}
 
@@ -267,7 +269,7 @@ public class ApplicationManager {
 		System.out.println("Please try again.");
 	}
 
-	private void authStatusToMenu() {
+	private void authenticatedUserToMenu() {
 		if (authManager.isLoggedInAsRecycler()) {
 			UserInterface.displayLoggedInRecyclerMenu(
 					user.getUserName(),

@@ -15,10 +15,12 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.autumn24;
+package org.autumn24.managers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonSyntaxException;
 import org.autumn24.data.AppData;
 import org.autumn24.users.User;
 import org.autumn24.utils.UserDeserializer;
@@ -26,6 +28,7 @@ import org.autumn24.utils.UserDeserializer;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 
 public class AppDataManager {
 	public static Gson gson = new GsonBuilder()
@@ -40,32 +43,26 @@ public class AppDataManager {
 		this.userDatabase = userDatabase;
 	}
 
-	public boolean updateAppDataToJson() {
+	public void updateAppDataToJson() {
 		try (FileWriter writer = new FileWriter(userDatabase)) {
 			gson.toJson(appData, writer);
-			return true;
-		} catch (FileNotFoundException e) {
-			System.out.println("Database not found: " + userDatabase);
-		} catch (Exception e) {
+		} catch (JsonIOException | IOException e) {
 			System.out.println(e.getMessage());
 		}
-		return false;
 	}
 
-	public boolean loadJsonAppData() {
+	public void loadJsonAppData() {
 		try (FileReader reader = new FileReader(userDatabase)) {
 			AppData appDataObj = gson.fromJson(reader, AppData.class);
 			if (appDataObj == null) {
 				System.out.println("Required data not found...");
-				return false;
+				return;
 			}
 			appData = appDataObj;
-			return true;
 		} catch (FileNotFoundException e) {
 			System.out.println("Database not found: " + userDatabase);
-		} catch (Exception e) {
+		} catch (JsonIOException | JsonSyntaxException | IOException e) {
 			System.out.println(e.getMessage());
 		}
-		return false;
 	}
 }
