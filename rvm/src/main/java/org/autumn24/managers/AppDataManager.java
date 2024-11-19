@@ -15,7 +15,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.autumn24;
+package org.autumn24.managers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

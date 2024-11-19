@@ -15,7 +15,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.autumn24;
+package org.autumn24.managers;
 
 import org.autumn24.authentication.AuthStatus;
 import org.autumn24.users.User;
