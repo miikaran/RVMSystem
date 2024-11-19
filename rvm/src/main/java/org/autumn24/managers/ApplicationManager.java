@@ -60,20 +60,14 @@ public class ApplicationManager {
 	}
 
 	private static int getUserAction() {
-		if (!scanner.hasNextInt()) {
-			scanner.nextLine(); // Clear invalid input
+		if (!scanner.hasNextLine()) {
+			scanner.nextLine();
 			return 0;
 		}
-		int choice = scanner.nextInt();
-		scanner.nextLine(); // Clear input buffer for new line
-		if (ReverseVendingMachineStatus.IDLE.equals(rvm.rvmStatus)) {
-            /*
-            If RVM has gone to sleep mode while waiting on user action,
-            return invalid option to activate sleep-mode recovery.
-            */
-			return 0;
-		}
-		return choice;
+		String choice = scanner.nextLine();
+		/* If RVM has gone to sleep mode while waiting on user action,
+		return invalid option to activate sleep-mode recovery. */
+		return ReverseVendingMachineStatus.IDLE.equals(rvm.rvmStatus) ? 0 : Integer.parseInt(choice);
 	}
 
 	public void run() {
