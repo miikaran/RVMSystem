@@ -17,7 +17,7 @@
 
 package org.autumn24.authentication;
 
-import org.autumn24.AuthManager;
+import org.autumn24.managers.AuthManager;
 import org.autumn24.users.Employee;
 import org.autumn24.users.RegisteredRecycler;
 import org.autumn24.users.User;

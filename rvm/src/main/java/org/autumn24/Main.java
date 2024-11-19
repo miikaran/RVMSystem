@@ -17,6 +17,8 @@
 
 package org.autumn24;
 
+import org.autumn24.managers.ApplicationManager;
+
 /**
  * Holds the execution process
  *
