@@ -57,7 +57,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	public ReverseVendingMachineStatus rvmStatus;
 	public ReverseVendingMachineFunctionalStatus rvmFnStatus;
 	public ReverseVendingMachinePowerStatus rvmPwStatus;
-	private BigDecimal recyclingSessionTotalValue;
+	private BigDecimal recyclingSessionTotalValue = BigDecimal.ZERO;
 
 	public ReverseVendingMachine() {
 		rvmId = UUID.randomUUID().toString();
