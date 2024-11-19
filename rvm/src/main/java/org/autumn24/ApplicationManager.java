@@ -168,8 +168,8 @@ public class ApplicationManager {
 			return;
 		}
 		rvm.printReceipt();
-		updateAppData();
 		totalValueResetAfterProcessing();
+		updateAppData();
 	}
 
 	private void handleDonation() {
@@ -184,8 +184,8 @@ public class ApplicationManager {
 			case 1, 2, 3 -> rvm.donateToCharity(userInput);
 			default -> throw new IllegalArgumentException("Invalid option...");
 		}
-		updateAppData();
 		totalValueResetAfterProcessing();
+		updateAppData();
 	}
 
 	private boolean notValidSessionTotal() {
