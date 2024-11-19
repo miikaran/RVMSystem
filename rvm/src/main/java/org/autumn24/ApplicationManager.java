@@ -189,13 +189,13 @@ public class ApplicationManager {
 	}
 
 	private boolean notValidSessionTotal() {
-		return rvm.recyclingSessionTotalValue == null
-				|| rvm.recyclingSessionTotalValue.equals(BigDecimal.valueOf(0.0)
+		return (rvm.getRecyclingSessionTotalValue() == null)
+				|| (rvm.getRecyclingSessionTotalValue().equals(BigDecimal.ZERO)
 		);
 	}
 
 	private void totalValueResetAfterProcessing() {
-		rvm.recyclingSessionTotalValue = BigDecimal.valueOf(0.0);
+		rvm.setRecyclingSessionTotalValue(BigDecimal.ZERO);
 	}
 
 	private void handleUserAuth() {
@@ -276,14 +276,14 @@ public class ApplicationManager {
 		if (authManager.isLoggedInAsRecycler()) {
 			UserInterface.displayLoggedInRecyclerMenu(
 					user.getUserName(),
-					rvm.recyclingSessionTotalValue,
+					rvm.getRecyclingSessionTotalValue(),
 					(short) items.size(),
 					rvm.recyclingSessionRecycledAmount);
 		} else if (authManager.isLoggedInAsEmployee()) {
 			UserInterface.displayAdminMenu();
 		} else {
 			UserInterface.displayMenu(
-					rvm.recyclingSessionTotalValue,
+					rvm.getRecyclingSessionTotalValue(),
 					(short) items.size(),
 					rvm.recyclingSessionRecycledAmount
 			);
@@ -297,7 +297,7 @@ public class ApplicationManager {
 			int newTotalBottlesRecycled = totalBottlesRecycled + rvm.recyclingSessionRecycledAmount;
 			((RegisteredRecycler) user).setTotalBottlesRecycled((short) newTotalBottlesRecycled);
 			BigDecimal totalValueRecycled = ((RegisteredRecycler) user).getRedeemedTotalValue();
-			BigDecimal newTotalValueRecycled = totalValueRecycled.add(rvm.recyclingSessionTotalValue);
+			BigDecimal newTotalValueRecycled = totalValueRecycled.add(rvm.getRecyclingSessionTotalValue());
 			((RegisteredRecycler) user).setRedeemedTotalValue(newTotalValueRecycled);
 		}
 		appDataManager.updateAppDataToJson();
