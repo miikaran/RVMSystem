@@ -15,10 +15,10 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.autumn24.rvm.enums;
+package org.autumn24;
 
-public enum ReverseVendingMachineAuthStatus {
-	ADMIN,      // Indicates that admin is authenticated to the RVM
+public enum AuthStatus {
+	ADMIN,      // Indicates that admin is authenticated
 	GUEST,      // Indicates that the rvm is running on the guest (default) user
-	RECYCLER    // Indicates that the recycler has authenticated to the RVM
+	RECYCLER    // Indicates that the recycler has authenticated
 }
