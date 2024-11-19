@@ -1,4 +1,21 @@
 {
+  "rvm": {
+    "rvmId": "4c217e52-4738-4739-9194-91f2e203bad5",
+    "ALUMINIUM_CANS_LIMIT": 3,
+    "GLASS_BOTTLES_LIMIT": 3,
+    "PLASTIC_BOTTLES_LIMIT": 3,
+    "recyclingSessionTotalValue": 0.70,
+    "recyclingSessionRecycledAmount": 4,
+    "numberOfAluminiumCansRecycled": 2,
+    "numberOfGlassBottlesRecycled": 0,
+    "numberOfPlasticBottlesRecycled": 2,
+    "aluminiumCanLimitCounter": 2,
+    "glassBottleLimitCounter": 0,
+    "plasticBottleLimitCounter": 2,
+    "rvmFnStatus": "OPERATIONAL",
+    "rvmPwStatus": "ON",
+    "rvmAuthStatus": "GUEST"
+  },
   "userData": [
     {
       "userName": "Miihael",
@@ -6,12 +23,11 @@
       "userRole": "guest"
     },
     {
+      "totalBottlesRecycled": 7,
+      "redeemedTotalValue": 1.55,
       "userName": "Juuppelis",
       "userId": "456",
-      "userRole": "recycler",
-      "totalBottlesRecycled": 5,
-      "redemeedTotalValue": 50
+      "userRole": "recycler"
     }
-  ],
-  "rvmData": {}
+  ]
 }
