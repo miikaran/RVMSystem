@@ -65,6 +65,14 @@ public class UserInterface {
 		System.out.print("=> ");
 	}
 
+	public static void displayAdminMenu() {
+		System.out.println();
+		System.out.println("========ADMIN MENU========");
+		System.out.println("1 ------> EMPTY MACHINE");
+		System.out.println("2 ------> LOGOUT");
+		System.out.println();
+	}
+
 	public static void displayWrinkledItemMenu() {
 		System.out.println();
 		System.out.println("======================================");

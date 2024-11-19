@@ -26,13 +26,9 @@ import org.autumn24.extra.Recycle;
 import org.autumn24.items.Item;
 import org.autumn24.items.ItemMaterial;
 import org.autumn24.items.ItemStatus;
-import org.autumn24.rvm.enums.ReverseVendingMachineAuthStatus;
 import org.autumn24.rvm.enums.ReverseVendingMachineFunctionalStatus;
 import org.autumn24.rvm.enums.ReverseVendingMachinePowerStatus;
 import org.autumn24.rvm.enums.ReverseVendingMachineStatus;
-import org.autumn24.users.Employee;
-import org.autumn24.users.RegisteredRecycler;
-import org.autumn24.users.User;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -65,13 +61,11 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	public ReverseVendingMachineStatus rvmStatus;
 	public ReverseVendingMachineFunctionalStatus rvmFnStatus;
 	public ReverseVendingMachinePowerStatus rvmPwStatus;
-	public ReverseVendingMachineAuthStatus rvmAuthStatus;
 
 	public ReverseVendingMachine() {
 		rvmId = UUID.randomUUID().toString();
 		rvmFnStatus = ReverseVendingMachineFunctionalStatus.OPERATIONAL;
 		rvmPwStatus = ReverseVendingMachinePowerStatus.OFF;
-		rvmAuthStatus = ReverseVendingMachineAuthStatus.GUEST;
 	}
 
 	public String getRvmId() {
@@ -117,6 +111,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	@Override
 	public void donateToChosenCharity(Charity charity) {
 		System.out.printf("Donated %s to %s%n", recyclingSessionTotalValue, charity.name());
+		resetSessionCounters();
 	}
 
 	public Receipt printReceipt() {
@@ -127,6 +122,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 				recyclingSessionTotalValue
 		);
 		receipt.displayReceipt();
+		resetSessionCounters();
 		return receipt;
 	}
 
@@ -200,10 +196,6 @@ public class ReverseVendingMachine implements Recycle, Donate {
 		return ReverseVendingMachineStatus.FULL.equals(rvmStatus);
 	}
 
-	public boolean isLoggedInAsRecycler() {
-		return ReverseVendingMachineAuthStatus.RECYCLER.equals(rvmAuthStatus);
-	}
-
 	public String getFullPile() {
 		if (IsAluminiumLimitReached()) {
 			return RecyclingPile.METAL.name();
@@ -232,16 +224,6 @@ public class ReverseVendingMachine implements Recycle, Donate {
 			return false;
 		}
 		return ItemStatus.WRINKLED.equals(item.getItemStatus());
-	}
-
-	public void updateAuthStatus(User user) {
-		if (user instanceof Employee) {
-			rvmAuthStatus = ReverseVendingMachineAuthStatus.ADMIN;
-		} else if (user instanceof RegisteredRecycler) {
-			rvmAuthStatus = ReverseVendingMachineAuthStatus.RECYCLER;
-		} else {
-			rvmAuthStatus = ReverseVendingMachineAuthStatus.GUEST;
-		}
 	}
 
 	public void resetSessionCounters() {
