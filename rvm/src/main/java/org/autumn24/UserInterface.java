@@ -36,12 +36,13 @@ public class UserInterface {
 		if (totalValue == null) totalValue = BigDecimal.ZERO;
 		System.out.println();
 		System.out.println(totalValue + "€ " + " Recycled: " + recycledAmount + " Recyclables left: " + recyclablesLeft);
-		System.out.println("===================");
+		System.out.println();
+		System.out.println("=======MAIN MENU=======");
 		System.out.println("1 ------> INSERT");
 		System.out.println("2 ------> RECEIPT");
 		System.out.println("3 ------> DONATE");
 		System.out.println("4 ------> SCAN USER ID");
-		System.out.println("4 ------> EXIT");
+		System.out.println("5 ------> EXIT");
 		System.out.println();
 		System.out.print("=> ");
 	}
@@ -86,6 +87,23 @@ public class UserInterface {
 			int placement = i + 1;
 			System.out.printf("%s : %s | %s%n", placement, charity.name(), charity.cause());
 		}
+		System.out.println();
+		System.out.print("=> ");
+	}
+
+	public static void displayLoggedInRecyclerMenu(String user, BigDecimal totalValue, short recyclablesLeft, short recycledAmount) {
+		if (totalValue == null) totalValue = BigDecimal.ZERO;
+		System.out.println();
+		System.out.println(totalValue + "€ " + " Recycled: " + recycledAmount + " Recyclables left: " + recyclablesLeft);
+		System.out.println();
+		System.out.println("=======LOGGED IN AS " + user + "=======");
+		System.out.println("1 ------> INSERT");
+		System.out.println("2 ------> RECEIPT");
+		System.out.println("3 ------> DONATE");
+		System.out.println("5 ------> EXIT");
+		System.out.println("=======SPECIAL OPTIONS======");
+		System.out.println("6 ------> STATS");
+		System.out.println("7 ------> AWARDS");
 		System.out.println();
 		System.out.print("=> ");
 	}
