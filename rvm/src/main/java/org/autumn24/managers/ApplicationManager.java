@@ -21,6 +21,7 @@ import org.autumn24.UserInterface;
 import org.autumn24.authentication.AuthenticatedUser;
 import org.autumn24.authentication.Authentication;
 import org.autumn24.exceptions.InvalidItemSizeException;
+import org.autumn24.exceptions.InvalidOptionException;
 import org.autumn24.items.Item;
 import org.autumn24.items.ItemFactory;
 import org.autumn24.items.ItemStatus;
@@ -130,7 +131,7 @@ public class ApplicationManager {
 			case 3 -> handleDonation();
 			case 4 -> handleUserAuth();
 			case 5 -> appRunning = false;
-			default -> throw new IllegalArgumentException("Invalid option...");
+			default -> throw new InvalidOptionException();
 		}
 	}
 
@@ -143,7 +144,7 @@ public class ApplicationManager {
 				user = AuthManager.getUserById("Guest");
 				AuthManager.setAuthenticatedUser(AuthenticatedUser.GUEST);
 			}
-			default -> throw new IllegalArgumentException("Invalid option...");
+			default -> throw new InvalidOptionException();
 		}
 	}
 
@@ -186,7 +187,7 @@ public class ApplicationManager {
 		int userInput = getUserAction();
 		switch (userInput) {
 			case 1, 2, 3 -> rvm.donateToCharity(userInput);
-			default -> throw new IllegalArgumentException("Invalid option...");
+			default -> throw new InvalidOptionException();
 		}
 		totalValueResetAfterProcessing();
 		updateAppData();
@@ -231,7 +232,6 @@ public class ApplicationManager {
 		switch (userInput) {
 			case 1 -> handleUserAuth();
 			case 2 -> appRunning = false;
-			default -> throw new IllegalArgumentException("Invalid option...");
 		}
 	}
 
@@ -262,7 +262,7 @@ public class ApplicationManager {
 				System.out.println("Resuming...");
 				break;
 			default:
-				throw new IllegalArgumentException("Invalid option...");
+				throw new InvalidOptionException();
 		}
 	}
 

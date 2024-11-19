@@ -20,6 +20,7 @@ package org.autumn24.rvm;
 import org.autumn24.charity.Charity;
 import org.autumn24.charity.CharityFactory;
 import org.autumn24.exceptions.InvalidItemMaterialException;
+import org.autumn24.exceptions.InvalidOptionException;
 import org.autumn24.exceptions.MissingItemMaterialException;
 import org.autumn24.extra.Donate;
 import org.autumn24.extra.Recycle;
@@ -188,7 +189,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 
 	public boolean isValidSleepModeException(Exception e) {
 		// Used to identify exceptions that can be suppressed when recovering from sleepmode
-		return e instanceof IllegalArgumentException && ReverseVendingMachineStatus.IDLE.equals(rvmStatus);
+		return e instanceof InvalidOptionException && ReverseVendingMachineStatus.IDLE.equals(rvmStatus);
 	}
 
 	public boolean machineIsUsable() {
