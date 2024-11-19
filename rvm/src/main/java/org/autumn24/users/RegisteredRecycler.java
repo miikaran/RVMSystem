@@ -17,11 +17,13 @@
 
 package org.autumn24.users;
 
+import java.math.BigDecimal;
+
 public class RegisteredRecycler extends User implements Recycler {
 	private short totalBottlesRecycled;
-	private short redeemedTotalValue;
+	private BigDecimal redeemedTotalValue;
 
-	public RegisteredRecycler(String userName, String userId, String userRole, short totalBottlesRecycled, short redeemedTotalValue) {
+	public RegisteredRecycler(String userName, String userId, String userRole, short totalBottlesRecycled, BigDecimal redeemedTotalValue) {
 		super(userName, userId, userRole);
 		this.totalBottlesRecycled = totalBottlesRecycled;
 		this.redeemedTotalValue = redeemedTotalValue;
@@ -35,11 +37,11 @@ public class RegisteredRecycler extends User implements Recycler {
 		this.totalBottlesRecycled = totalBottlesRecycled;
 	}
 
-	public short getRedeemedTotalValue() {
+	public BigDecimal getRedeemedTotalValue() {
 		return redeemedTotalValue;
 	}
 
-	public void setRedeemedTotalValue(short redeemedTotalValue) {
+	public void setRedeemedTotalValue(BigDecimal redeemedTotalValue) {
 		this.redeemedTotalValue = redeemedTotalValue;
 	}
 

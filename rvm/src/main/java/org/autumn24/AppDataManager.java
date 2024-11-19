@@ -28,8 +28,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 public class AppDataManager {
-	public static Gson gson = new GsonBuilder().
-			registerTypeAdapter(User.class, new UserDeserializer())
+	public static Gson gson = new GsonBuilder()
+			.setPrettyPrinting()
+			.registerTypeAdapter(User.class, new UserDeserializer())
 			.create();
 
 	private final String userDatabase;
@@ -39,7 +40,7 @@ public class AppDataManager {
 		this.userDatabase = userDatabase;
 	}
 
-	public boolean updateAppData() {
+	public boolean updateAppDataToJson() {
 		try (FileWriter writer = new FileWriter(userDatabase)) {
 			gson.toJson(appData, writer);
 			return true;
@@ -51,7 +52,7 @@ public class AppDataManager {
 		return false;
 	}
 
-	public boolean loadAppData() {
+	public boolean loadJsonAppData() {
 		try (FileReader reader = new FileReader(userDatabase)) {
 			AppData appDataObj = gson.fromJson(reader, AppData.class);
 			if (appDataObj == null) {

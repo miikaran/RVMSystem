@@ -30,6 +30,9 @@ import org.autumn24.rvm.enums.ReverseVendingMachineAuthStatus;
 import org.autumn24.rvm.enums.ReverseVendingMachineFunctionalStatus;
 import org.autumn24.rvm.enums.ReverseVendingMachinePowerStatus;
 import org.autumn24.rvm.enums.ReverseVendingMachineStatus;
+import org.autumn24.users.Employee;
+import org.autumn24.users.RegisteredRecycler;
+import org.autumn24.users.User;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -171,6 +174,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	}
 
 	public void startMachine() {
+		System.out.println("\n\uD83D\uDD0B Starting machine: " + rvmId);
 		rvmPwStatus = ReverseVendingMachinePowerStatus.ON;
 	}
 
@@ -194,6 +198,10 @@ public class ReverseVendingMachine implements Recycle, Donate {
 
 	public boolean IsMachineFull() {
 		return ReverseVendingMachineStatus.FULL.equals(rvmStatus);
+	}
+
+	public boolean isLoggedInAsRecycler() {
+		return ReverseVendingMachineAuthStatus.RECYCLER.equals(rvmAuthStatus);
 	}
 
 	public String getFullPile() {
@@ -224,5 +232,20 @@ public class ReverseVendingMachine implements Recycle, Donate {
 			return false;
 		}
 		return ItemStatus.WRINKLED.equals(item.getItemStatus());
+	}
+
+	public void updateAuthStatus(User user) {
+		if (user instanceof Employee) {
+			rvmAuthStatus = ReverseVendingMachineAuthStatus.ADMIN;
+		} else if (user instanceof RegisteredRecycler) {
+			rvmAuthStatus = ReverseVendingMachineAuthStatus.RECYCLER;
+		} else {
+			rvmAuthStatus = ReverseVendingMachineAuthStatus.GUEST;
+		}
+	}
+
+	public void resetSessionCounters() {
+		recyclingSessionTotalValue = BigDecimal.ZERO;
+		recyclingSessionRecycledAmount = 0;
 	}
 }

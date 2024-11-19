@@ -17,23 +17,28 @@
 
 package org.autumn24.data;
 
+import org.autumn24.rvm.ReverseVendingMachine;
 import org.autumn24.users.User;
 
 import java.util.ArrayList;
 
 public class AppData {
-	public RvmData rvmData;
+	private ReverseVendingMachine rvm;
 	private ArrayList<User> userData;
 
 	public ArrayList<User> getUserData() {
 		return userData;
 	}
 
+	public ReverseVendingMachine getRvm() {
+		return rvm;
+	}
+
 	@Override
 	public String toString() {
 		return "AppData{" +
 				"userData=" + userData +
-				", rvmDataModel=" + rvmData +
+				", rvmDataModel=" + rvm +
 				'}';
 	}
 }

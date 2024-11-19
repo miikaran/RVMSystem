@@ -25,6 +25,7 @@ import org.autumn24.rvm.InactivityTimer;
 import org.autumn24.rvm.ReverseVendingMachine;
 import org.autumn24.rvm.enums.ReverseVendingMachineStatus;
 import org.autumn24.users.GuestRecycler;
+import org.autumn24.users.RegisteredRecycler;
 import org.autumn24.users.User;
 
 import java.math.BigDecimal;
@@ -46,13 +47,13 @@ public class ApplicationManager {
 	private static AuthManager authManager;
 	private final InactivityTimer inactivityTimer;
 	public boolean appRunning = false;
-	private User user = new GuestRecycler();
+	private User user;
 
 	public ApplicationManager() {
-		rvm = new ReverseVendingMachine();
-		inactivityTimer = new InactivityTimer(rvm);
 		appDataManager = new AppDataManager("appData.json");
 		authManager = new AuthManager(appDataManager);
+		inactivityTimer = new InactivityTimer(rvm);
+		user = new GuestRecycler();
 		generateBottles(new ItemFactory());
 	}
 
@@ -74,11 +75,12 @@ public class ApplicationManager {
 	}
 
 	public void run() {
-		appRunning = true;                      // 1. Set app running
-		rvm.startMachine();                     // 2. Start reverse vending machine
-		appDataManager.loadAppData();           // 3. Read application data (user, rvm)
-		inactivityTimer.resetTimer();           // 4. Start inactivity timer
-		mainLoop();                             // 5. Start main loop of the application to allow user actions
+		appRunning = true;                          // 1. Set app running
+		appDataManager.loadJsonAppData();           // 2. Read application data (user, rvm)
+		rvm = appDataManager.appData.getRvm();      // 3. Get rvm initialized from app data
+		rvm.startMachine();                         // 4. Start reverse vending machine
+		inactivityTimer.resetTimer();               // 5. Start inactivity timer
+		mainLoop();                                 // 6. Start main loop of the application to allow user actions
 	}
 
 	private void mainLoop() {
@@ -115,11 +117,7 @@ public class ApplicationManager {
 	}
 
 	private void handleMainMenuActions() {
-		UserInterface.displayMenu(
-				rvm.recyclingSessionTotalValue,
-				(short) items.size(),
-				rvm.recyclingSessionRecycledAmount
-		);
+		authStatusToMenu();
 		int userInput = getUserAction();
 		switch (userInput) {
 			case 1 -> handleInsert();
@@ -141,6 +139,7 @@ public class ApplicationManager {
 		System.out.println("Inserting item: " + itemToRecycle);
 		if (rvm.wrinkledItemDetected(itemToRecycle)) {
 			handleWrinkledItem(itemToRecycle);
+			return;
 		}
 		boolean successfullyRecycled = rvm.recycleItem(itemToRecycle);
 		if (!successfullyRecycled) {
@@ -154,8 +153,9 @@ public class ApplicationManager {
 			System.out.println("Recycle something to print a receipt!");
 			return;
 		}
+		updateAppData();
 		rvm.printReceipt();
-		totalValueResetAfterProcessing();
+		rvm.resetSessionCounters();
 	}
 
 	private void handleDonation() {
@@ -171,11 +171,8 @@ public class ApplicationManager {
 			case 1, 2, 3 -> rvm.donateToCharity(userInput);
 			default -> throw new IllegalArgumentException("Invalid option...");
 		}
-		totalValueResetAfterProcessing();
-	}
-
-	private void totalValueResetAfterProcessing() {
-		rvm.recyclingSessionTotalValue = BigDecimal.valueOf(0.0);
+		updateAppData();
+		rvm.resetSessionCounters();
 	}
 
 	private boolean notValidSessionTotal() {
@@ -195,7 +192,9 @@ public class ApplicationManager {
 		}
 		boolean userAuthenticated = authManager.authenticateUser(userId);
 		if (userAuthenticated) {
-			user = authManager.getUserById(userId);
+			User authenticatedUser = authManager.getUserById(userId);
+			rvm.updateAuthStatus(authenticatedUser);
+			user = authenticatedUser;
 			System.out.println("User " + user.getUserName() + " authenticated successfully.");
 			return;
 		}
@@ -246,6 +245,34 @@ public class ApplicationManager {
 		}
 		System.out.println("Error notified: " + e.getMessage());
 		System.out.println("Please try again.");
-		System.exit(0);
+	}
+
+	private void authStatusToMenu() {
+		if (rvm.isLoggedInAsRecycler()) {
+			UserInterface.displayLoggedInRecyclerMenu(
+					user.getUserName(),
+					rvm.recyclingSessionTotalValue,
+					(short) items.size(),
+					rvm.recyclingSessionRecycledAmount);
+		} else {
+			UserInterface.displayMenu(
+					rvm.recyclingSessionTotalValue,
+					(short) items.size(),
+					rvm.recyclingSessionRecycledAmount
+			);
+		}
+	}
+
+	private void updateAppData() {
+		// Need to rework on this 😩 - but works for now
+		if (rvm.isLoggedInAsRecycler() && user instanceof RegisteredRecycler) {
+			int totalBottlesRecycled = ((RegisteredRecycler) user).getTotalBottlesRecycled();
+			int newTotalBottlesRecycled = totalBottlesRecycled + rvm.recyclingSessionRecycledAmount;
+			((RegisteredRecycler) user).setTotalBottlesRecycled((short) newTotalBottlesRecycled);
+			BigDecimal totalValueRecycled = ((RegisteredRecycler) user).getRedeemedTotalValue();
+			BigDecimal newTotalValueRecycled = totalValueRecycled.add(rvm.recyclingSessionTotalValue);
+			((RegisteredRecycler) user).setRedeemedTotalValue(newTotalValueRecycled);
+		}
+		appDataManager.updateAppDataToJson();
 	}
 }
