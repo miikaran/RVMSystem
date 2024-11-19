@@ -59,7 +59,7 @@ public class ApplicationManager {
 		generateBottles(new ItemFactory());
 	}
 
-	public static int getUserAction() {
+	private static int getUserAction() {
 		if (!scanner.hasNextInt()) {
 			scanner.nextLine(); // Clear invalid input
 			return 0;
@@ -109,7 +109,7 @@ public class ApplicationManager {
 		}
 	}
 
-	public void generateBottles(ItemFactory itemFactory) {
+	private void generateBottles(ItemFactory itemFactory) {
 		System.out.println("\nGenerated bottles: ");
 		for (int i = 0; i < 8; i++) {
 			try {
