@@ -22,6 +22,8 @@ import java.math.RoundingMode;
 import java.util.Date;
 import java.util.UUID;
 
+import static org.autumn24.UserInterface.*;
+
 /**
  * A class representing receipt that can be received from a reverse vending machine.
  *
@@ -50,15 +52,22 @@ public class Receipt {
 	public void displayReceipt() {
 		Date date = new Date();
 		System.out.println();
-		System.out.println("\nDate:               " + date);
-		System.out.println("Receipt Id:         " + receiptId);
-		System.out.println("===========RECYCLED ITEMS=============");
-		System.out.println("Aluminium Cans:     " + numberOfProcessedAluminiumCans);
-		System.out.println("Glass Bottles:      " + numberOfProcessedGlassBottles);
-		System.out.println("Plastic Bottles:    " + numberOfProcessedPlasticBottles);
-		System.out.println("===========TOTAL VALUE================");
-		System.out.printf("%s €\n", totalValue);
-		System.out.println();
+		System.out.println(WHITE + BOLD + "═════════════════════════════════════");
+		System.out.println("           RECYCLING RECEIPT              ");
+		System.out.println("═════════════════════════════════════" + RESET);
+		System.out.printf(LIGHT_GRAY + "📅 Date:        " + WHITE + "%s%n", date);
+		System.out.printf(LIGHT_GRAY + "🆔 Receipt ID:  " + WHITE + "%s%n", receiptId);
+		System.out.println(WHITE + "-------------------------------------");
+		System.out.println("           RECYCLED ITEMS            ");
+		System.out.println("-------------------------------------" + RESET);
+		System.out.printf(LIGHT_GRAY + "🥫 Aluminium Cans: " + WHITE + "%d%n", numberOfProcessedAluminiumCans);
+		System.out.printf(LIGHT_GRAY + "🍾 Glass Bottles:  " + WHITE + "%d%n", numberOfProcessedGlassBottles);
+		System.out.printf(LIGHT_GRAY + "🍼 Plastic Bottles: " + WHITE + "%d%n", numberOfProcessedPlasticBottles);
+		System.out.println(WHITE + "-------------------------------------");
+		System.out.println("             TOTAL VALUE             ");
+		System.out.println("-------------------------------------" + RESET);
+		System.out.printf(LIGHT_GRAY + "💵 Total Earned:   " + WHITE + "%.2f €%n", totalValue);
+		System.out.println(WHITE + "═════════════════════════════════════" + RESET);
 	}
 
 	@Override
