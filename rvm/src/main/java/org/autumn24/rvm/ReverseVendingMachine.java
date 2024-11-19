@@ -135,7 +135,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	public Charity donateToCharity(int charityIndex) {
 		Charity charity = CharityFactory.createCharity(charityIndex);
 		System.out.println("Donating " + getRecyclingSessionTotalValue() + "€ to " + charity.name());
-		System.out.println("Thank you for choosing us!");
+		System.out.println("Thank you for donating!");
 		return charity;
 	}
 
