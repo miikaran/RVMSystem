@@ -97,10 +97,10 @@ public class ApplicationManager {
 	private void machineStateToHandler() {
 		if (authManager.isLoggedInAsEmployee()) {
 			handleAdminMenuActions();
-		} else if (rvm.machineIsUsable()) {
-			handleMainMenuActions();
 		} else if (rvm.IsMachineFull()) {
 			handleFullMachine();
+		} else if (rvm.machineIsUsable()) {
+			handleMainMenuActions();
 		}
 	}
 
@@ -167,9 +167,9 @@ public class ApplicationManager {
 			System.out.println("Recycle something to print a receipt!");
 			return;
 		}
+		updateAllUserAppData();
 		rvm.printReceipt();
-		totalValueResetAfterProcessing();
-		updateAppData();
+		rvm.resetSessionCounters();
 	}
 
 	private void handleDonation() {
@@ -184,18 +184,14 @@ public class ApplicationManager {
 			case 1, 2, 3 -> rvm.donateToCharity(userInput);
 			default -> throw new IllegalArgumentException("Invalid option...");
 		}
-		totalValueResetAfterProcessing();
-		updateAppData();
+
+		rvm.resetSessionCounters();
 	}
 
 	private boolean notValidSessionTotal() {
-		return rvm.recyclingSessionTotalValue == null
-				|| rvm.recyclingSessionTotalValue.equals(BigDecimal.valueOf(0.0)
+		return rvm.recyclingSession.getTotalValue() == null
+				|| rvm.recyclingSession.getTotalValue().equals(BigDecimal.valueOf(0.0)
 		);
-	}
-
-	private void totalValueResetAfterProcessing() {
-		rvm.recyclingSessionTotalValue = BigDecimal.valueOf(0.0);
 	}
 
 	private void handleUserAuth() {
@@ -219,9 +215,10 @@ public class ApplicationManager {
 	private void handleFullMachine() {
 		inactivityTimer.resetTimer();
 		UserInterface.displayMachineError("Machine Limit Reached");
-		if (rvm.recyclingSessionRecycledAmount > 0) {
-			// Print receipt if in middle of recycling the machine is full.
+		if (rvm.recyclingSession.getTotalBottlesRecyled() > 0) {
+			updateAllUserAppData();
 			rvm.printReceipt();
+			rvm.resetSessionCounters();
 		}
 		UserInterface.displayExceptionMenu();
 		int userInput = getUserAction();
@@ -235,9 +232,7 @@ public class ApplicationManager {
 	private void handleRvmEmptying() {
 		if (rvm.IsMachineFull()) {
 			System.out.println("Emptying all piles...");
-			rvm.plasticBottleLimitCounter = 0;
-			rvm.glassBottleLimitCounter = 0;
-			rvm.aluminiumCanLimitCounter = 0;
+			rvm.recyclables.values().forEach(recyclableData -> recyclableData.setRecyclingLimitCounter((short) 0));
 			rvm.rvmStatus = null;
 			appDataManager.updateAppDataToJson();
 			System.out.println("All piles cleared!");
@@ -276,28 +271,28 @@ public class ApplicationManager {
 		if (authManager.isLoggedInAsRecycler()) {
 			UserInterface.displayLoggedInRecyclerMenu(
 					user.getUserName(),
-					rvm.recyclingSessionTotalValue,
+					rvm.recyclingSession.getTotalValue(),
 					(short) items.size(),
-					rvm.recyclingSessionRecycledAmount);
+					rvm.recyclingSession.getTotalBottlesRecyled());
 		} else if (authManager.isLoggedInAsEmployee()) {
 			UserInterface.displayAdminMenu();
 		} else {
 			UserInterface.displayMenu(
-					rvm.recyclingSessionTotalValue,
+					rvm.recyclingSession.getTotalValue(),
 					(short) items.size(),
-					rvm.recyclingSessionRecycledAmount
+					rvm.recyclingSession.getTotalBottlesRecyled()
 			);
 		}
 	}
 
-	private void updateAppData() {
+	private void updateAllUserAppData() {
 		// Need to rework on this 😩 - but works for now
-		if (authManager.isLoggedInAsRecycler() && user instanceof RegisteredRecycler) {
+		if (authManager.isLoggedInAsRecycler()) {
 			int totalBottlesRecycled = ((RegisteredRecycler) user).getTotalBottlesRecycled();
-			int newTotalBottlesRecycled = totalBottlesRecycled + rvm.recyclingSessionRecycledAmount;
+			int newTotalBottlesRecycled = totalBottlesRecycled + rvm.recyclingSession.getTotalBottlesRecyled();
 			((RegisteredRecycler) user).setTotalBottlesRecycled((short) newTotalBottlesRecycled);
 			BigDecimal totalValueRecycled = ((RegisteredRecycler) user).getRedeemedTotalValue();
-			BigDecimal newTotalValueRecycled = totalValueRecycled.add(rvm.recyclingSessionTotalValue);
+			BigDecimal newTotalValueRecycled = totalValueRecycled.add(rvm.recyclingSession.getTotalValue());
 			((RegisteredRecycler) user).setRedeemedTotalValue(newTotalValueRecycled);
 		}
 		appDataManager.updateAppDataToJson();

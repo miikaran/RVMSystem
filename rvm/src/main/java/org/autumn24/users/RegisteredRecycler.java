@@ -21,12 +21,12 @@ import java.math.BigDecimal;
 
 public class RegisteredRecycler extends User implements Recycler {
 	private short totalBottlesRecycled;
-	private BigDecimal redeemedTotalValue;
+	private BigDecimal totalValueRecycled;
 
 	public RegisteredRecycler(String userName, String userId, String userRole, short totalBottlesRecycled, BigDecimal redeemedTotalValue) {
 		super(userName, userId, userRole);
 		this.totalBottlesRecycled = totalBottlesRecycled;
-		this.redeemedTotalValue = redeemedTotalValue;
+		this.totalValueRecycled = redeemedTotalValue;
 	}
 
 	public short getTotalBottlesRecycled() {
@@ -38,18 +38,18 @@ public class RegisteredRecycler extends User implements Recycler {
 	}
 
 	public BigDecimal getRedeemedTotalValue() {
-		return redeemedTotalValue;
+		return totalValueRecycled;
 	}
 
 	public void setRedeemedTotalValue(BigDecimal redeemedTotalValue) {
-		this.redeemedTotalValue = redeemedTotalValue;
+		this.totalValueRecycled = redeemedTotalValue;
 	}
 
 	@Override
 	public String toString() {
 		return "RegisteredRecycler{" +
 				"totalBottlesRecycled=" + totalBottlesRecycled +
-				", redeemedTotalValue=" + redeemedTotalValue +
+				", totalValueRecycled=" + totalValueRecycled +
 				'}';
 	}
 }
