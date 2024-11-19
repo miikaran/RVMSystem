@@ -20,7 +20,7 @@ package org.autumn24.authentication;
 /**
  * This enum represents different users who can interact with the RVM.
  */
-public enum AuthStatus {
+public enum AuthenticatedUser {
 	/**
 	 * Indicates that admin is authenticated
 	 */

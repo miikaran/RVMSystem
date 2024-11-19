@@ -37,10 +37,10 @@ public class Authentication {
 	 */
 	public static void authenticateUser(String userId) {
 		User authUser = AuthManager.getUserById(userId);
-		AuthManager.setAuthStatus(switch (Objects.requireNonNull(authUser)) {
-			case Employee _ -> AuthStatus.ADMIN;
-			case RegisteredRecycler _ -> AuthStatus.RECYCLER;
-			default -> AuthStatus.GUEST;
+		AuthManager.setAuthenticatedUser(switch (Objects.requireNonNull(authUser)) {
+			case Employee _ -> AuthenticatedUser.ADMIN;
+			case RegisteredRecycler _ -> AuthenticatedUser.RECYCLER;
+			default -> AuthenticatedUser.GUEST;
 		});
 	}
 

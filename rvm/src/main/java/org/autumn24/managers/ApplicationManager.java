@@ -18,7 +18,7 @@
 package org.autumn24.managers;
 
 import org.autumn24.UserInterface;
-import org.autumn24.authentication.AuthStatus;
+import org.autumn24.authentication.AuthenticatedUser;
 import org.autumn24.authentication.Authentication;
 import org.autumn24.exceptions.InvalidItemSizeException;
 import org.autumn24.items.Item;
@@ -122,7 +122,7 @@ public class ApplicationManager {
 	}
 
 	private void handleMainMenuActions() {
-		authStatusToMenu();
+		authenticatedUserToMenu();
 		int userInput = getUserAction();
 		switch (userInput) {
 			case 1 -> handleInsert();
@@ -135,13 +135,13 @@ public class ApplicationManager {
 	}
 
 	private void handleAdminMenuActions() {
-		authStatusToMenu();
+		authenticatedUserToMenu();
 		int userInput = getUserAction();
 		switch (userInput) {
 			case 1 -> handleRvmEmptying();
 			case 2 -> {
 				user = AuthManager.getUserById("Guest");
-				AuthManager.setAuthStatus(AuthStatus.GUEST);
+				AuthManager.setAuthenticatedUser(AuthenticatedUser.GUEST);
 			}
 			default -> throw new IllegalArgumentException("Invalid option...");
 		}
@@ -275,7 +275,7 @@ public class ApplicationManager {
 		System.out.println("Please try again.");
 	}
 
-	private void authStatusToMenu() {
+	private void authenticatedUserToMenu() {
 		if (authManager.isLoggedInAsRecycler()) {
 			UserInterface.displayLoggedInRecyclerMenu(
 					user.getUserName(),

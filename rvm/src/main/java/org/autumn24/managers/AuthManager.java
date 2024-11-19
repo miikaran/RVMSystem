@@ -17,18 +17,18 @@
 
 package org.autumn24.managers;
 
-import org.autumn24.authentication.AuthStatus;
+import org.autumn24.authentication.AuthenticatedUser;
 import org.autumn24.users.User;
 
 import java.util.ArrayList;
 
 public class AuthManager {
 	public static AppDataManager appDataManager;
-	private static AuthStatus authStatus;
+	private static AuthenticatedUser authenticatedUser;
 
 	public AuthManager(AppDataManager appDataManager) {
 		AuthManager.appDataManager = appDataManager;
-		authStatus = AuthStatus.GUEST;
+		authenticatedUser = AuthenticatedUser.GUEST;
 	}
 
 	public static User getUserById(String userId) {
@@ -37,15 +37,15 @@ public class AuthManager {
 		return found ? userData.getFirst() : null;
 	}
 
-	public static void setAuthStatus(AuthStatus authStatus) {
-		AuthManager.authStatus = authStatus;
+	public static void setAuthenticatedUser(AuthenticatedUser authenticatedUser) {
+		AuthManager.authenticatedUser = authenticatedUser;
 	}
 
 	public boolean isLoggedInAsEmployee() {
-		return authStatus.equals(AuthStatus.ADMIN);
+		return authenticatedUser.equals(AuthenticatedUser.ADMIN);
 	}
-	
+
 	public boolean isLoggedInAsRecycler() {
-		return authStatus.equals(AuthStatus.RECYCLER);
+		return authenticatedUser.equals(AuthenticatedUser.RECYCLER);
 	}
 }
