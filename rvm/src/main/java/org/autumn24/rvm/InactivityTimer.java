@@ -56,7 +56,7 @@ public class InactivityTimer {
 	public void onInactivityTimeout(ReverseVendingMachine rvm) {
 		// This method could later be passed as a parameter to this class, but this is gud for now 😎
 		System.out.println("\n\nMachine ID: '" + rvm.getRvmId() + "' - Entering sleep mode \uD83D\uDCA4");
-		rvm.rvmStatus = ReverseVendingMachineStatus.IDLE;
+		rvm.setRvmStatus(ReverseVendingMachineStatus.IDLE);
 		System.out.println("Press any key to wake it back up.");
 	}
 

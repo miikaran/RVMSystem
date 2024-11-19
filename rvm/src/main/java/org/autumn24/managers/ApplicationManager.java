@@ -67,7 +67,7 @@ public class ApplicationManager {
 		String choice = scanner.nextLine();
 		/* If RVM has gone to sleep mode while waiting on user action,
 		return invalid option to activate sleep-mode recovery. */
-		return ReverseVendingMachineStatus.IDLE.equals(rvm.rvmStatus) ? 0 : Integer.parseInt(choice);
+		return ReverseVendingMachineStatus.IDLE.equals(rvm.getRvmStatus()) ? 0 : Integer.parseInt(choice);
 	}
 
 	public void run() {
@@ -230,7 +230,7 @@ public class ApplicationManager {
 		if (rvm.IsMachineFull()) {
 			System.out.println("Emptying all piles...");
 			rvm.recyclables.values().forEach(recyclableData -> recyclableData.setRecyclingLimitCounter((short) 0));
-			rvm.rvmStatus = null;
+			rvm.setRvmStatus(null);
 			appDataManager.updateAppDataToJson();
 			System.out.println("All piles cleared!");
 		} else {
