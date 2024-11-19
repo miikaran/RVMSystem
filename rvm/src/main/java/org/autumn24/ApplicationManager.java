@@ -169,6 +169,7 @@ public class ApplicationManager {
 		}
 		rvm.printReceipt();
 		updateAppData();
+		totalValueResetAfterProcessing();
 	}
 
 	private void handleDonation() {
@@ -184,12 +185,17 @@ public class ApplicationManager {
 			default -> throw new IllegalArgumentException("Invalid option...");
 		}
 		updateAppData();
+		totalValueResetAfterProcessing();
 	}
 
 	private boolean notValidSessionTotal() {
 		return rvm.recyclingSessionTotalValue == null
 				|| rvm.recyclingSessionTotalValue.equals(BigDecimal.valueOf(0.0)
 		);
+	}
+
+	private void totalValueResetAfterProcessing() {
+		rvm.recyclingSessionTotalValue = BigDecimal.valueOf(0.0);
 	}
 
 	private void handleUserAuth() {
