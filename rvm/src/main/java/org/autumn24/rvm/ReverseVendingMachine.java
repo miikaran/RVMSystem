@@ -17,12 +17,12 @@
 
 package org.autumn24.rvm;
 
-import org.autumn24.Donate;
-import org.autumn24.Recycle;
 import org.autumn24.charity.Charity;
 import org.autumn24.charity.CharityFactory;
 import org.autumn24.exceptions.InvalidItemMaterialException;
 import org.autumn24.exceptions.MissingItemMaterialException;
+import org.autumn24.extra.Donate;
+import org.autumn24.extra.Recycle;
 import org.autumn24.items.Item;
 import org.autumn24.items.ItemMaterial;
 import org.autumn24.items.ItemStatus;
