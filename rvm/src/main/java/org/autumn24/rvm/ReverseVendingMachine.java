@@ -19,7 +19,8 @@ package org.autumn24.rvm;
 
 import org.autumn24.charity.Charity;
 import org.autumn24.charity.CharityFactory;
-import org.autumn24.exceptions.InvalidItemMaterialException;
+import org.autumn24.data.RecyclableData;
+import org.autumn24.data.RecyclingSessionData;
 import org.autumn24.exceptions.MissingItemMaterialException;
 import org.autumn24.extra.Donate;
 import org.autumn24.extra.Recycle;
@@ -31,6 +32,8 @@ import org.autumn24.rvm.enums.ReverseVendingMachinePowerStatus;
 import org.autumn24.rvm.enums.ReverseVendingMachineStatus;
 
 import java.math.BigDecimal;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -41,24 +44,18 @@ import java.util.UUID;
  */
 public class ReverseVendingMachine implements Recycle, Donate {
 
+	public static short ALUMINIUM_CANS_LIMIT = 3;
+	public static short GLASS_BOTTLES_LIMIT = 3;
+	public static short PLASTIC_BOTTLES_LIMIT = 3;
+	public final Map<ItemMaterial, RecyclableData> recyclables = new EnumMap<>(ItemMaterial.class);
+	public transient final RecyclingSessionData recyclingSession;
 	private final String rvmId;
-	public short ALUMINIUM_CANS_LIMIT = 3;
-	public short GLASS_BOTTLES_LIMIT = 3;
-	public short PLASTIC_BOTTLES_LIMIT = 3;
-	public BigDecimal recyclingSessionTotalValue;
-	public short recyclingSessionRecycledAmount;
-
-	// Keeps count of recycled items
-	public short numberOfAluminiumCansRecycled;
-	public short numberOfGlassBottlesRecycled;
-	public short numberOfPlasticBottlesRecycled;
-
-	// Keeps count of recyclable specific limits
-	public short aluminiumCanLimitCounter;
-	public short glassBottleLimitCounter;
-	public short plasticBottleLimitCounter;
-
-	public ReverseVendingMachineStatus rvmStatus;
+	private transient final Map<ItemMaterial, RecyclingPile> materialToPileMap = Map.of(
+			ItemMaterial.GLASS, RecyclingPile.GLASS,
+			ItemMaterial.ALUMINIUM, RecyclingPile.METAL,
+			ItemMaterial.PLASTIC, RecyclingPile.PLASTIC
+	);
+	public transient ReverseVendingMachineStatus rvmStatus;
 	public ReverseVendingMachineFunctionalStatus rvmFnStatus;
 	public ReverseVendingMachinePowerStatus rvmPwStatus;
 
@@ -66,6 +63,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 		rvmId = UUID.randomUUID().toString();
 		rvmFnStatus = ReverseVendingMachineFunctionalStatus.OPERATIONAL;
 		rvmPwStatus = ReverseVendingMachinePowerStatus.OFF;
+		recyclingSession = new RecyclingSessionData();
 	}
 
 	public String getRvmId() {
@@ -76,59 +74,47 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	public boolean recycleItem(Item item) {
 		ItemStatus status = item.getItemStatus();
 		ItemMaterial material = item.getItemMaterial();
-		if (!validateRecyclableItem(status, material)) {
+		if (!validateRecyclableItem(status, material) || wrinkledItemDetected(item)) {
 			return false;
 		}
 		BigDecimal value = item.getDeterminedValue();
-		boolean limitReached;
-		RecyclingPile pile = switch (material) {
-			case ALUMINIUM -> {
-				limitReached = IsAluminiumLimitReached();
-				yield RecyclingPile.METAL;
-			}
-			case GLASS -> {
-				limitReached = IsGlassBottleLimitReached();
-				yield RecyclingPile.GLASS;
-			}
-			case PLASTIC -> {
-				limitReached = IsPlasticBottleLimitReached();
-				yield RecyclingPile.PLASTIC;
-			}
-			default -> throw new InvalidItemMaterialException("Material'" + material + "' not found in RecyclingPile.");
-		};
+		RecyclableData recyclableData = recyclables.get(material);
+		boolean limitReached = recyclableData.isLimitReached();
 		if (limitReached) {
 			rvmStatus = ReverseVendingMachineStatus.FULL;
 			return false;
 		}
-		if (wrinkledItemDetected(item)) {
-			return false;
-		}
-		increaseRecycledItemsCounter(pile);
-		increaseSessionCounters(value);
+		RecyclingPile pile = switch (material) {
+			case ALUMINIUM -> RecyclingPile.METAL;
+			case GLASS -> RecyclingPile.GLASS;
+			case PLASTIC -> RecyclingPile.PLASTIC;
+		};
+		System.out.println("Item sorted to " + pile.name());
+		increaseRecycledItemsCounter(material);
+		increaseSessionCounters(material, value);
 		return true;
 	}
 
 	@Override
 	public void donateToChosenCharity(Charity charity) {
-		System.out.printf("Donated %s to %s%n", recyclingSessionTotalValue, charity.name());
+		System.out.printf("Donated %s to %s%n", recyclingSession.getTotalValue(), charity.name());
 		resetSessionCounters();
 	}
 
 	public Receipt printReceipt() {
 		Receipt receipt = new Receipt(
-				numberOfAluminiumCansRecycled,
-				numberOfGlassBottlesRecycled,
-				numberOfPlasticBottlesRecycled,
-				recyclingSessionTotalValue
+				recyclables.get(ItemMaterial.ALUMINIUM).getSessionRecycled(),
+				recyclables.get(ItemMaterial.GLASS).getSessionRecycled(),
+				recyclables.get(ItemMaterial.PLASTIC).getSessionRecycled(),
+				recyclingSession.getTotalValue()
 		);
 		receipt.displayReceipt();
-		resetSessionCounters();
 		return receipt;
 	}
 
 	public Charity donateToCharity(int charityIndex) {
 		Charity charity = CharityFactory.createCharity(charityIndex);
-		System.out.println("Donating " + recyclingSessionTotalValue + "€ to " + charity.name());
+		System.out.println("Donating " + recyclingSession.getTotalValue() + "€ to " + charity.name());
 		System.out.println("Thank you for choosing us!");
 		return charity;
 	}
@@ -140,33 +126,22 @@ public class ReverseVendingMachine implements Recycle, Donate {
 		return !status.equals(ItemStatus.WRINKLED);
 	}
 
-	public void increaseRecycledItemsCounter(RecyclingPile pile) {
-		switch (pile) {
-			// Increase number of type X recycled item counters.
-			case METAL: {
-				numberOfAluminiumCansRecycled++;
-				aluminiumCanLimitCounter++;
-				break;
-			}
-			case GLASS: {
-				numberOfGlassBottlesRecycled++;
-				glassBottleLimitCounter++;
-				break;
-			}
-			case PLASTIC: {
-				numberOfPlasticBottlesRecycled++;
-				plasticBottleLimitCounter++;
-				break;
-			}
+	public void increaseRecycledItemsCounter(ItemMaterial material) {
+		if (material == null) {
+			throw new MissingItemMaterialException("Material is type null, ItemMaterial expected");
 		}
+		RecyclableData recyclable = recyclables.get(material);
+		recyclable.addTotalRecycled(1);
+		recyclable.addToRecyclingLimitCounter(1);
+		recyclable.addSessionRecycled(1);
 	}
 
-	public void increaseSessionCounters(BigDecimal value) {
-		if (recyclingSessionTotalValue == null) {
-			recyclingSessionTotalValue = BigDecimal.ZERO;
+	public void increaseSessionCounters(ItemMaterial material, BigDecimal value) {
+		BigDecimal currTotalValue = recyclingSession.getTotalValue();
+		if (currTotalValue == null) {
+			recyclingSession.setTotalValue(BigDecimal.ZERO);
 		}
-		recyclingSessionTotalValue = recyclingSessionTotalValue.add(value);
-		recyclingSessionRecycledAmount++;
+		recyclingSession.addRecyclable(material, (short) 1, value);
 	}
 
 	public void startMachine() {
@@ -197,26 +172,11 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	}
 
 	public String getFullPile() {
-		if (IsAluminiumLimitReached()) {
-			return RecyclingPile.METAL.name();
-		} else if (IsPlasticBottleLimitReached()) {
-			return RecyclingPile.PLASTIC.name();
-		} else if (IsGlassBottleLimitReached()) {
-			return RecyclingPile.GLASS.name();
-		}
-		return "";
-	}
-
-	public boolean IsAluminiumLimitReached() {
-		return ALUMINIUM_CANS_LIMIT == aluminiumCanLimitCounter;
-	}
-
-	public boolean IsPlasticBottleLimitReached() {
-		return PLASTIC_BOTTLES_LIMIT == plasticBottleLimitCounter;
-	}
-
-	public boolean IsGlassBottleLimitReached() {
-		return GLASS_BOTTLES_LIMIT == glassBottleLimitCounter;
+		return materialToPileMap.entrySet().stream()
+				.filter(entry -> recyclables.get(entry.getKey()).isLimitReached())
+				.map(entry -> entry.getValue().name())
+				.findFirst()
+				.orElse("");
 	}
 
 	public boolean wrinkledItemDetected(Item item) {
@@ -227,7 +187,24 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	}
 
 	public void resetSessionCounters() {
-		recyclingSessionTotalValue = BigDecimal.ZERO;
-		recyclingSessionRecycledAmount = 0;
+		recyclingSession.setTotalValue(BigDecimal.valueOf(0.0));
+		recyclingSession.setTotalSessionRecycledAmount((short) 0);
+		recyclingSession.getSessionRecycledAmounts().clear();
+	}
+
+	@Override
+	public String toString() {
+		return "ReverseVendingMachine{" +
+				"recyclables=" + recyclables +
+				", recyclingSession=" + recyclingSession +
+				", ALUMINIUM_CANS_LIMIT=" + ALUMINIUM_CANS_LIMIT +
+				", GLASS_BOTTLES_LIMIT=" + GLASS_BOTTLES_LIMIT +
+				", PLASTIC_BOTTLES_LIMIT=" + PLASTIC_BOTTLES_LIMIT +
+				", rvmId='" + rvmId + '\'' +
+				", materialToPileMap=" + materialToPileMap +
+				", rvmStatus=" + rvmStatus +
+				", rvmFnStatus=" + rvmFnStatus +
+				", rvmPwStatus=" + rvmPwStatus +
+				'}';
 	}
 }
