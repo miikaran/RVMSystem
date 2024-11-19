@@ -21,8 +21,10 @@ import org.autumn24.charity.Charity;
 import org.autumn24.charity.charities.AlzheimerAssociation;
 import org.autumn24.charity.charities.AmnestyInternational;
 import org.autumn24.charity.charities.Greenpeace;
+import org.autumn24.rvm.Receipt;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * A class that is used to display ui views.
@@ -115,6 +117,30 @@ public class UserInterface {
 		System.out.print(BOLD + "=> " + RESET);
 	}
 
+	public static void displayReceipt(Receipt receipt) {
+		Date date = new Date();
+		System.out.println();
+		System.out.println(WHITE + BOLD + "═════════════════════════════════════");
+		System.out.println("           RECYCLING RECEIPT              ");
+		System.out.println("═════════════════════════════════════" + RESET);
+		System.out.printf(LIGHT_GRAY + "📅 Date:        " + WHITE + "%s%n", date);
+		System.out.printf(LIGHT_GRAY + "🆔 Receipt ID:  " + WHITE + "%s%n", receipt.getReceiptId());
+		System.out.println(WHITE + "-------------------------------------");
+		System.out.println("           RECYCLED ITEMS            ");
+		System.out.println("-------------------------------------" + RESET);
+		System.out.printf(LIGHT_GRAY + "🥫 Aluminium Cans: " + WHITE + "%d%n",
+				receipt.getNumberOfProcessedAluminiumCans());
+		System.out.printf(LIGHT_GRAY + "🍾 Glass Bottles:  " + WHITE + "%d%n",
+				receipt.getNumberOfProcessedGlassBottles());
+		System.out.printf(LIGHT_GRAY + "🍼 Plastic Bottles: " + WHITE + "%d%n",
+				receipt.getNumberOfProcessedPlasticBottles());
+		System.out.println(WHITE + "-------------------------------------");
+		System.out.println("             TOTAL VALUE             ");
+		System.out.println("-------------------------------------" + RESET);
+		System.out.printf(LIGHT_GRAY + "💵 Total Earned:   " + WHITE + "%.2f €%n", receipt.getTotalValue());
+		System.out.println(WHITE + "═════════════════════════════════════" + RESET);
+	}
+
 	public static void displayLoggedInRecyclerMenu(String user, BigDecimal totalValue, short recyclablesLeft, short recycledAmount) {
 		if (totalValue == null) totalValue = BigDecimal.ZERO;
 		System.out.println("\n\n");
@@ -151,6 +177,4 @@ public class UserInterface {
 
 	public static void displayBottleAnimation() {
 	} //😲
-
-
 }
