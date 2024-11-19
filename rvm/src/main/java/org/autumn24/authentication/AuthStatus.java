@@ -15,7 +15,7 @@
  * If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.autumn24;
+package org.autumn24.authentication;
 
 public enum AuthStatus {
 	ADMIN,      // Indicates that admin is authenticated

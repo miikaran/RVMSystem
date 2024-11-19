@@ -17,6 +17,8 @@
 
 package org.autumn24;
 
+import org.autumn24.authentication.AuthStatus;
+import org.autumn24.authentication.Authentication;
 import org.autumn24.exceptions.InvalidItemSizeException;
 import org.autumn24.items.Item;
 import org.autumn24.items.ItemFactory;
@@ -29,6 +31,7 @@ import org.autumn24.users.User;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 /**
@@ -76,7 +79,7 @@ public class ApplicationManager {
 		appDataManager.loadJsonAppData();
 		rvm = appDataManager.appData.getRvm();
 		rvm.startMachine();
-		user = authManager.getUserById("Guest");
+		user = AuthManager.getUserById("Guest");
 		inactivityTimer = new InactivityTimer(rvm);
 		inactivityTimer.resetTimer();
 		mainLoop();
@@ -136,8 +139,8 @@ public class ApplicationManager {
 		switch (userInput) {
 			case 1 -> handleRvmEmptying();
 			case 2 -> {
-				user = authManager.getUserById("Guest");
-				authManager.setAuthStatus(AuthStatus.GUEST);
+				user = AuthManager.getUserById("Guest");
+				AuthManager.setAuthStatus(AuthStatus.GUEST);
 			}
 			default -> throw new IllegalArgumentException("Invalid option...");
 		}
@@ -205,13 +208,14 @@ public class ApplicationManager {
 			System.out.print("=> ");
 			userId = scanner.nextLine();
 		}
-		boolean userAuthenticated = authManager.authenticateUser(userId);
-		if (userAuthenticated) {
-			user = authManager.getUserById(userId);
-			System.out.println("User " + user.getUserName() + " authenticated successfully.");
+		boolean validUser = Authentication.userExists(userId);
+		if (!validUser) {
+			System.out.println("User authentication failed...");
 			return;
 		}
-		System.out.println("User authentication failed...");
+		Authentication.authenticateUser(userId);
+		user = AuthManager.getUserById(userId);
+		System.out.println("User " + Objects.requireNonNull(user).getUserName() + " authenticated successfully.");
 	}
 
 	private void handleFullMachine() {
