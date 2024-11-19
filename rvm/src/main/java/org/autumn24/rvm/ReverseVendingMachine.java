@@ -17,6 +17,7 @@
 
 package org.autumn24.rvm;
 
+import org.autumn24.UserInterface;
 import org.autumn24.charity.Charity;
 import org.autumn24.charity.CharityFactory;
 import org.autumn24.data.RecyclableData;
@@ -105,7 +106,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 				recyclables.get(ItemMaterial.PLASTIC).getSessionRecycled(),
 				recyclingSession.getTotalValue()
 		);
-		receipt.displayReceipt();
+		UserInterface.displayReceipt(receipt);
 		return receipt;
 	}
 
