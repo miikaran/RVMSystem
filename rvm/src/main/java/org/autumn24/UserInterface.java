@@ -34,17 +34,17 @@ import java.util.Date;
  */
 public class UserInterface {
 
-	public static final String RED = "\u001B[31m";
-	public static final String GREEN = "\u001B[32m";
-	public static final String YELLOW = "\u001B[33m";
-	public static final String BLUE = "\u001B[34m";
-	public static final String PURPLE = "\u001B[35m";
-	public static final String CYAN = "\u001B[36m";
-	public static final String WHITE = "\u001B[37m";
-	public static final String LIGHT_GRAY = "\u001B[90m";
-	public static final String BOLD = "\u001B[1m";
-	public static final String UNDERLINE = "\u001B[4m";
-	public static final String RESET = "\u001B[0m";
+	private static final String RED = "\u001B[31m";
+	private static final String GREEN = "\u001B[32m";
+	private static final String YELLOW = "\u001B[33m";
+	private static final String BLUE = "\u001B[34m";
+	private static final String PURPLE = "\u001B[35m";
+	private static final String CYAN = "\u001B[36m";
+	private static final String WHITE = "\u001B[37m";
+	private static final String LIGHT_GRAY = "\u001B[90m";
+	private static final String BOLD = "\u001B[1m";
+	private static final String UNDERLINE = "\u001B[4m";
+	private static final String RESET = "\u001B[0m";
 
 	public static void displayMenu(BigDecimal totalValue, short recyclablesLeft, short recycledAmount) {
 		if (totalValue == null) totalValue = BigDecimal.ZERO;
