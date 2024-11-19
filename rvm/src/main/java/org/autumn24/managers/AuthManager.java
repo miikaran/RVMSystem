@@ -33,8 +33,10 @@ public class AuthManager {
 
 	public static User getUserById(String userId) {
 		ArrayList<User> userData = appDataManager.appData.getUserData();
-		boolean found = userData.stream().anyMatch(user -> user.getUserId().equals(userId));
-		return found ? userData.getFirst() : null;
+		return userData.stream()
+				.filter(user -> user.getUserId().equals(userId))
+				.findFirst()
+				.orElse(null);
 	}
 
 	public static void setAuthenticatedUser(AuthenticatedUser authenticatedUser) {
