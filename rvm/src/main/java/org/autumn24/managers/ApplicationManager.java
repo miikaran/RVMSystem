@@ -189,11 +189,11 @@ public class ApplicationManager {
 			case 1, 2, 3 -> rvm.donateToCharity(userInput);
 			default -> throw new InvalidOptionException();
 		}
-		updateAppData();
+		updateAllUserAppData();
 	}
 
 	private boolean notValidSessionTotal() {
-		return rvm.getRecyclingSessionTotalValue().equals(BigDecimal.ZERO);
+		return rvm.recyclingSession.getTotalValue().equals(BigDecimal.ZERO);
 	}
 
 	private void handleUserAuth() {
