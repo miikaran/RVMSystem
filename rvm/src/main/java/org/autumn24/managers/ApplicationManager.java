@@ -105,7 +105,8 @@ public class ApplicationManager {
 
 	private void generateBottles(ItemFactory itemFactory) {
 		System.out.println("\nGenerated bottles: ");
-		for (int i = 0; i < 8; i++) {
+		final byte ITEMS_TO_GENERATE_LIMITED = 8; // SIMULATION LIMITATION FOR DEMO
+		for (int i = 0; i < ITEMS_TO_GENERATE_LIMITED; i++) {
 			try {
 				Item item = itemFactory.createItem();
 				System.out.println(item);
