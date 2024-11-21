@@ -20,6 +20,7 @@ package org.autumn24.managers;
 import org.autumn24.UserInterface;
 import org.autumn24.authentication.AuthenticatedUser;
 import org.autumn24.authentication.Authentication;
+import org.autumn24.enviromental_impact.EnergySaved;
 import org.autumn24.exceptions.InvalidItemSizeException;
 import org.autumn24.exceptions.InvalidOptionException;
 import org.autumn24.items.Item;
@@ -126,7 +127,17 @@ public class ApplicationManager {
 			case 3 -> handleDonation();
 			case 4 -> handleUserAuth();
 			case 5 -> appRunning = false;
+			case 6 -> handleEcoStats(user);
 			default -> throw new InvalidOptionException();
+		}
+	}
+
+	/* In progress dont touch */
+	private void handleEcoStats(User user) {
+		if (authManager.isLoggedInAsRecycler()) {
+			EnergySaved.energySavedByRecyclingAluminiumCans((RegisteredRecycler) user);
+		} else {
+			System.out.println("You must be logged in to view eco stats");
 		}
 	}
 
