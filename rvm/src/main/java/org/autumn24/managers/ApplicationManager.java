@@ -189,7 +189,7 @@ public class ApplicationManager {
 	}
 
 	private boolean notValidSessionTotal() {
-		return rvm.recyclingSession.getTotalValue().equals(BigDecimal.ZERO);
+		return rvm.recyclingSession.getRecyclingSessionTotalValue().equals(BigDecimal.ZERO);
 	}
 
 	private void handleUserAuth() {
@@ -214,7 +214,7 @@ public class ApplicationManager {
 	private void handleFullMachine() {
 		inactivityTimer.resetTimer();
 		UserInterface.displayMachineError("Machine Limit Reached");
-		if (rvm.recyclingSession.getTotalBottlesRecyled() > 0) {
+		if (rvm.recyclingSession.getRecyclingSessionRecycledAmount() > 0) {
 			updateAllUserAppData();
 			rvm.printReceipt();
 			rvm.resetSessionCounters();
@@ -269,28 +269,42 @@ public class ApplicationManager {
 		if (authManager.isLoggedInAsRecycler()) {
 			UserInterface.displayLoggedInRecyclerMenu(
 					user.getUserName(),
-					rvm.recyclingSession.getTotalValue(),
+					rvm.recyclingSession.getRecyclingSessionTotalValue(),
 					(short) items.size(),
-					rvm.recyclingSession.getTotalBottlesRecyled());
+					rvm.recyclingSession.getRecyclingSessionRecycledAmount());
 		} else if (authManager.isLoggedInAsEmployee()) {
 			UserInterface.displayAdminMenu();
 		} else {
 			UserInterface.displayMenu(
-					rvm.recyclingSession.getTotalValue(),
+					rvm.recyclingSession.getRecyclingSessionTotalValue(),
 					(short) items.size(),
-					rvm.recyclingSession.getTotalBottlesRecyled()
+					rvm.recyclingSession.getRecyclingSessionRecycledAmount()
 			);
 		}
 	}
 
 	private void updateAllUserAppData() {
 		// Need to rework on this 😩 - but works for now
+		/* THIS IS ART NO JUDGMENT PLS */
 		if (authManager.isLoggedInAsRecycler()) {
-			int totalBottlesRecycled = ((RegisteredRecycler) user).getTotalBottlesRecycled();
-			int newTotalBottlesRecycled = totalBottlesRecycled + rvm.recyclingSession.getTotalBottlesRecyled();
-			((RegisteredRecycler) user).setTotalBottlesRecycled((short) newTotalBottlesRecycled);
+			long totalPlasticBottlesRecycled = ((RegisteredRecycler) user).getTotalPlasticBottlesRecycled();
+			long newTotalPlasticBottlesRecycled = totalPlasticBottlesRecycled + rvm.recyclingSession.getRecyclingSessionRecycledPlasticBottles();
+			((RegisteredRecycler) user).setTotalPlasticBottlesRecycled(newTotalPlasticBottlesRecycled);
+
+			long totalGlassBottlesRecycled = ((RegisteredRecycler) user).getTotalGlassBottlesRecycled();
+			long newTotalGlassBottlesRecycled = totalGlassBottlesRecycled + rvm.recyclingSession.getRecyclingSessionRecycledGlassBottles();
+			((RegisteredRecycler) user).setTotalGlassBottlesRecycled(newTotalGlassBottlesRecycled);
+
+			long totalAluminiumCansRecycled = ((RegisteredRecycler) user).getTotalAluminiumCansRecycled();
+			long newTotalAluminiumCansRecycled = totalAluminiumCansRecycled + rvm.recyclingSession.getRecyclingSessionRecycledAluminumBottles();
+			((RegisteredRecycler) user).setTotalAluminiumCansRecycled(newTotalAluminiumCansRecycled);
+
+			long totalItemsRecycled = ((RegisteredRecycler) user).getTotalItemsRecycled();
+			long newTotalItemsRecycled = totalItemsRecycled + rvm.recyclingSession.getRecyclingSessionRecycledAmount();
+			((RegisteredRecycler) user).setTotalItemsRecycled();
+
 			BigDecimal totalValueRecycled = ((RegisteredRecycler) user).getRedeemedTotalValue();
-			BigDecimal newTotalValueRecycled = totalValueRecycled.add(rvm.recyclingSession.getTotalValue());
+			BigDecimal newTotalValueRecycled = totalValueRecycled.add(rvm.recyclingSession.getRecyclingSessionTotalValue());
 			((RegisteredRecycler) user).setRedeemedTotalValue(newTotalValueRecycled);
 		}
 		appDataManager.updateAppDataToJson();

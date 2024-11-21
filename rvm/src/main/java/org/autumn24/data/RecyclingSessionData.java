@@ -41,46 +41,63 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class RecyclingSessionData {
+	private final Map<ItemMaterial, Short> sessionRecycledAmounts = new EnumMap<>(ItemMaterial.class);
+	private long recyclingSessionRecycledPlasticBottles = 0;
+	private long recyclingSessionRecycledGlassBottles = 0;
+	private long recyclingSessionRecycledAluminumBottles = 0;
 	private BigDecimal recyclingSessionTotalValue = BigDecimal.ZERO;
-	private short recyclingSessionRecycledAmount = 0;
-	private Map<ItemMaterial, Short> sessionRecycledAmounts = new EnumMap<>(ItemMaterial.class);
+	private short recyclingSessionRecycledAmount = 0; // short because our simulation limitations apply
 
 	public void addRecyclable(ItemMaterial material, short amount, BigDecimal determinedValue) {
 		sessionRecycledAmounts.put(material, (short) (sessionRecycledAmounts.getOrDefault(material, (short) 0) + amount));
 		recyclingSessionTotalValue = recyclingSessionTotalValue.add(determinedValue);
 		recyclingSessionRecycledAmount += amount;
+
+		switch (material) {
+			case ALUMINIUM -> recyclingSessionRecycledAluminumBottles++;
+			case GLASS -> recyclingSessionRecycledGlassBottles++;
+			case PLASTIC -> recyclingSessionRecycledPlasticBottles++;
+		}
 	}
 
-	public short getTotalBottlesRecyled() {
-		return recyclingSessionRecycledAmount;
+	public long getRecyclingSessionRecycledPlasticBottles() {
+		return recyclingSessionRecycledPlasticBottles;
 	}
 
-	public BigDecimal getTotalValue() {
+	public long getRecyclingSessionRecycledGlassBottles() {
+		return recyclingSessionRecycledGlassBottles;
+	}
+
+	public long getRecyclingSessionRecycledAluminumBottles() {
+		return recyclingSessionRecycledAluminumBottles;
+	}
+
+	public BigDecimal getRecyclingSessionTotalValue() {
 		return recyclingSessionTotalValue;
 	}
 
-	public void setTotalValue(BigDecimal totalValue) {
-		this.recyclingSessionTotalValue = totalValue;
+	public void setRecyclingSessionTotalValue(BigDecimal recyclingSessionTotalValue) {
+		this.recyclingSessionTotalValue = recyclingSessionTotalValue;
 	}
 
-	public void setTotalSessionRecycledAmount(short totalSessionRecycledAmount) {
-		this.recyclingSessionRecycledAmount = totalSessionRecycledAmount;
+	public short getRecyclingSessionRecycledAmount() {
+		return recyclingSessionRecycledAmount;
+	}
+
+	public void setRecyclingSessionRecycledAmount(short recyclingSessionRecycledAmount) {
+		this.recyclingSessionRecycledAmount = recyclingSessionRecycledAmount;
 	}
 
 	public Map<ItemMaterial, Short> getSessionRecycledAmounts() {
 		return sessionRecycledAmounts;
 	}
 
-	public void setSessionRecycledAmounts(Map<ItemMaterial, Short> sessionRecycledAmounts) {
-		this.sessionRecycledAmounts = sessionRecycledAmounts;
-	}
-
 	@Override
 	public String toString() {
-		return "RecyclingSession{" +
+		return "RecyclingSessionData{" +
 				"sessionRecycledAmounts=" + sessionRecycledAmounts +
-				", totalBottlesRecyled=" + recyclingSessionRecycledAmount +
-				", totalValue=" + recyclingSessionTotalValue +
+				", recyclingSessionTotalValue=" + recyclingSessionTotalValue +
+				", recyclingSessionRecycledAmount=" + recyclingSessionRecycledAmount +
 				'}';
 	}
 }

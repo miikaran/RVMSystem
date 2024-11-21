@@ -96,7 +96,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 
 	@Override
 	public void donateToChosenCharity(Charity charity) {
-		System.out.printf("Donated %s to %s%n", recyclingSession.getTotalValue(), charity.name());
+		System.out.printf("Donated %s to %s%n", recyclingSession.getRecyclingSessionTotalValue(), charity.name());
 	}
 
 	public Receipt printReceipt() {
@@ -104,7 +104,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 				recyclables.get(ItemMaterial.ALUMINIUM).getSessionRecycled(),
 				recyclables.get(ItemMaterial.GLASS).getSessionRecycled(),
 				recyclables.get(ItemMaterial.PLASTIC).getSessionRecycled(),
-				recyclingSession.getTotalValue()
+				recyclingSession.getRecyclingSessionTotalValue()
 		);
 		UserInterface.displayReceipt(receipt);
 		return receipt;
@@ -112,7 +112,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 
 	public Charity donateToCharity(int charityIndex) {
 		Charity charity = CharityFactory.createCharity(charityIndex);
-		System.out.println("Donating " + recyclingSession.getTotalValue() + "€ to " + charity.name());
+		System.out.println("Donating " + recyclingSession.getRecyclingSessionTotalValue() + "€ to " + charity.name());
 		System.out.println("Thank you for choosing us!");
 		return charity;
 	}
@@ -135,9 +135,9 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	}
 
 	public void increaseSessionCounters(ItemMaterial material, BigDecimal value) {
-		BigDecimal currTotalValue = recyclingSession.getTotalValue();
+		BigDecimal currTotalValue = recyclingSession.getRecyclingSessionTotalValue();
 		if (currTotalValue == null) {
-			recyclingSession.setTotalValue(BigDecimal.ZERO);
+			recyclingSession.setRecyclingSessionTotalValue(BigDecimal.ZERO);
 		}
 		recyclingSession.addRecyclable(material, (short) 1, value);
 	}
@@ -185,8 +185,8 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	}
 
 	public void resetSessionCounters() {
-		recyclingSession.setTotalValue(BigDecimal.ZERO);
-		recyclingSession.setTotalSessionRecycledAmount((short) 0);
+		recyclingSession.setRecyclingSessionTotalValue(BigDecimal.ZERO);
+		recyclingSession.setRecyclingSessionRecycledAmount((short) 0);
 		recyclingSession.getSessionRecycledAmounts().clear();
 		recyclables.get(ItemMaterial.ALUMINIUM).setSessionRecycled((short) 0);
 		recyclables.get(ItemMaterial.PLASTIC).setSessionRecycled((short) 0);

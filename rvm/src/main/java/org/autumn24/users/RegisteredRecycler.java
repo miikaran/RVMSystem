@@ -20,21 +20,57 @@ package org.autumn24.users;
 import java.math.BigDecimal;
 
 public class RegisteredRecycler extends User implements Recycler {
-	private short totalBottlesRecycled;
+	private long totalPlasticBottlesRecycled;
+	private long totalGlassBottlesRecycled;
+	private long totalAluminiumCansRecycled;
+	private long totalItemsRecycled;
 	private BigDecimal totalValueRecycled;
 
-	public RegisteredRecycler(String userName, String userId, String userRole, short totalBottlesRecycled, BigDecimal redeemedTotalValue) {
+	/* -------------------------------------------------------- */
+	// TODO: Make this use a builder pattern due to many params
+	/* -------------------------------------------------------- */
+	public RegisteredRecycler(String userName, String userId, String userRole, long totalPlasticBottlesRecycled, long totalGlassBottlesRecycled, long totalAluminiumCansRecycled, long totalItemsRecycled, BigDecimal redeemedTotalValue) {
 		super(userName, userId, userRole);
-		this.totalBottlesRecycled = totalBottlesRecycled;
+		this.totalPlasticBottlesRecycled = totalPlasticBottlesRecycled;
+		this.totalGlassBottlesRecycled = totalGlassBottlesRecycled;
+		this.totalAluminiumCansRecycled = totalAluminiumCansRecycled;
+		this.totalItemsRecycled = totalItemsRecycled;
 		this.totalValueRecycled = redeemedTotalValue;
 	}
 
-	public short getTotalBottlesRecycled() {
-		return totalBottlesRecycled;
+	public long getTotalItemsRecycled() {
+		return totalItemsRecycled;
 	}
 
-	public void setTotalBottlesRecycled(short totalBottlesRecycled) {
-		this.totalBottlesRecycled = totalBottlesRecycled;
+	public void setTotalItemsRecycled() {
+		this.totalItemsRecycled =
+				totalPlasticBottlesRecycled
+						+ totalGlassBottlesRecycled
+						+ totalAluminiumCansRecycled;
+	}
+
+	public long getTotalAluminiumCansRecycled() {
+		return totalAluminiumCansRecycled;
+	}
+
+	public void setTotalAluminiumCansRecycled(long totalAluminiumCansRecycled) {
+		this.totalAluminiumCansRecycled = totalAluminiumCansRecycled;
+	}
+
+	public long getTotalGlassBottlesRecycled() {
+		return totalGlassBottlesRecycled;
+	}
+
+	public void setTotalGlassBottlesRecycled(long totalGlassBottlesRecycled) {
+		this.totalGlassBottlesRecycled = totalGlassBottlesRecycled;
+	}
+
+	public long getTotalPlasticBottlesRecycled() {
+		return totalPlasticBottlesRecycled;
+	}
+
+	public void setTotalPlasticBottlesRecycled(long totalPlasticBottlesRecycled) {
+		this.totalPlasticBottlesRecycled = totalPlasticBottlesRecycled;
 	}
 
 	public BigDecimal getRedeemedTotalValue() {
@@ -48,7 +84,10 @@ public class RegisteredRecycler extends User implements Recycler {
 	@Override
 	public String toString() {
 		return "RegisteredRecycler{" +
-				"totalBottlesRecycled=" + totalBottlesRecycled +
+				"totalPlasticBottlesRecycled=" + totalPlasticBottlesRecycled +
+				", totalGlassBottlesRecycled=" + totalGlassBottlesRecycled +
+				", totalAluminiumCansRecycled=" + totalAluminiumCansRecycled +
+				", totalItemsRecycled=" + totalItemsRecycled +
 				", totalValueRecycled=" + totalValueRecycled +
 				'}';
 	}
