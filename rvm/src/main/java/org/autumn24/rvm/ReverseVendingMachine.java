@@ -17,6 +17,7 @@
 
 package org.autumn24.rvm;
 
+import org.autumn24.UserInterface;
 import org.autumn24.charity.Charity;
 import org.autumn24.charity.CharityFactory;
 import org.autumn24.data.RecyclableData;
@@ -53,9 +54,9 @@ public class ReverseVendingMachine implements Recycle, Donate {
 			ItemMaterial.ALUMINIUM, RecyclingPile.METAL,
 			ItemMaterial.PLASTIC, RecyclingPile.PLASTIC
 	);
-	public transient ReverseVendingMachineStatus rvmStatus;
-	public ReverseVendingMachineFunctionalStatus rvmFnStatus;
-	public ReverseVendingMachinePowerStatus rvmPwStatus;
+	private final transient ReverseVendingMachineFunctionalStatus rvmFnStatus;
+	private transient ReverseVendingMachinePowerStatus rvmPwStatus;
+	private transient ReverseVendingMachineStatus rvmStatus;
 
 	public ReverseVendingMachine() {
 		rvmId = UUID.randomUUID().toString();
@@ -78,7 +79,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 		BigDecimal value = item.getDeterminedValue();
 		RecyclableData recyclableData = recyclables.get(material);
 		if (recyclableData.isLimitReached()) {
-			rvmStatus = ReverseVendingMachineStatus.FULL;
+			setRvmStatus(ReverseVendingMachineStatus.FULL);
 			return false;
 		}
 		RecyclingPile pile = materialToPileMap.get(material);
@@ -90,8 +91,7 @@ public class ReverseVendingMachine implements Recycle, Donate {
 
 	@Override
 	public void donateToChosenCharity(Charity charity) {
-		System.out.printf("Donated %s to %s%n", recyclingSession.getTotalValue(), charity.name());
-		resetSessionCounters();
+		System.out.printf("Donated %s to %s%n", recyclingSession.getRecyclingSessionTotalValue(), charity.name());
 	}
 
 	public Receipt printReceipt() {
@@ -99,15 +99,15 @@ public class ReverseVendingMachine implements Recycle, Donate {
 				recyclables.get(ItemMaterial.ALUMINIUM).getSessionRecycled(),
 				recyclables.get(ItemMaterial.GLASS).getSessionRecycled(),
 				recyclables.get(ItemMaterial.PLASTIC).getSessionRecycled(),
-				recyclingSession.getTotalValue()
+				recyclingSession.getRecyclingSessionTotalValue()
 		);
-		receipt.displayReceipt();
+		UserInterface.displayReceipt(receipt);
 		return receipt;
 	}
 
 	public Charity donateToCharity(int charityIndex) {
 		Charity charity = CharityFactory.createCharity(charityIndex);
-		System.out.println("Donating " + recyclingSession.getTotalValue() + "€ to " + charity.name());
+		System.out.println("Donating " + recyclingSession.getRecyclingSessionTotalValue() + "€ to " + charity.name());
 		System.out.println("Thank you for choosing us!");
 		return charity;
 	}
@@ -130,9 +130,9 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	}
 
 	public void increaseSessionCounters(ItemMaterial material, BigDecimal value) {
-		BigDecimal currTotalValue = recyclingSession.getTotalValue();
+		BigDecimal currTotalValue = recyclingSession.getRecyclingSessionTotalValue();
 		if (currTotalValue == null) {
-			recyclingSession.setTotalValue(BigDecimal.ZERO);
+			recyclingSession.setRecyclingSessionTotalValue(BigDecimal.ZERO);
 		}
 		recyclingSession.addRecyclable(material, (short) 1, value);
 	}
@@ -143,25 +143,25 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	}
 
 	public void exitFromSleepMode() {
-		if (rvmStatus.equals(ReverseVendingMachineStatus.IDLE)) {
+		if (getRvmStatus().equals(ReverseVendingMachineStatus.IDLE)) {
 			System.out.println("\n\uD83D\uDD0B Machine: " + rvmId + " recovering from sleep mode:");
-			rvmStatus = ReverseVendingMachineStatus.IN_USE;
+			setRvmStatus(ReverseVendingMachineStatus.IN_USE);
 		}
 	}
 
 	public boolean isValidSleepModeException(Exception e) {
 		// Used to identify exceptions that can be suppressed when recovering from sleepmode
-		return e instanceof InvalidOptionException && ReverseVendingMachineStatus.IDLE.equals(rvmStatus);
+		return e instanceof InvalidOptionException && ReverseVendingMachineStatus.IDLE.equals(getRvmStatus());
 	}
 
 	public boolean machineIsUsable() {
 		return ReverseVendingMachineFunctionalStatus.OPERATIONAL.equals(rvmFnStatus)
 				&& ReverseVendingMachinePowerStatus.ON.equals(rvmPwStatus)
-				&& !ReverseVendingMachineStatus.FULL.equals(rvmStatus);
+				&& !ReverseVendingMachineStatus.FULL.equals(getRvmStatus());
 	}
 
 	public boolean IsMachineFull() {
-		return ReverseVendingMachineStatus.FULL.equals(rvmStatus);
+		return ReverseVendingMachineStatus.FULL.equals(getRvmStatus());
 	}
 
 	public String getFullPile() {
@@ -180,8 +180,8 @@ public class ReverseVendingMachine implements Recycle, Donate {
 	}
 
 	public void resetSessionCounters() {
-		recyclingSession.setTotalValue(BigDecimal.ZERO);
-		recyclingSession.setTotalSessionRecycledAmount((short) 0);
+		recyclingSession.setRecyclingSessionTotalValue(BigDecimal.ZERO);
+		recyclingSession.setRecyclingSessionRecycledAmount((short) 0);
 		recyclingSession.getSessionRecycledAmounts().clear();
 		recyclables.get(ItemMaterial.ALUMINIUM).setSessionRecycled((short) 0);
 		recyclables.get(ItemMaterial.PLASTIC).setSessionRecycled((short) 0);
@@ -195,9 +195,17 @@ public class ReverseVendingMachine implements Recycle, Donate {
 				", recyclingSession=" + recyclingSession +
 				", rvmId='" + rvmId + '\'' +
 				", materialToPileMap=" + materialToPileMap +
-				", rvmStatus=" + rvmStatus +
+				", rvmStatus=" + getRvmStatus() +
 				", rvmFnStatus=" + rvmFnStatus +
 				", rvmPwStatus=" + rvmPwStatus +
 				'}';
+	}
+
+	public ReverseVendingMachineStatus getRvmStatus() {
+		return rvmStatus;
+	}
+
+	public void setRvmStatus(ReverseVendingMachineStatus rvmStatus) {
+		this.rvmStatus = rvmStatus;
 	}
 }

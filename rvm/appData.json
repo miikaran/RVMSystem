@@ -3,23 +3,21 @@
     "recyclables": {
       "ALUMINIUM": {
         "recyclingLimit": 3,
-        "recyclingLimitCounter": 1,
-        "totalRecycled": 40
+        "recyclingLimitCounter": 0,
+        "totalRecycled": 49
       },
       "GLASS": {
         "recyclingLimit": 3,
-        "recyclingLimitCounter": 1,
-        "totalRecycled": 38
+        "recyclingLimitCounter": 2,
+        "totalRecycled": 50
       },
       "PLASTIC": {
         "recyclingLimit": 3,
-        "recyclingLimitCounter": 1,
-        "totalRecycled": 31
+        "recyclingLimitCounter": 0,
+        "totalRecycled": 36
       }
     },
-    "rvmId": "4c217e52-4738-4739-9194-91f2e203bad5",
-    "rvmFnStatus": "OPERATIONAL",
-    "rvmPwStatus": "ON"
+    "rvmId": "4c217e52-4738-4739-9194-91f2e203bad5"
   },
   "userData": [
     {
@@ -28,8 +26,11 @@
       "userRole": "guest"
     },
     {
-      "totalBottlesRecycled": 21,
-      "totalValueRecycled": 5.40,
+      "totalPlasticBottlesRecycled": 0,
+      "totalGlassBottlesRecycled": 1,
+      "totalAluminiumCansRecycled": 0,
+      "totalItemsRecycled": 1,
+      "totalValueRecycled": 0.1,
       "userName": "Juuppelis",
       "userId": "456",
       "userRole": "recycler"

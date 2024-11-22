@@ -20,6 +20,7 @@ package org.autumn24.managers;
 import org.autumn24.UserInterface;
 import org.autumn24.authentication.AuthenticatedUser;
 import org.autumn24.authentication.Authentication;
+import org.autumn24.enviromental_impact.EnergySaved;
 import org.autumn24.exceptions.InvalidItemSizeException;
 import org.autumn24.exceptions.InvalidOptionException;
 import org.autumn24.items.Item;
@@ -60,20 +61,14 @@ public class ApplicationManager {
 	}
 
 	private static int getUserAction() {
-		if (!scanner.hasNextInt()) {
-			scanner.nextLine(); // Clear invalid input
+		if (!scanner.hasNextLine()) {
+			scanner.nextLine();
 			return 0;
 		}
-		int choice = scanner.nextInt();
-		scanner.nextLine(); // Clear input buffer for new line
-		if (ReverseVendingMachineStatus.IDLE.equals(rvm.rvmStatus)) {
-            /*
-            If RVM has gone to sleep mode while waiting on user action,
-            return invalid option to activate sleep-mode recovery.
-            */
-			return 0;
-		}
-		return choice;
+		String choice = scanner.nextLine();
+		/* If RVM has gone to sleep mode while waiting on user action,
+		return invalid option to activate sleep-mode recovery. */
+		return ReverseVendingMachineStatus.IDLE.equals(rvm.getRvmStatus()) ? 0 : Integer.parseInt(choice);
 	}
 
 	public void run() {
@@ -111,7 +106,8 @@ public class ApplicationManager {
 
 	private void generateBottles(ItemFactory itemFactory) {
 		System.out.println("\nGenerated bottles: ");
-		for (int i = 0; i < 8; i++) {
+		final byte ITEMS_TO_GENERATE_LIMITED = 8; // SIMULATION LIMITATION FOR DEMO
+		for (int i = 0; i < ITEMS_TO_GENERATE_LIMITED; i++) {
 			try {
 				Item item = itemFactory.createItem();
 				System.out.println(item);
@@ -131,7 +127,17 @@ public class ApplicationManager {
 			case 3 -> handleDonation();
 			case 4 -> handleUserAuth();
 			case 5 -> appRunning = false;
+			case 6 -> handleEcoStats(user);
 			default -> throw new InvalidOptionException();
+		}
+	}
+
+	/* In progress dont touch */
+	private void handleEcoStats(User user) {
+		if (authManager.isLoggedInAsRecycler()) {
+			EnergySaved.energySavedByRecyclingAluminiumCans((RegisteredRecycler) user);
+		} else {
+			System.out.println("You must be logged in to view eco stats");
 		}
 	}
 
@@ -194,7 +200,7 @@ public class ApplicationManager {
 	}
 
 	private boolean notValidSessionTotal() {
-		return rvm.recyclingSession.getTotalValue().equals(BigDecimal.ZERO);
+		return rvm.recyclingSession.getRecyclingSessionTotalValue().equals(BigDecimal.ZERO);
 	}
 
 	private void handleUserAuth() {
@@ -219,7 +225,7 @@ public class ApplicationManager {
 	private void handleFullMachine() {
 		inactivityTimer.resetTimer();
 		UserInterface.displayMachineError("Machine Limit Reached");
-		if (rvm.recyclingSession.getTotalBottlesRecyled() > 0) {
+		if (rvm.recyclingSession.getRecyclingSessionRecycledAmount() > 0) {
 			updateAllUserAppData();
 			rvm.printReceipt();
 			rvm.resetSessionCounters();
@@ -236,7 +242,7 @@ public class ApplicationManager {
 		if (rvm.IsMachineFull()) {
 			System.out.println("Emptying all piles...");
 			rvm.recyclables.values().forEach(recyclableData -> recyclableData.setRecyclingLimitCounter((short) 0));
-			rvm.rvmStatus = null;
+			rvm.setRvmStatus(null);
 			appDataManager.updateAppDataToJson();
 			System.out.println("All piles cleared!");
 		} else {
@@ -274,28 +280,42 @@ public class ApplicationManager {
 		if (authManager.isLoggedInAsRecycler()) {
 			UserInterface.displayLoggedInRecyclerMenu(
 					user.getUserName(),
-					rvm.recyclingSession.getTotalValue(),
+					rvm.recyclingSession.getRecyclingSessionTotalValue(),
 					(short) items.size(),
-					rvm.recyclingSession.getTotalBottlesRecyled());
+					rvm.recyclingSession.getRecyclingSessionRecycledAmount());
 		} else if (authManager.isLoggedInAsEmployee()) {
 			UserInterface.displayAdminMenu();
 		} else {
 			UserInterface.displayMenu(
-					rvm.recyclingSession.getTotalValue(),
+					rvm.recyclingSession.getRecyclingSessionTotalValue(),
 					(short) items.size(),
-					rvm.recyclingSession.getTotalBottlesRecyled()
+					rvm.recyclingSession.getRecyclingSessionRecycledAmount()
 			);
 		}
 	}
 
 	private void updateAllUserAppData() {
 		// Need to rework on this 😩 - but works for now
+		/* THIS IS ART NO JUDGMENT PLS */
 		if (authManager.isLoggedInAsRecycler()) {
-			int totalBottlesRecycled = ((RegisteredRecycler) user).getTotalBottlesRecycled();
-			int newTotalBottlesRecycled = totalBottlesRecycled + rvm.recyclingSession.getTotalBottlesRecyled();
-			((RegisteredRecycler) user).setTotalBottlesRecycled((short) newTotalBottlesRecycled);
+			long totalPlasticBottlesRecycled = ((RegisteredRecycler) user).getTotalPlasticBottlesRecycled();
+			long newTotalPlasticBottlesRecycled = totalPlasticBottlesRecycled + rvm.recyclingSession.getRecyclingSessionRecycledPlasticBottles();
+			((RegisteredRecycler) user).setTotalPlasticBottlesRecycled(newTotalPlasticBottlesRecycled);
+
+			long totalGlassBottlesRecycled = ((RegisteredRecycler) user).getTotalGlassBottlesRecycled();
+			long newTotalGlassBottlesRecycled = totalGlassBottlesRecycled + rvm.recyclingSession.getRecyclingSessionRecycledGlassBottles();
+			((RegisteredRecycler) user).setTotalGlassBottlesRecycled(newTotalGlassBottlesRecycled);
+
+			long totalAluminiumCansRecycled = ((RegisteredRecycler) user).getTotalAluminiumCansRecycled();
+			long newTotalAluminiumCansRecycled = totalAluminiumCansRecycled + rvm.recyclingSession.getRecyclingSessionRecycledAluminumBottles();
+			((RegisteredRecycler) user).setTotalAluminiumCansRecycled(newTotalAluminiumCansRecycled);
+
+			long totalItemsRecycled = ((RegisteredRecycler) user).getTotalItemsRecycled();
+			long newTotalItemsRecycled = totalItemsRecycled + rvm.recyclingSession.getRecyclingSessionRecycledAmount();
+			((RegisteredRecycler) user).setTotalItemsRecycled();
+
 			BigDecimal totalValueRecycled = ((RegisteredRecycler) user).getRedeemedTotalValue();
-			BigDecimal newTotalValueRecycled = totalValueRecycled.add(rvm.recyclingSession.getTotalValue());
+			BigDecimal newTotalValueRecycled = totalValueRecycled.add(rvm.recyclingSession.getRecyclingSessionTotalValue());
 			((RegisteredRecycler) user).setRedeemedTotalValue(newTotalValueRecycled);
 		}
 		appDataManager.updateAppDataToJson();

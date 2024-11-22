@@ -19,10 +19,7 @@ package org.autumn24.rvm;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
 import java.util.UUID;
-
-import static org.autumn24.UserInterface.*;
 
 /**
  * A class representing receipt that can be received from a reverse vending machine.
@@ -32,10 +29,10 @@ import static org.autumn24.UserInterface.*;
  */
 public class Receipt {
 	private final BigDecimal totalValue;
-	public short numberOfProcessedAluminiumCans;
-	public short numberOfProcessedGlassBottles;
-	public short numberOfProcessedPlasticBottles;
-	public String receiptId;
+	private final short numberOfProcessedAluminiumCans;
+	private final short numberOfProcessedGlassBottles;
+	private final short numberOfProcessedPlasticBottles;
+	private final String receiptId;
 
 	public Receipt(short aluminiumCans, short glassBottles, short plasticBottles, BigDecimal totalValue) {
 		numberOfProcessedAluminiumCans = aluminiumCans;
@@ -45,29 +42,24 @@ public class Receipt {
 		receiptId = UUID.randomUUID().toString();
 	}
 
-	public BigDecimal getTotalValue() {
-		return totalValue;
+	public short getNumberOfProcessedAluminiumCans() {
+		return numberOfProcessedAluminiumCans;
 	}
 
-	public void displayReceipt() {
-		Date date = new Date();
-		System.out.println();
-		System.out.println(WHITE + BOLD + "═════════════════════════════════════");
-		System.out.println("           RECYCLING RECEIPT              ");
-		System.out.println("═════════════════════════════════════" + RESET);
-		System.out.printf(LIGHT_GRAY + "📅 Date:        " + WHITE + "%s%n", date);
-		System.out.printf(LIGHT_GRAY + "🆔 Receipt ID:  " + WHITE + "%s%n", receiptId);
-		System.out.println(WHITE + "-------------------------------------");
-		System.out.println("           RECYCLED ITEMS            ");
-		System.out.println("-------------------------------------" + RESET);
-		System.out.printf(LIGHT_GRAY + "🥫 Aluminium Cans: " + WHITE + "%d%n", numberOfProcessedAluminiumCans);
-		System.out.printf(LIGHT_GRAY + "🍾 Glass Bottles:  " + WHITE + "%d%n", numberOfProcessedGlassBottles);
-		System.out.printf(LIGHT_GRAY + "🍼 Plastic Bottles: " + WHITE + "%d%n", numberOfProcessedPlasticBottles);
-		System.out.println(WHITE + "-------------------------------------");
-		System.out.println("             TOTAL VALUE             ");
-		System.out.println("-------------------------------------" + RESET);
-		System.out.printf(LIGHT_GRAY + "💵 Total Earned:   " + WHITE + "%.2f €%n", totalValue);
-		System.out.println(WHITE + "═════════════════════════════════════" + RESET);
+	public short getNumberOfProcessedGlassBottles() {
+		return numberOfProcessedGlassBottles;
+	}
+
+	public short getNumberOfProcessedPlasticBottles() {
+		return numberOfProcessedPlasticBottles;
+	}
+
+	public String getReceiptId() {
+		return receiptId;
+	}
+
+	public BigDecimal getTotalValue() {
+		return totalValue;
 	}
 
 	@Override
