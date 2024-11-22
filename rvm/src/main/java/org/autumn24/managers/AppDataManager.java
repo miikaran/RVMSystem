@@ -36,15 +36,15 @@ public class AppDataManager {
 			.registerTypeAdapter(User.class, new UserDeserializer())
 			.create();
 
-	private final String userDatabase;
+	private final String database;
 	public AppData appData;
 
 	public AppDataManager(String userDatabase) {
-		this.userDatabase = userDatabase;
+		this.database = userDatabase;
 	}
 
 	public void updateAppDataToJson() {
-		try (FileWriter writer = new FileWriter(userDatabase)) {
+		try (FileWriter writer = new FileWriter(database)) {
 			gson.toJson(appData, writer);
 		} catch (JsonIOException | IOException e) {
 			System.out.println(e.getMessage());
@@ -52,7 +52,7 @@ public class AppDataManager {
 	}
 
 	public void loadJsonAppData() {
-		try (FileReader reader = new FileReader(userDatabase)) {
+		try (FileReader reader = new FileReader(database)) {
 			AppData appDataObj = gson.fromJson(reader, AppData.class);
 			if (appDataObj == null) {
 				System.out.println("Required data not found...");
@@ -60,7 +60,7 @@ public class AppDataManager {
 			}
 			appData = appDataObj;
 		} catch (FileNotFoundException e) {
-			System.out.println("Database not found: " + userDatabase);
+			System.out.println("Database not found: " + database);
 		} catch (JsonIOException | JsonSyntaxException | IOException e) {
 			System.out.println(e.getMessage());
 		}
