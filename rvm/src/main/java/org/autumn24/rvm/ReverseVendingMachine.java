@@ -77,16 +77,11 @@ public class ReverseVendingMachine implements Recycle, Donate {
 		}
 		BigDecimal value = item.getDeterminedValue();
 		RecyclableData recyclableData = recyclables.get(material);
-		boolean limitReached = recyclableData.isLimitReached();
-		if (limitReached) {
+		if (recyclableData.isLimitReached()) {
 			rvmStatus = ReverseVendingMachineStatus.FULL;
 			return false;
 		}
-		RecyclingPile pile = switch (material) {
-			case ALUMINIUM -> RecyclingPile.METAL;
-			case GLASS -> RecyclingPile.GLASS;
-			case PLASTIC -> RecyclingPile.PLASTIC;
-		};
+		RecyclingPile pile = materialToPileMap.get(material);
 		System.out.println("Sorting item to " + pile.name());
 		increaseRecycledItemsCounter(material);
 		increaseSessionCounters(material, value);
