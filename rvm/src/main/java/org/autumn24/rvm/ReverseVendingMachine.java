@@ -183,9 +183,10 @@ public class ReverseVendingMachine implements Recycle, Donate {
 		recyclingSession.setRecyclingSessionTotalValue(BigDecimal.ZERO);
 		recyclingSession.setRecyclingSessionRecycledAmount((short) 0);
 		recyclingSession.getSessionRecycledAmounts().clear();
-		recyclables.get(ItemMaterial.ALUMINIUM).setSessionRecycled((short) 0);
-		recyclables.get(ItemMaterial.PLASTIC).setSessionRecycled((short) 0);
-		recyclables.get(ItemMaterial.GLASS).setSessionRecycled((short) 0);
+		recyclables.forEach((material, recyclable) -> recyclable.setSessionRecycled((short) 0));
+		recyclingSession.setRecyclingSessionRecycledAluminumBottles(0);
+		recyclingSession.setRecyclingSessionRecycledPlasticBottles(0);
+		recyclingSession.setRecyclingSessionRecycledGlassBottles(0);
 	}
 
 	@Override

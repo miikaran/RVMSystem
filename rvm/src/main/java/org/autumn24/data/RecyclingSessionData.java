@@ -64,12 +64,24 @@ public class RecyclingSessionData {
 		return recyclingSessionRecycledPlasticBottles;
 	}
 
+	public void setRecyclingSessionRecycledPlasticBottles(long recyclingSessionRecycledPlasticBottles) {
+		this.recyclingSessionRecycledPlasticBottles = recyclingSessionRecycledPlasticBottles;
+	}
+
 	public long getRecyclingSessionRecycledGlassBottles() {
 		return recyclingSessionRecycledGlassBottles;
 	}
 
+	public void setRecyclingSessionRecycledGlassBottles(long recyclingSessionRecycledGlassBottles) {
+		this.recyclingSessionRecycledGlassBottles = recyclingSessionRecycledGlassBottles;
+	}
+
 	public long getRecyclingSessionRecycledAluminumBottles() {
 		return recyclingSessionRecycledAluminumBottles;
+	}
+
+	public void setRecyclingSessionRecycledAluminumBottles(long recyclingSessionRecycledAluminumBottles) {
+		this.recyclingSessionRecycledAluminumBottles = recyclingSessionRecycledAluminumBottles;
 	}
 
 	public BigDecimal getRecyclingSessionTotalValue() {
@@ -96,6 +108,9 @@ public class RecyclingSessionData {
 	public String toString() {
 		return "RecyclingSessionData{" +
 				"sessionRecycledAmounts=" + sessionRecycledAmounts +
+				", recyclingSessionRecycledPlasticBottles=" + recyclingSessionRecycledPlasticBottles +
+				", recyclingSessionRecycledGlassBottles=" + recyclingSessionRecycledGlassBottles +
+				", recyclingSessionRecycledAluminumBottles=" + recyclingSessionRecycledAluminumBottles +
 				", recyclingSessionTotalValue=" + recyclingSessionTotalValue +
 				", recyclingSessionRecycledAmount=" + recyclingSessionRecycledAmount +
 				'}';
