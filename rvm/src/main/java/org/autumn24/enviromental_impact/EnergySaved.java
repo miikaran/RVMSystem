@@ -32,11 +32,42 @@ public class EnergySaved {
 	public static double energySavedByRecyclingAluminiumCans(RegisteredRecycler recycler) {
 		// https://www.madehow.com/Volume-2/Aluminum-Beverage-Can.html
 		// Recycling aluminum can save 95% of energy costs used to produce aluminum
-		final double energyUsedToProduceASingleAluminiumCanInMegaJoules = 1.5; // ~
-		final double energyRequiredToRecycledASingleAluminiumCanInMegaJoules = 0.075;
+		final double producingVirginAluminumCan = 1.5; // ~ MJ
+		final double recyclingAnAluminumCan = 0.075;
+		return calculateEnergySaved(recycler, producingVirginAluminumCan, recyclingAnAluminumCan);
+	}
+
+	/**
+	 * @param recycler the user whose recycling data is used in the calculation
+	 * @return energy saved (Kilowatt Hour)
+	 */
+	public static double energySavedByRecyclingPlasticBottles(RegisteredRecycler recycler) {
+		// https://www.greenbubble.com.au/blogs/news/how-much-energy-does-it-take-to-recycle-a-plastic-bottle
+		// https://pacinst.org/wp-content/uploads/2013/02/bottled_water_and_energy3.pdf
+		final double producingVirginPlasticBottle = 3.4; // ~ per litre bottle
+		final double recyclingAPlasticBottle = 0.3; // ~ per litre bottle
+		return calculateEnergySaved(recycler, producingVirginPlasticBottle, recyclingAPlasticBottle);
+	}
+
+	/**
+	 * @param recycler the user whose recycling data is used in the calculation
+	 * @return energy saved (Kilowatt Hour)
+	 */
+	public static double energySavedByRecyclingGlassBottles(RegisteredRecycler recycler) {
+		// https://learnglassblowing.com/the-energy-used-to-make-a-glass-bottle/
+		// www.norcalcompactors.net/glass-recycling/
+		final double producingVirginGlassBottle = 1.8;
+		final double recyclingAGlassBottle = 1.086;
+		return calculateEnergySaved(recycler, producingVirginGlassBottle, recyclingAGlassBottle);
+	}
+
+	private static double calculateEnergySaved(
+			RegisteredRecycler recycler,
+			double energyRequiredToProduce, // MJ
+			double energyRequiredToRecycle  // MJ
+	) {
 		long cansRecycled = recycler.getTotalAluminiumCansRecycled();
-		double energySavedByCan = (energyUsedToProduceASingleAluminiumCanInMegaJoules
-				- energyRequiredToRecycledASingleAluminiumCanInMegaJoules);
+		double energySavedByCan = (energyRequiredToProduce - energyRequiredToRecycle);
 		double energySaved = energySavedByCan * cansRecycled;
 		return convertMJToKiloWattHour(energySaved);
 	}
