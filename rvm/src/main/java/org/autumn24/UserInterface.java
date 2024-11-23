@@ -160,6 +160,18 @@ public class UserInterface {
 		System.out.print(BOLD + "=> " + RESET);
 	}
 
+	public static void showEcoStats() {
+		System.out.println("\n\nChoose what you want to see: ");
+		final String energySavedText = "ENERGY SAVED BY RECYCLING ";
+		final String energySavedIn = "ENERGY SAVED IN ";
+		System.out.printf("%s[1] ➤ %sALUMINUM%s%n", energySavedText, GREEN, RESET);
+		System.out.printf("%s[2] ➤ %sGLASS%s%n", energySavedText, YELLOW, RESET);
+		System.out.printf("%s[3] ➤ %sPLASTIC%s%n", energySavedText, CYAN, RESET);
+		System.out.printf("%s[4] ➤ %sTOTAL%s%n", energySavedIn, PURPLE, RESET);
+		System.out.println("\n\n");
+		System.out.print(BOLD + "=> " + RESET);
+	}
+
 	public static void clearScreen() {
         /*
         (tää toimii mul vaan jos suorittaa eri terminaalis tän ohjelman)
