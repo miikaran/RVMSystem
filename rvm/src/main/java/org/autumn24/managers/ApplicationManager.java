@@ -20,7 +20,7 @@ package org.autumn24.managers;
 import org.autumn24.UserInterface;
 import org.autumn24.authentication.AuthenticatedUser;
 import org.autumn24.authentication.Authentication;
-import org.autumn24.enviromental_impact.EnergySaved;
+import org.autumn24.enviromental_impact.EnergyFactory;
 import org.autumn24.exceptions.InvalidItemSizeException;
 import org.autumn24.exceptions.InvalidOptionException;
 import org.autumn24.items.Item;
@@ -33,6 +33,7 @@ import org.autumn24.users.RegisteredRecycler;
 import org.autumn24.users.User;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
@@ -132,10 +133,12 @@ public class ApplicationManager {
 		}
 	}
 
-	/* In progress dont touch */
 	private void handleEcoStats(User user) {
+		UserInterface.showEcoStats();
 		if (authManager.isLoggedInAsRecycler()) {
-			EnergySaved.energySavedByRecyclingAluminiumCans((RegisteredRecycler) user);
+			BigDecimal energySaved = EnergyFactory.showStat(getUserAction(), user);
+			BigDecimal roundedResult = energySaved.setScale(4, RoundingMode.CEILING);
+			System.out.printf("\nYOU HAVE SAVED %s kWh OF ENERGY!", String.valueOf(roundedResult).toUpperCase());
 		} else {
 			System.out.println("You must be logged in to view eco stats");
 		}
