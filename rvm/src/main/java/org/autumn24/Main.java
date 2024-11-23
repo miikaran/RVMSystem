@@ -27,8 +27,6 @@ import org.autumn24.managers.ApplicationManager;
  */
 public class Main {
 	public static void main(String[] args) {
-		System.out.println("Return assignment for autumn 2024 object oriented programming course");
-
 		// Initialize application manager to handle menu actions
 		ApplicationManager AppManager = new ApplicationManager();
 		AppManager.run();
