@@ -31,38 +31,56 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 public class AppDataManager {
-	public static Gson gson = new GsonBuilder()
+	private static final Gson gson = new GsonBuilder()
 			.setPrettyPrinting()
-			.registerTypeAdapter(User.class, new UserDeserializer())
+			.registerTypeAdapter(
+					User.class,
+					new UserDeserializer()
+			)
 			.create();
 
 	private final String database;
-	public AppData appData;
+	private AppData appData;
 
 	public AppDataManager(String userDatabase) {
 		this.database = userDatabase;
 	}
 
-	public void updateAppDataToJson() {
-		try (FileWriter writer = new FileWriter(database)) {
-			gson.toJson(appData, writer);
+	public static Gson getGson() {
+		return gson;
+	}
+
+	void updateAppDataToJson() {
+		try (FileWriter writer = new FileWriter(getDatabase())) {
+			getGson().toJson(getAppData(), writer);
 		} catch (JsonIOException | IOException e) {
 			System.out.println(e.getMessage());
 		}
 	}
 
-	public void loadJsonAppData() {
-		try (FileReader reader = new FileReader(database)) {
-			AppData appDataObj = gson.fromJson(reader, AppData.class);
-			if (appDataObj == null) {
-				System.out.println("Required data not found...");
-				return;
+	void loadJsonAppData() {
+		try (FileReader reader = new FileReader(getDatabase())) {
+			AppData appDataObj = getGson().fromJson(reader, AppData.class);
+			switch (appDataObj) {
+				case null -> System.out.println("Required data not found...");
+				default -> setAppData(appDataObj);
 			}
-			appData = appDataObj;
 		} catch (FileNotFoundException e) {
-			System.out.println("Database not found: " + database);
+			System.out.println("Database not found: " + getDatabase());
 		} catch (JsonIOException | JsonSyntaxException | IOException e) {
 			System.out.println(e.getMessage());
 		}
+	}
+
+	public String getDatabase() {
+		return database;
+	}
+
+	public AppData getAppData() {
+		return appData;
+	}
+
+	public void setAppData(AppData appData) {
+		this.appData = appData;
 	}
 }

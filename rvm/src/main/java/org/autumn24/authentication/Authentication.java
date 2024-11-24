@@ -49,7 +49,7 @@ public class Authentication {
 	 * @return whether the given userId exists
 	 */
 	public static boolean userExists(String userId) {
-		ArrayList<User> userData = AuthManager.appDataManager.appData.getUserData();
+		ArrayList<User> userData = AuthManager.appDataManager.getAppData().getUserData();
 		return userData.stream().anyMatch(user -> user.getUserId().equals(userId));
 	}
 }

@@ -75,7 +75,7 @@ public class ApplicationManager {
 	public void run() {
 		appRunning = true;
 		appDataManager.loadJsonAppData();
-		rvm = appDataManager.appData.getRvm();
+		rvm = appDataManager.getAppData().getRvm();
 		rvm.startMachine();
 		user = AuthManager.getUserById("Guest");
 		inactivityTimer = new InactivityTimer(rvm);

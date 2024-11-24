@@ -32,7 +32,7 @@ public class AuthManager {
 	}
 
 	public static User getUserById(String userId) {
-		ArrayList<User> userData = appDataManager.appData.getUserData();
+		ArrayList<User> userData = appDataManager.getAppData().getUserData();
 		return userData.stream()
 				.filter(user -> user.getUserId().equals(userId))
 				.findFirst()
