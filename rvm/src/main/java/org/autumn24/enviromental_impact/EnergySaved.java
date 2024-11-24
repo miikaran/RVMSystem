@@ -24,7 +24,7 @@ import java.math.BigDecimal;
 /**
  * This class represents how much energy recyclers recycling has saved.
  */
-public class EnergySaved {
+class EnergySaved {
 	/**
 	 * Calculating how much energy recycler has saved when they have recycled aluminum cans.
 	 *

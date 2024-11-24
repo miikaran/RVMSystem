@@ -20,7 +20,7 @@ package org.autumn24.managers;
 import org.autumn24.UserInterface;
 import org.autumn24.authentication.AuthenticatedUser;
 import org.autumn24.authentication.Authentication;
-import org.autumn24.enviromental_impact.EnergyFactory;
+import org.autumn24.enviromental_impact.EcoStatSelector;
 import org.autumn24.exceptions.InvalidItemSizeException;
 import org.autumn24.exceptions.InvalidOptionException;
 import org.autumn24.items.Item;
@@ -136,7 +136,8 @@ public class ApplicationManager {
 	private void handleEcoStats(User user) {
 		UserInterface.showEcoStats();
 		if (authManager.isLoggedInAsRecycler()) {
-			BigDecimal energySaved = EnergyFactory.showStat(getUserAction(), user);
+			// For now these can be here
+			BigDecimal energySaved = EcoStatSelector.energySaved(getUserAction(), user);
 			BigDecimal roundedResult = energySaved.setScale(4, RoundingMode.CEILING);
 			System.out.printf("\nYOU HAVE SAVED %s kWh OF ENERGY!", String.valueOf(roundedResult).toUpperCase());
 		} else {
