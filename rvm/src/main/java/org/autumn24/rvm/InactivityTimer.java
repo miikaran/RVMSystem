@@ -30,7 +30,7 @@ import java.util.TimerTask;
  */
 public class InactivityTimer {
 
-	public static int INACTIVITY_TIMEOUT_MS = 10000;
+	public static int INACTIVITY_TIMEOUT_MS = 30000;
 	public Timer inactivityTimer;
 	public TimerTask inactivityTimerTask;
 	public ReverseVendingMachine rvm;
