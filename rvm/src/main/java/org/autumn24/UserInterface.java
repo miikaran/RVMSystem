@@ -22,6 +22,7 @@ import org.autumn24.charity.charities.AlzheimerAssociation;
 import org.autumn24.charity.charities.AmnestyInternational;
 import org.autumn24.charity.charities.Greenpeace;
 import org.autumn24.rvm.Receipt;
+import org.autumn24.users.RegisteredRecycler;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -160,7 +161,10 @@ public class UserInterface {
 		System.out.print(BOLD + "=> " + RESET);
 	}
 
-	public static void showEcoStats() {
+	public static void showEcoStats(RegisteredRecycler recycler) {
+		System.out.println(BOLD + GREEN + "\n🌍 ECO STATS 🌍" + RESET);
+		System.out.printf("○ Total Bottles Recycled: %s%d%s%n", BOLD, recycler.getTotalItemsRecycled(), RESET);
+		System.out.printf("○ Total Value Recycled: %s%.2f €%s%n", BOLD, recycler.getRedeemedTotalValue(), RESET);
 		System.out.println("\n\nChoose what you want to see: ");
 		final String energySavedText = "ENERGY SAVED BY RECYCLING ";
 		final String energySavedIn = "ENERGY SAVED IN ";
@@ -180,13 +184,8 @@ public class UserInterface {
         */
 	}
 
-	// Possible UI views for later 😊
-	public static void displayStats() {
-	} // 📊
 
 	public static void displayEcoTip() {
 	} // ♻️
 
-	public static void displayBottleAnimation() {
-	} //😲
 }

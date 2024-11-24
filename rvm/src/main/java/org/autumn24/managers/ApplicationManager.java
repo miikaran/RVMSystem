@@ -134,8 +134,8 @@ public class ApplicationManager {
 	}
 
 	private void handleEcoStats(User user) {
-		UserInterface.showEcoStats();
 		if (authManager.isLoggedInAsRecycler()) {
+			UserInterface.showEcoStats((RegisteredRecycler) user);
 			// For now these can be here
 			BigDecimal energySaved = EcoStatSelector.energySaved(getUserAction(), user);
 			BigDecimal roundedResult = energySaved.setScale(4, RoundingMode.CEILING);
@@ -224,6 +224,7 @@ public class ApplicationManager {
 		Authentication.authenticateUser(userId);
 		user = AuthManager.getUserById(userId);
 		System.out.println("User " + Objects.requireNonNull(user).getUserName() + " authenticated successfully.");
+		System.out.println("Role: " + user.getUserRole());
 	}
 
 	private void handleFullMachine() {
