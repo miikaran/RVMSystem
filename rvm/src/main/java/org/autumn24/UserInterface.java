@@ -163,7 +163,7 @@ public class UserInterface {
 
 	public static void showEcoStats(RegisteredRecycler recycler) {
 		System.out.println(BOLD + GREEN + "\n🌍 ECO STATS 🌍" + RESET);
-		System.out.printf("○ Total Bottles Recycled: %s%d%s%n", BOLD, recycler.getTotalItemsRecycled(), RESET);
+		System.out.printf("○ Total Items Recycled: %s%d%s%n", BOLD, recycler.getTotalItemsRecycled(), RESET);
 		System.out.printf("○ Total Value Recycled: %s%.2f €%s%n", BOLD, recycler.getRedeemedTotalValue(), RESET);
 		System.out.println("\n\nChoose what you want to see: ");
 		final String energySavedText = "ENERGY SAVED BY RECYCLING ";
