@@ -19,15 +19,22 @@ package org.autumn24.charity;
 
 import org.autumn24.charity.charities.AlzheimerAssociation;
 import org.autumn24.charity.charities.AmnestyInternational;
-import org.autumn24.charity.charities.Greenpeace;
+import org.autumn24.charity.charities.GreenpeaceFund;
 
+/**
+ * Used to create charities based on received input
+ */
 public class CharityFactory {
-	public static Charity createCharity(int charityIndex) {
-		return switch (charityIndex) {
-			case 1 -> Greenpeace.createGreenpeace();
+	/**
+	 * @param chosenCharity the charity number which was chosen.
+	 * @return the chosen charity
+	 */
+	public static Charity createCharity(int chosenCharity) {
+		return switch (chosenCharity) {
+			case 1 -> GreenpeaceFund.createGreenpeace();
 			case 2 -> AmnestyInternational.createAmnestyInternational();
 			case 3 -> AlzheimerAssociation.createAlzheimerAssociation();
-			default -> throw new IllegalArgumentException("Unexpected value: " + charityIndex);
+			default -> throw new IllegalArgumentException("Unexpected value: " + chosenCharity);
 		};
 	}
 }

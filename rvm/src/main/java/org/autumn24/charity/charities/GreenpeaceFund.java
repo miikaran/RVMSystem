@@ -19,9 +19,20 @@ package org.autumn24.charity.charities;
 
 import org.autumn24.charity.Charity;
 
-public record Greenpeace(String name, String cause) implements Charity {
-	public static Greenpeace createGreenpeace() {
-		return new Greenpeace(
+/**
+ * Represents donate-able Alzheimer charity.
+ *
+ * @param name  Greenpeace Fund name
+ * @param cause charity cause / what they do
+ */
+public record GreenpeaceFund(String name, String cause) implements Charity {
+	/**
+	 * Creates a new Greenpeace Fund instance
+	 *
+	 * @return Greenpeace Fund
+	 */
+	public static GreenpeaceFund createGreenpeace() {
+		return new GreenpeaceFund(
 				"Greenpeace Fund",
 				"Fights for environmental justice and for our planet."
 		);

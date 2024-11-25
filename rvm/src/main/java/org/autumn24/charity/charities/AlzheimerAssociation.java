@@ -19,7 +19,18 @@ package org.autumn24.charity.charities;
 
 import org.autumn24.charity.Charity;
 
+/**
+ * Represents donate-able Alzheimer charity.
+ *
+ * @param name  Alzheimer Association name
+ * @param cause charity cause / what they do
+ */
 public record AlzheimerAssociation(String name, String cause) implements Charity {
+	/**
+	 * Creates a new alzheimer association instance.
+	 *
+	 * @return Alzheimer Association
+	 */
 	public static AlzheimerAssociation createAlzheimerAssociation() {
 		return new AlzheimerAssociation(
 				"Alzheimer's Association",

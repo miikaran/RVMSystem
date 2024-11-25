@@ -21,7 +21,17 @@ package org.autumn24.charity;
  * Represents the base of all charities to which can be donated to
  */
 public interface Charity {
+	/**
+	 * Name to implemented
+	 *
+	 * @return Charity name
+	 */
 	String name();
 
+	/**
+	 * Cause to be implemented
+	 *
+	 * @return Charity cause / their purpose
+	 */
 	String cause();
 }

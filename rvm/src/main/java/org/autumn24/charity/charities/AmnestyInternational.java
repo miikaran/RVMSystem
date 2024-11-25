@@ -19,7 +19,18 @@ package org.autumn24.charity.charities;
 
 import org.autumn24.charity.Charity;
 
+/**
+ * Represents donate-able Amnesty International.
+ *
+ * @param name  Amnesty International name
+ * @param cause charity cause / what they do
+ */
 public record AmnestyInternational(String name, String cause) implements Charity {
+	/**
+	 * Creates a new Amnesty International instance.
+	 *
+	 * @return Amnesty International
+	 */
 	public static AmnestyInternational createAmnestyInternational() {
 		return new AmnestyInternational(
 				"Amnesty International",

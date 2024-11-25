@@ -20,7 +20,7 @@ package org.autumn24;
 import org.autumn24.charity.Charity;
 import org.autumn24.charity.charities.AlzheimerAssociation;
 import org.autumn24.charity.charities.AmnestyInternational;
-import org.autumn24.charity.charities.Greenpeace;
+import org.autumn24.charity.charities.GreenpeaceFund;
 import org.autumn24.rvm.Receipt;
 import org.autumn24.users.RegisteredRecycler;
 
@@ -104,7 +104,7 @@ public class UserInterface {
 		System.out.println("\n\n");
 		System.out.println(CYAN + BOLD + "🌟 Select a charity to donate to 🌟" + RESET);
 		Charity[] charities = {
-				Greenpeace.createGreenpeace(),
+				GreenpeaceFund.createGreenpeace(),
 				AmnestyInternational.createAmnestyInternational(),
 				AlzheimerAssociation.createAlzheimerAssociation()
 		};
