@@ -74,6 +74,15 @@ class EnergySaved {
 				);
 	}
 
+	/**
+	 * Calculates the energy recycler/user saved when looking
+	 * at the items if they were created from raw materials instead of the recycled once.
+	 *
+	 * @param recycler                whose data is used
+	 * @param energyRequiredToProduce required energy to produce the item in question
+	 * @param energyRequiredToRecycle energy it takes to recycle the item in question
+	 * @return energy saved in kWh
+	 */
 	private static BigDecimal calculateEnergySaved(
 			RegisteredRecycler recycler,
 			double energyRequiredToProduce, // MJ
@@ -85,6 +94,12 @@ class EnergySaved {
 		return convertMJToKiloWattHour(energySaved);
 	}
 
+	/**
+	 * Converts MJ to kWh
+	 *
+	 * @param mjValueToBeConverted mega joule energy value created by energy saved methods
+	 * @return the received value MJ in kWh
+	 */
 	private static BigDecimal convertMJToKiloWattHour(double mjValueToBeConverted) {
 		// 1 MJ = 0.27778 kwh
 		return BigDecimal.valueOf(mjValueToBeConverted * 0.27778);
