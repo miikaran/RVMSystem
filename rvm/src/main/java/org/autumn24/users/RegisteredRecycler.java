@@ -19,17 +19,23 @@ package org.autumn24.users;
 
 import java.math.BigDecimal;
 
-public class RegisteredRecycler extends User implements Recycler {
+public class RegisteredRecycler extends User {
 	private long totalPlasticBottlesRecycled;
 	private long totalGlassBottlesRecycled;
 	private long totalAluminiumCansRecycled;
 	private long totalItemsRecycled;
 	private BigDecimal totalValueRecycled;
 
-	/* -------------------------------------------------------- */
-	// TODO: Make this use a builder pattern due to many params
-	/* -------------------------------------------------------- */
-	public RegisteredRecycler(String userName, String userId, String userRole, long totalPlasticBottlesRecycled, long totalGlassBottlesRecycled, long totalAluminiumCansRecycled, long totalItemsRecycled, BigDecimal redeemedTotalValue) {
+	public RegisteredRecycler(
+			String userName,
+			String userId,
+			String userRole,
+			long totalPlasticBottlesRecycled,
+			long totalGlassBottlesRecycled,
+			long totalAluminiumCansRecycled,
+			long totalItemsRecycled,
+			BigDecimal redeemedTotalValue
+	) {
 		super(userName, userId, userRole);
 		this.totalPlasticBottlesRecycled = totalPlasticBottlesRecycled;
 		this.totalGlassBottlesRecycled = totalGlassBottlesRecycled;
