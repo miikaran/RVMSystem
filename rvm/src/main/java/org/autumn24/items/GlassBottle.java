@@ -25,9 +25,6 @@ import java.util.Objects;
 
 /**
  * Represent a glass bottle that the RVM can accept.
- *
- * @author evnct
- * @since 1.0.0
  */
 public class GlassBottle extends RecyclableItem implements Item {
 	private final double[] standardSizes = {0.25, 0.33, 0.5, 0.75, 1.0, 1.5, 2.0};

@@ -20,9 +20,6 @@ package org.autumn24.items;
 /**
  * Represents the base of all types of generated
  * items that are accepted by the rvm.
- *
- * @author evnct
- * @since 1.0.0
  */
 public abstract class RecyclableItem {
 

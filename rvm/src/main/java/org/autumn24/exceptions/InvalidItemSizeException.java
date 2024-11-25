@@ -20,9 +20,6 @@ package org.autumn24.exceptions;
 /**
  * Thrown when generated random size chosen from the standardSizes array is not
  * from the array or has unpredictable size which will affect the whole program.
- *
- * @author evnct
- * @since 1.0.0
  */
 public class InvalidItemSizeException extends Throwable {
 	public InvalidItemSizeException(String message) {

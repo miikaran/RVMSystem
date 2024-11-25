@@ -27,9 +27,6 @@ import java.util.stream.DoubleStream;
  * All recyclable items implement this interface as long as items are generated
  * randomly. Methods of this interface should be called on their constructors at least
  * in their current implementation.
- *
- * @author evnct
- * @since 1.0.0
  */
 public interface Item {
 	/**

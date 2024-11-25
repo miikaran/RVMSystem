@@ -21,9 +21,6 @@ import org.autumn24.managers.ApplicationManager;
 
 /**
  * Holds the execution process
- *
- * @author evnct
- * @since 1.0.0
  */
 public class Main {
 	public static void main(String[] args) {

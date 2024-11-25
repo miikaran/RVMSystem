@@ -24,9 +24,6 @@ import java.util.Random;
 /**
  * Factory used to build different types of items, such as:
  * aluminium cans, glass bottles, plastic bottles.
- *
- * @author evnct
- * @since 1.0.0
  */
 public class ItemFactory {
 	public static AluminiumCan createAluminiumCan() throws InvalidItemSizeException {
