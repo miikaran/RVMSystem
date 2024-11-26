@@ -22,15 +22,30 @@ import org.autumn24.users.User;
 
 import java.util.ArrayList;
 
+/**
+ * A class representing an authentication manager.
+ * Used to manage authentication related stuff.
+ */
 public class AuthManager {
 	public static AppDataManager appDataManager;
 	private static AuthenticatedUser authenticatedUser;
 
+	/**
+	 * Creates a new authentication manager with given params.
+	 *
+	 * @param appDataManager Application data manager to use for fetching user data.
+	 */
 	public AuthManager(AppDataManager appDataManager) {
 		AuthManager.appDataManager = appDataManager;
 		authenticatedUser = AuthenticatedUser.GUEST;
 	}
 
+	/**
+	 * Attempts to get user by its user id.
+	 *
+	 * @param userId Unique id of the user
+	 * @return An object representing the user
+	 */
 	public static User getUserById(String userId) {
 		ArrayList<User> userData = appDataManager.getAppData().getUserData();
 		return userData.stream()
@@ -39,14 +54,29 @@ public class AuthManager {
 				.orElse(null);
 	}
 
+	/**
+	 * Sets currently authenticated user to provided one.
+	 *
+	 * @param authenticatedUser
+	 */
 	public static void setAuthenticatedUser(AuthenticatedUser authenticatedUser) {
 		AuthManager.authenticatedUser = authenticatedUser;
 	}
 
+	/**
+	 * Checks whether user is logged in as employee or not.
+	 *
+	 * @return Boolean value representing is the user logged in as employee or not.
+	 */
 	public boolean isLoggedInAsEmployee() {
 		return authenticatedUser.equals(AuthenticatedUser.ADMIN);
 	}
 
+	/**
+	 * Checks whether user is logged in as recycler or not.
+	 *
+	 * @return Boolean value representing is the user logged in as recycler or not.
+	 */
 	public boolean isLoggedInAsRecycler() {
 		return authenticatedUser.equals(AuthenticatedUser.RECYCLER);
 	}

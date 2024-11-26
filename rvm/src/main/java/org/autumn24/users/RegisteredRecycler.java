@@ -69,7 +69,7 @@ public class RegisteredRecycler extends User {
 	}
 
 	/**
-	 * Sets total items recycled by user to all diffent types combined.
+	 * Sets total items recycled by user to all different types combined.
 	 */
 	public void setTotalItemsRecycled() {
 		this.totalItemsRecycled =
