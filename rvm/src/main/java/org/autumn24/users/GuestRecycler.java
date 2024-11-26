@@ -17,7 +17,7 @@
 
 package org.autumn24.users;
 
-public class GuestRecycler extends User implements Recycler {
+public class GuestRecycler extends User {
 	public GuestRecycler() {
 		super("Guest", "Guest", "guest");
 	}

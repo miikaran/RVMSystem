@@ -27,16 +27,6 @@ public class Employee extends User {
 		this.canRepairRvm = canRepairRvm;
 	}
 
-	public void repairRvm() {
-	}
-
-	public void emptyRvmPile() {
-	}
-
-	public String getEmployeeId() {
-		return employeeId;
-	}
-
 	@Override
 	public String toString() {
 		return "Employee{" +
