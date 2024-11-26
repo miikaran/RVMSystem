@@ -18,10 +18,7 @@
 package org.autumn24.rvm;
 
 /**
- * Different types of piles for recycled items
- *
- * @author miikaran
- * @since 1.0.0
+ * Different types of piles for recycled item
  */
 public enum RecyclingPile {
 	METAL,

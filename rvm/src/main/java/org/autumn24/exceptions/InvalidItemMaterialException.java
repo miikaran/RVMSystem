@@ -19,9 +19,6 @@ package org.autumn24.exceptions;
 
 /**
  * Thrown when recycled item material is not found in RecyclingPile enum.
- *
- * @author miikaran
- * @since 1.0.0
  */
 public class InvalidItemMaterialException extends RuntimeException {
 	public InvalidItemMaterialException(String message) {

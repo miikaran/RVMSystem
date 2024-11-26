@@ -24,9 +24,6 @@ import java.util.TimerTask;
 
 /**
  * A class that represents an inactivity timer that enables idle status aka (sleep-mode) for the target rvm.
- *
- * @author miikaran
- * @since 1.0.0
  */
 public class InactivityTimer {
 

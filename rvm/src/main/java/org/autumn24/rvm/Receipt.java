@@ -23,9 +23,6 @@ import java.util.UUID;
 
 /**
  * A class representing receipt that can be received from a reverse vending machine.
- *
- * @author miikaran
- * @since 1.0.0
  */
 public class Receipt {
 	private final BigDecimal totalValue;

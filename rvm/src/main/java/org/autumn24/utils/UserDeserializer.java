@@ -28,9 +28,6 @@ import java.lang.reflect.Type;
 
 /**
  * A class that represents a JSON deserializer that returns correct object based on user role
- *
- * @author miikaran
- * @since 1.0.0
  */
 public class UserDeserializer implements JsonDeserializer<User> {
 	@Override

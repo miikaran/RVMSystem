@@ -29,9 +29,6 @@ import java.util.Date;
 
 /**
  * A class that is used to display ui views.
- *
- * @author miikaran
- * @since 1.0.0
  */
 public class UserInterface {
 

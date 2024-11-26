@@ -40,9 +40,6 @@ import java.util.UUID;
 
 /**
  * A class that represents a reverse vending machine.
- *
- * @author miikaran
- * @since 1.0.0
  */
 public class ReverseVendingMachine implements Recycle, Donate {
 

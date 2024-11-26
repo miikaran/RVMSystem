@@ -19,9 +19,6 @@ package org.autumn24.exceptions;
 
 /**
  * Thrown when recycled item material is null or empty.
- *
- * @author miikaran
- * @since 1.0.0
  */
 public class MissingItemMaterialException extends RuntimeException {
 	public MissingItemMaterialException(String message) {

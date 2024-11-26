@@ -40,9 +40,6 @@ import java.util.Scanner;
 
 /**
  * A class that manages main actions in the application.
- *
- * @author miikaran
- * @since 1.0.0
  */
 public class ApplicationManager {
 
