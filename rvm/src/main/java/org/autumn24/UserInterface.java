@@ -51,7 +51,7 @@ public class UserInterface {
 		if (totalValue == null) totalValue = BigDecimal.ZERO;
 		System.out.println();
 		System.out.println(BOLD + BLUE + "‖═════════MAIN MENU══════════‖" + RESET);
-		System.out.printf(YELLOW + "💰 Total Value: " + WHITE + "%.2f€" + RESET + "\n", totalValue);
+		System.out.printf("%s💰 Total Value: %s%.2f€%s\n", YELLOW, WHITE, totalValue, RESET);
 		System.out.println(GREEN + "♻️ Recycled: " + WHITE + recycledAmount + " items" + RESET);
 		System.out.println(CYAN + "🔄 Recyclables Left: " + WHITE + recyclablesLeft + " items" + RESET);
 		System.out.println();
@@ -111,8 +111,8 @@ public class UserInterface {
 		for (int i = 0; i < charities.length; i++) {
 			Charity charity = charities[i];
 			int placement = i + 1;
-			System.out.printf(BOLD + "%s ➤ %s" + RESET + YELLOW + " | %s%n" + RESET,
-					placement, charity.name(), charity.cause());
+			System.out.printf("%s%s ➤ %s%s%s | %s%n%s",
+					BOLD, placement, charity.name(), RESET, YELLOW, charity.cause(), RESET);
 		}
 		System.out.println("\n\n");
 		System.out.print(BOLD + "=> " + RESET);
@@ -124,28 +124,25 @@ public class UserInterface {
 		System.out.println(WHITE + BOLD + "═════════════════════════════════════");
 		System.out.println("           RECYCLING RECEIPT              ");
 		System.out.println("═════════════════════════════════════" + RESET);
-		System.out.printf(LIGHT_GRAY + "📅 Date:        " + WHITE + "%s%n", date);
-		System.out.printf(LIGHT_GRAY + "🆔 Receipt ID:  " + WHITE + "%s%n", receipt.getReceiptId());
+		System.out.printf("%s📅 Date:        " + WHITE + "%s%n", LIGHT_GRAY, date);
+		System.out.printf("%s🆔 Receipt ID:  %s%s%n", LIGHT_GRAY, WHITE, receipt.getReceiptId());
 		System.out.println(WHITE + "-------------------------------------");
 		System.out.println("           RECYCLED ITEMS            ");
 		System.out.println("-------------------------------------" + RESET);
-		System.out.printf(LIGHT_GRAY + "🥫 Aluminium Cans: " + WHITE + "%d%n",
-				receipt.getNumberOfProcessedAluminiumCans());
-		System.out.printf(LIGHT_GRAY + "🍾 Glass Bottles:  " + WHITE + "%d%n",
-				receipt.getNumberOfProcessedGlassBottles());
-		System.out.printf(LIGHT_GRAY + "🍼 Plastic Bottles: " + WHITE + "%d%n",
-				receipt.getNumberOfProcessedPlasticBottles());
+		System.out.printf("%s🥫 Aluminium Cans: %s%d%n", LIGHT_GRAY, WHITE, receipt.getNumberOfProcessedAluminiumCans());
+		System.out.printf("%s🍾 Glass Bottles:  %s%d%n", LIGHT_GRAY, WHITE, receipt.getNumberOfProcessedGlassBottles());
+		System.out.printf("%s🍼 Plastic Bottles: %s%d%n", LIGHT_GRAY, WHITE, receipt.getNumberOfProcessedPlasticBottles());
 		System.out.println(WHITE + "-------------------------------------");
 		System.out.println("             TOTAL VALUE             ");
 		System.out.println("-------------------------------------" + RESET);
-		System.out.printf(LIGHT_GRAY + "💵 Total Earned:   " + WHITE + "%.2f €%n", receipt.getTotalValue());
+		System.out.printf("%s💵 Total Earned:   %s%.2f €%n", LIGHT_GRAY, WHITE, receipt.getTotalValue());
 		System.out.println(WHITE + "═════════════════════════════════════" + RESET);
 	}
 
 	public static void displayLoggedInRecyclerMenu(String user, BigDecimal totalValue, short recyclablesLeft, short recycledAmount) {
 		if (totalValue == null) totalValue = BigDecimal.ZERO;
 		System.out.println("\n\n");
-		System.out.printf(YELLOW + "💰 Total Value: " + WHITE + "%.2f€" + RESET + "\n", totalValue);
+		System.out.printf("%s💰 Total Value: %s%.2f€%s\n", YELLOW, WHITE, totalValue, RESET);
 		System.out.println(GREEN + "♻️ Recycled: " + WHITE + recycledAmount + " items" + RESET);
 		System.out.println(CYAN + "🔄 Recyclables Left: " + WHITE + recyclablesLeft + " items" + RESET);
 		System.out.println();
