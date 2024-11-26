@@ -17,10 +17,22 @@
 
 package org.autumn24.users;
 
+/**
+ * A class representing an employee user.
+ * Has admin privileges by default.
+ */
 public class Employee extends User {
 	private final String employeeId;
 	public boolean canRepairRvm;
 
+	/**
+	 * Creates a new employee user with given params
+	 *
+	 * @param employeeId   // Id that can be used to identify the employee
+	 * @param canRepairRvm // Value representing can the employee repair rvm's
+	 * @param firstName    // First name of the employee
+	 * @param lastName     // Last name of the employee
+	 */
 	public Employee(String employeeId, boolean canRepairRvm, String firstName, String lastName) {
 		super(firstName + lastName, employeeId, "admin");
 		this.employeeId = employeeId;

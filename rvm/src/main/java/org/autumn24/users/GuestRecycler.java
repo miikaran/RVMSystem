@@ -17,7 +17,14 @@
 
 package org.autumn24.users;
 
+/**
+ * A class representing a guest user. This is the user that is used by default.
+ */
 public class GuestRecycler extends User {
+
+	/**
+	 * Sets user params to static guest user values
+	 */
 	public GuestRecycler() {
 		super("Guest", "Guest", "guest");
 	}
