@@ -155,9 +155,8 @@ public class UserInterface {
 		System.out.println(YELLOW + "[2] ➤ RECEIPT" + RESET);
 		System.out.println(CYAN + "[3] ➤ DONATE" + RESET);
 		System.out.println(RED + "[5] ➤ EXIT" + RESET);
-		System.out.println(BOLD + BLUE + "======= SPECIAL OPTIONS =======" + RESET);
+		System.out.println(BOLD + BLUE + "======= SPECIAL OPTION =======" + RESET);
 		System.out.println(PURPLE + "[6] ➤ STATS" + RESET);
-		System.out.println(GREEN + "[7] ➤ AWARDS" + RESET);
 		System.out.println("\n\n");
 		System.out.print(BOLD + "=> " + RESET);
 	}
