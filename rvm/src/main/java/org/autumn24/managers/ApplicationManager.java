@@ -300,25 +300,30 @@ public class ApplicationManager {
 		// Need to rework on this 😩 - but works for now
 		/* THIS IS ART NO JUDGMENT PLS */
 		if (authManager.isLoggedInAsRecycler()) {
-			long totalPlasticBottlesRecycled = ((RegisteredRecycler) user).getTotalPlasticBottlesRecycled();
+			RegisteredRecycler recycler = (RegisteredRecycler) user;
+
+			// Updates total plastic bottles recycled
+			long totalPlasticBottlesRecycled = recycler.getTotalPlasticBottlesRecycled();
 			long newTotalPlasticBottlesRecycled = totalPlasticBottlesRecycled + rvm.recyclingSession.getRecyclingSessionRecycledPlasticBottles();
-			((RegisteredRecycler) user).setTotalPlasticBottlesRecycled(newTotalPlasticBottlesRecycled);
+			recycler.setTotalPlasticBottlesRecycled(newTotalPlasticBottlesRecycled);
 
-			long totalGlassBottlesRecycled = ((RegisteredRecycler) user).getTotalGlassBottlesRecycled();
+			// Updates total glass bottles recycled
+			long totalGlassBottlesRecycled = recycler.getTotalGlassBottlesRecycled();
 			long newTotalGlassBottlesRecycled = totalGlassBottlesRecycled + rvm.recyclingSession.getRecyclingSessionRecycledGlassBottles();
-			((RegisteredRecycler) user).setTotalGlassBottlesRecycled(newTotalGlassBottlesRecycled);
+			recycler.setTotalGlassBottlesRecycled(newTotalGlassBottlesRecycled);
 
-			long totalAluminiumCansRecycled = ((RegisteredRecycler) user).getTotalAluminiumCansRecycled();
+			// Updates total aluminium cans recycled
+			long totalAluminiumCansRecycled = recycler.getTotalAluminiumCansRecycled();
 			long newTotalAluminiumCansRecycled = totalAluminiumCansRecycled + rvm.recyclingSession.getRecyclingSessionRecycledAluminumBottles();
-			((RegisteredRecycler) user).setTotalAluminiumCansRecycled(newTotalAluminiumCansRecycled);
+			recycler.setTotalAluminiumCansRecycled(newTotalAluminiumCansRecycled);
 
-			long totalItemsRecycled = ((RegisteredRecycler) user).getTotalItemsRecycled();
-			long newTotalItemsRecycled = totalItemsRecycled + rvm.recyclingSession.getRecyclingSessionRecycledAmount();
+			// Update total items recycled
 			((RegisteredRecycler) user).setTotalItemsRecycled();
 
-			BigDecimal totalValueRecycled = ((RegisteredRecycler) user).getRedeemedTotalValue();
+			// Updated total values recycled
+			BigDecimal totalValueRecycled = recycler.getRedeemedTotalValue();
 			BigDecimal newTotalValueRecycled = totalValueRecycled.add(rvm.recyclingSession.getRecyclingSessionTotalValue());
-			((RegisteredRecycler) user).setRedeemedTotalValue(newTotalValueRecycled);
+			recycler.setRedeemedTotalValue(newTotalValueRecycled);
 		}
 		appDataManager.updateAppDataToJson();
 	}
