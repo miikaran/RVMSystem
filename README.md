@@ -28,3 +28,5 @@ The only 3rd party dependency this project has,
 is the [`Google/gson`](https://github.com/google/gson) for converting 
 Java objects into JSON and back.
 
+## See Project Overview and Structure
+[Project overview](https://github.com/evnct/RVMSystem/blob/main/rvm/docs/uml/project-end-class-diagram-together.png)
