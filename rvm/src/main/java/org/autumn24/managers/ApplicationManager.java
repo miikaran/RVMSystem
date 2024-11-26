@@ -145,13 +145,23 @@ public class ApplicationManager {
 	private void handleAdminMenuActions() {
 		authenticatedUserToMenu();
 		int userInput = getUserAction();
-		switch (userInput) {
-			case 1 -> handleRvmEmptying();
-			case 2 -> {
+		if (rvm.IsMachineFull()) {
+			switch (userInput) {
+				case 1 -> handleRvmEmptying();
+				case 2 -> {
+					user = AuthManager.getUserById("Guest");
+					AuthManager.setAuthenticatedUser(AuthenticatedUser.GUEST);
+				}
+				default -> throw new InvalidOptionException();
+			}
+		} else {
+			if (userInput == 1) {
+				System.out.println("Logging out...");
 				user = AuthManager.getUserById("Guest");
 				AuthManager.setAuthenticatedUser(AuthenticatedUser.GUEST);
+				return;
 			}
-			default -> throw new InvalidOptionException();
+			throw new InvalidOptionException();
 		}
 	}
 
