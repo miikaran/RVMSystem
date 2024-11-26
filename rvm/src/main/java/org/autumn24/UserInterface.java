@@ -82,11 +82,15 @@ public class UserInterface {
 		System.out.print(BOLD + "=> " + RESET);
 	}
 
-	public static void displayAdminMenu() {
+	public static void displayAdminMenu(Boolean machineFull) {
 		System.out.println("\n\n");
 		System.out.println(BOLD + BLUE + "🔐 ADMIN MENU - SYSTEM MAINTENANCE 🔐" + RESET);
-		System.out.println(GREEN + "[1] ➤ EMPTY MACHINE" + RESET + "    " + YELLOW + "Clear all recyclables." + RESET);
-		System.out.println(WHITE + "[2] ➤ LOGOUT" + RESET + "          " + YELLOW + "Return to the main system." + RESET);
+		if (machineFull) {
+			System.out.println(GREEN + "[1] ➤ EMPTY MACHINE" + RESET + "    " + YELLOW + "Clear all recyclables." + RESET);
+			System.out.println(WHITE + "[2] ➤ LOGOUT" + RESET + "          " + YELLOW + "Return to the main system." + RESET);
+		} else {
+			System.out.println(WHITE + "[1] ➤ LOGOUT" + RESET + "          " + YELLOW + "Return to the main system." + RESET);
+		}
 		System.out.println("\n\n");
 		System.out.print(BOLD + "=> " + RESET);
 	}

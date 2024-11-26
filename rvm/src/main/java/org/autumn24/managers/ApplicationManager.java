@@ -289,7 +289,7 @@ public class ApplicationManager {
 					(short) items.size(),
 					rvm.recyclingSession.getRecyclingSessionRecycledAmount());
 		} else if (authManager.isLoggedInAsEmployee()) {
-			UserInterface.displayAdminMenu();
+			UserInterface.displayAdminMenu(rvm.IsMachineFull());
 		} else {
 			UserInterface.displayMenu(
 					rvm.recyclingSession.getRecyclingSessionTotalValue(),
