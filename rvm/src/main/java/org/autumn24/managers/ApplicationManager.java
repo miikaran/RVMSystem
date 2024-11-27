@@ -43,21 +43,53 @@ import java.util.Scanner;
  */
 public class ApplicationManager {
 
+	/**
+	 * Scanner to process user inputs.
+	 */
 	public static final Scanner scanner = new Scanner(System.in);
+	/**
+	 * List containing items to recycle.
+	 */
 	private static final ArrayList<Item> items = new ArrayList<>();
+	/**
+	 * Reverse vending machine to be managed.
+	 */
 	private static ReverseVendingMachine rvm;
+	/**
+	 * Manager that manages all the stored application data.
+	 */
 	private static AppDataManager appDataManager;
+	/**
+	 * Manager that manages the authentication and authorization of the app.
+	 */
 	private static AuthManager authManager;
+	/**
+	 * Boolean value representing is the app running or not.
+	 */
 	public boolean appRunning = false;
+	/**
+	 * Inactivity timer to handle idle (sleep)-mode.
+	 */
 	private InactivityTimer inactivityTimer;
+	/**
+	 * User using the reverse vending machine.
+	 */
 	private User user;
 
+	/**
+	 * Creates a new application manager with default values.
+	 */
 	public ApplicationManager() {
 		appDataManager = new AppDataManager("appData.json");
 		authManager = new AuthManager(appDataManager);
 		generateBottles(new ItemFactory());
 	}
 
+	/**
+	 * Gets user action input to start app actions.
+	 *
+	 * @return A number representing the user choice from the menu.
+	 */
 	private static int getUserAction() {
 		if (!scanner.hasNextLine()) {
 			scanner.nextLine();
@@ -69,6 +101,9 @@ public class ApplicationManager {
 		return ReverseVendingMachineStatus.IDLE.equals(rvm.getRvmStatus()) ? 0 : Integer.parseInt(choice);
 	}
 
+	/**
+	 * Does the necessary configurations and starts the main loop of the application.
+	 */
 	public void run() {
 		appRunning = true;
 		appDataManager.loadJsonAppData();
@@ -80,6 +115,9 @@ public class ApplicationManager {
 		mainLoop();
 	}
 
+	/**
+	 * The main loop of the application.
+	 */
 	private void mainLoop() {
 		while (appRunning) {
 			try {
@@ -92,6 +130,9 @@ public class ApplicationManager {
 		}
 	}
 
+	/**
+	 * Checks current machine status and executes corresponding handler.
+	 */
 	private void machineStateToHandler() {
 		if (authManager.isLoggedInAsEmployee()) {
 			handleAdminMenuActions();
@@ -102,6 +143,11 @@ public class ApplicationManager {
 		}
 	}
 
+	/**
+	 * Generates x amount of bottles to recycle.
+	 *
+	 * @param itemFactory Factory used to create recyclables.
+	 */
 	private void generateBottles(ItemFactory itemFactory) {
 		System.out.println("\nGenerated bottles: ");
 		final byte ITEMS_TO_GENERATE_LIMITED = 8; // SIMULATION LIMITATION FOR DEMO
@@ -116,6 +162,9 @@ public class ApplicationManager {
 		}
 	}
 
+	/**
+	 * Executes the main menu actions from user choice.
+	 */
 	private void handleMainMenuActions() {
 		authenticatedUserToMenu();
 		int userInput = getUserAction();
@@ -130,6 +179,12 @@ public class ApplicationManager {
 		}
 	}
 
+	/**
+	 * Handles registered users eco stats.
+	 * Displays how many bottles recycled, total value, total energy saved.
+	 *
+	 * @param user The registered user to handle the eco stats for.
+	 */
 	private void handleEcoStats(User user) {
 		if (authManager.isLoggedInAsRecycler()) {
 			UserInterface.showEcoStats((RegisteredRecycler) user);
@@ -142,6 +197,9 @@ public class ApplicationManager {
 		}
 	}
 
+	/**
+	 * Handles admin menu actions from user choice.
+	 */
 	private void handleAdminMenuActions() {
 		authenticatedUserToMenu();
 		int userInput = getUserAction();
@@ -165,6 +223,9 @@ public class ApplicationManager {
 		}
 	}
 
+	/**
+	 * Handles users insert action.
+	 */
 	private void handleInsert() {
 		if (items.isEmpty()) {
 			System.out.println("You have recycle all of our bottles!");
@@ -184,6 +245,9 @@ public class ApplicationManager {
 		items.remove(itemToRecycle);
 	}
 
+	/**
+	 * Handles users receipt action.
+	 */
 	private void handleReceipt() {
 		if (notValidSessionTotal()) {
 			System.out.println("Recycle something to print a receipt!");
@@ -194,6 +258,9 @@ public class ApplicationManager {
 		rvm.resetSessionCounters();
 	}
 
+	/**
+	 * Handles users donation action.
+	 */
 	private void handleDonation() {
 		if (notValidSessionTotal()) {
 			System.out.println("Nothing to donate!\nPlease recycle something in order to donate.");
@@ -210,10 +277,18 @@ public class ApplicationManager {
 		rvm.resetSessionCounters();
 	}
 
+	/**
+	 * Checks whether a session total is valid, and not, for example null.
+	 *
+	 * @return Boolean value representing is the total value valid.
+	 */
 	private boolean notValidSessionTotal() {
 		return rvm.recyclingSession.getRecyclingSessionTotalValue().equals(BigDecimal.ZERO);
 	}
 
+	/**
+	 * Handles user authentication action.
+	 */
 	private void handleUserAuth() {
 		inactivityTimer.resetTimer();
 		System.out.print("Enter user id: ");
@@ -234,6 +309,9 @@ public class ApplicationManager {
 		System.out.println("Role: " + user.getUserRole());
 	}
 
+	/**
+	 * Handles a situation where at least one of machines piles are full.
+	 */
 	private void handleFullMachine() {
 		inactivityTimer.resetTimer();
 		UserInterface.displayMachineError("Machine Limit Reached");
@@ -250,6 +328,9 @@ public class ApplicationManager {
 		}
 	}
 
+	/**
+	 * Handles emptying the machines piles when they are full.
+	 */
 	private void handleRvmEmptying() {
 		if (rvm.IsMachineFull()) {
 			System.out.println("Emptying all piles...");
@@ -262,6 +343,11 @@ public class ApplicationManager {
 		}
 	}
 
+	/**
+	 * Handles a situation where users inserted item is wrinkled and therefore invalid.
+	 *
+	 * @param item The item that was inserted.
+	 */
 	private void handleWrinkledItem(Item item) {
 		inactivityTimer.resetTimer();
 		UserInterface.displayMachineError("Can't insert an wrinkled item.");
@@ -279,6 +365,11 @@ public class ApplicationManager {
 		}
 	}
 
+	/**
+	 * Handles the app main loop exceptions.
+	 *
+	 * @param e The exception to handle.
+	 */
 	private void handleAppException(Exception e) {
 		if (rvm.isValidSleepModeException(e)) {
 			rvm.exitFromSleepMode();
@@ -288,6 +379,9 @@ public class ApplicationManager {
 		System.out.println("Please try again.");
 	}
 
+	/**
+	 * Displays correct menu for authenticated user.
+	 */
 	private void authenticatedUserToMenu() {
 		if (authManager.isLoggedInAsRecycler()) {
 			UserInterface.displayLoggedInRecyclerMenu(
@@ -306,6 +400,10 @@ public class ApplicationManager {
 		}
 	}
 
+	/**
+	 * Updates all the user app data to database (JSON).
+	 * Used when session is ending to store session specific data for users.
+	 */
 	private void updateAllUserAppData() {
 		// Need to rework on this 😩 - but works for now
 		/* THIS IS ART NO JUDGMENT PLS */

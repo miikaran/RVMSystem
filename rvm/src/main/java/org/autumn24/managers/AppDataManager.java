@@ -30,7 +30,15 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * A class that manages the stored application data.
+ */
 public class AppDataManager {
+	/**
+	 * Static Gson object to serialize/deserialize JSON data.
+	 * Contains added custom user deserializer to allow returning
+	 * correct user object from the user role.
+	 */
 	private static final Gson gson = new GsonBuilder()
 			.setPrettyPrinting()
 			.registerTypeAdapter(
@@ -40,16 +48,32 @@ public class AppDataManager {
 			.create();
 
 	private final String database;
+	/**
+	 * Stores the app data read from JSON.
+	 */
 	private AppData appData;
 
+	/**
+	 * Creates a new app data manager using the provided database.
+	 *
+	 * @param userDatabase The path to the database (JSON)
+	 */
 	public AppDataManager(String userDatabase) {
 		this.database = userDatabase;
 	}
 
+	/**
+	 * Gets the initialized gson object.
+	 *
+	 * @return A gson object.
+	 */
 	public static Gson getGson() {
 		return gson;
 	}
 
+	/**
+	 * Updates data from appData to the database.
+	 */
 	void updateAppDataToJson() {
 		try (FileWriter writer = new FileWriter(getDatabase())) {
 			getGson().toJson(getAppData(), writer);
@@ -58,6 +82,9 @@ public class AppDataManager {
 		}
 	}
 
+	/**
+	 * Loads data from database to the appData.
+	 */
 	void loadJsonAppData() {
 		try (FileReader reader = new FileReader(getDatabase())) {
 			AppData appDataObj = getGson().fromJson(reader, AppData.class);
@@ -72,14 +99,29 @@ public class AppDataManager {
 		}
 	}
 
+	/**
+	 * Gets configured database (JSON).
+	 *
+	 * @return A string representing the path to the database (JSON)
+	 */
 	public String getDatabase() {
 		return database;
 	}
 
+	/**
+	 * Gets app data.
+	 *
+	 * @return An AppData object that contains the all stored application data.
+	 */
 	public AppData getAppData() {
 		return appData;
 	}
 
+	/**
+	 * Sets app data.
+	 *
+	 * @param appData Sets application data to provided AppData object.
+	 */
 	public void setAppData(AppData appData) {
 		this.appData = appData;
 	}
