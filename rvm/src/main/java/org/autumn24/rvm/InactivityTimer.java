@@ -27,16 +27,30 @@ import java.util.TimerTask;
  */
 public class InactivityTimer {
 
+	/**
+	 * Time in milliseconds before timeout.
+	 */
 	public static int INACTIVITY_TIMEOUT_MS = 30000;
 	public Timer inactivityTimer;
+	/**
+	 * Task to be executed once timeout.
+	 */
 	public TimerTask inactivityTimerTask;
 	public ReverseVendingMachine rvm;
 
+	/**
+	 * Creates a new inactivity timer for the target rvm.
+	 *
+	 * @param rvm Target reverse vending machine.
+	 */
 	public InactivityTimer(ReverseVendingMachine rvm) {
 		inactivityTimer = new Timer(true);
 		this.rvm = rvm;
 	}
 
+	/**
+	 * Resets the timer by creating a new task and setting a new scheduler.
+	 */
 	public void resetTimer() {
 		if (inactivityTimerTask != null) {
 			inactivityTimerTask.cancel();
@@ -50,6 +64,11 @@ public class InactivityTimer {
 		inactivityTimer.schedule(inactivityTimerTask, INACTIVITY_TIMEOUT_MS);
 	}
 
+	/**
+	 * The method to be executed once the timeout.
+	 *
+	 * @param rvm Target reverse vending machine.
+	 */
 	public void onInactivityTimeout(ReverseVendingMachine rvm) {
 		// This method could later be passed as a parameter to this class, but this is gud for now 😎
 		System.out.println("\n\nMachine ID: '" + rvm.getRvmId() + "' - Entering sleep mode \uD83D\uDCA4");

@@ -35,12 +35,15 @@
 package org.autumn24.rvm.enums;
 
 /**
- * Different statuses a rvm can have
- *
- * @author miikaran
- * @since 1.0.0
+ * Different functional statuses a machine can have
  */
 public enum ReverseVendingMachineFunctionalStatus {
+	/**
+	 * Machine is broken. Not usable.
+	 */
 	BROKEN,
+	/**
+	 * The machine is operational. Usable.
+	 */
 	OPERATIONAL
 }

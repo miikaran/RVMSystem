@@ -35,12 +35,15 @@
 package org.autumn24.rvm.enums;
 
 /**
- * Different statuses a rvm can have
- *
- * @author miikaran
- * @since 1.0.0
+ * Different power statuses a machine can have
  */
 public enum ReverseVendingMachinePowerStatus {
+	/**
+	 * Means that the machine is on.
+	 */
 	ON,
+	/**
+	 * Means that the machine is off.
+	 */
 	OFF
 }

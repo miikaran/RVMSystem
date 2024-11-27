@@ -43,18 +43,43 @@ import java.util.UUID;
  */
 public class ReverseVendingMachine implements Recycle, Donate {
 
+	/**
+	 * Enum mapping that stores recycled items in its corresponding material key.
+	 */
 	public final Map<ItemMaterial, RecyclableData> recyclables = new EnumMap<>(ItemMaterial.class);
+	/**
+	 * Stores recycling session specific data that will be reset after every session.
+	 */
 	public transient final RecyclingSessionData recyclingSession;
+	/**
+	 * Unique id of the reverse vending machine.
+	 */
 	private final String rvmId;
+	/**
+	 * Static mapping of item material to material pile.
+	 */
 	private transient final Map<ItemMaterial, RecyclingPile> materialToPileMap = Map.of(
 			ItemMaterial.GLASS, RecyclingPile.GLASS,
 			ItemMaterial.ALUMINIUM, RecyclingPile.METAL,
 			ItemMaterial.PLASTIC, RecyclingPile.PLASTIC
 	);
+	/**
+	 * Reverse vending machine functional status (BROKEN, OPERATIONAL).
+	 */
 	private final transient ReverseVendingMachineFunctionalStatus rvmFnStatus;
+	/**
+	 * Reverse vending machine power status (ON, OFF).
+	 */
 	private transient ReverseVendingMachinePowerStatus rvmPwStatus;
+	/**
+	 * Reverse vending machine status (IDLE, IN-USE, FULL).
+	 */
 	private transient ReverseVendingMachineStatus rvmStatus;
 
+
+	/**
+	 * Creates a new reverse vending machine with default values.
+	 */
 	public ReverseVendingMachine() {
 		rvmId = UUID.randomUUID().toString();
 		rvmFnStatus = ReverseVendingMachineFunctionalStatus.OPERATIONAL;
@@ -62,10 +87,21 @@ public class ReverseVendingMachine implements Recycle, Donate {
 		recyclingSession = new RecyclingSessionData();
 	}
 
+	/**
+	 * Gets reverse vending machines id.
+	 *
+	 * @return A string representing the id.
+	 */
 	public String getRvmId() {
 		return rvmId;
 	}
 
+	/**
+	 * Recycles the given item to a matching recycling pile.
+	 *
+	 * @param item The item to be recycled.
+	 * @return Boolean value of the process success.
+	 */
 	@Override
 	public boolean recycleItem(Item item) {
 		ItemStatus status = item.getItemStatus();
@@ -86,11 +122,21 @@ public class ReverseVendingMachine implements Recycle, Donate {
 		return true;
 	}
 
+	/**
+	 * Donates current recycling sessions total value to chosen charity.
+	 *
+	 * @param charity The chosen charity to donate to.
+	 */
 	@Override
 	public void donateToChosenCharity(Charity charity) {
 		System.out.printf("Donated %s to %s%n", recyclingSession.getRecyclingSessionTotalValue(), charity.name());
 	}
 
+	/**
+	 * Generates a receipt from current recycling sessions data.
+	 *
+	 * @return The generated receipt.
+	 */
 	public Receipt printReceipt() {
 		Receipt receipt = new Receipt(
 				recyclables.get(ItemMaterial.ALUMINIUM).getSessionRecycled(),
@@ -102,6 +148,12 @@ public class ReverseVendingMachine implements Recycle, Donate {
 		return receipt;
 	}
 
+	/**
+	 * Donates current recycling session total value to chosen charity by index.
+	 *
+	 * @param charityIndex Index of the chosen charity.
+	 * @return The chosen charity to donate to.
+	 */
 	public Charity donateToCharity(int charityIndex) {
 		Charity charity = CharityFactory.createCharity(charityIndex);
 		System.out.println("Donating " + recyclingSession.getRecyclingSessionTotalValue() + "€ to " + charity.name());
@@ -109,6 +161,13 @@ public class ReverseVendingMachine implements Recycle, Donate {
 		return charity;
 	}
 
+	/**
+	 * Validates a recyclable item.
+	 *
+	 * @param status   Status of the item
+	 * @param material Material of the item
+	 * @return Boolean value representing is the item good to recycle.
+	 */
 	public boolean validateRecyclableItem(ItemStatus status, ItemMaterial material) {
 		if (material == null) {
 			throw new MissingItemMaterialException("Material is type null, ItemMaterial expected");
@@ -116,6 +175,11 @@ public class ReverseVendingMachine implements Recycle, Donate {
 		return !status.equals(ItemStatus.WRINKLED);
 	}
 
+	/**
+	 * Increases the recycled items counter by one for the stored recyclable data by material.
+	 *
+	 * @param material Material of the recycled item
+	 */
 	public void increaseRecycledItemsCounter(ItemMaterial material) {
 		if (material == null) {
 			throw new MissingItemMaterialException("Material is type null, ItemMaterial expected");
@@ -126,6 +190,12 @@ public class ReverseVendingMachine implements Recycle, Donate {
 		recyclable.addSessionRecycled(1);
 	}
 
+	/**
+	 * Increases session specific counters using the recyclingSession.
+	 *
+	 * @param material The material of the recycled item.
+	 * @param value    The value of the recycled item.
+	 */
 	public void increaseSessionCounters(ItemMaterial material, BigDecimal value) {
 		BigDecimal currTotalValue = recyclingSession.getRecyclingSessionTotalValue();
 		if (currTotalValue == null) {
@@ -134,11 +204,17 @@ public class ReverseVendingMachine implements Recycle, Donate {
 		recyclingSession.addRecyclable(material, (short) 1, value);
 	}
 
+	/**
+	 * Starts the initialized RVM by setting the power status to ON.
+	 */
 	public void startMachine() {
 		System.out.println("\n\uD83D\uDD0B Starting machine: " + rvmId);
 		rvmPwStatus = ReverseVendingMachinePowerStatus.ON;
 	}
 
+	/**
+	 * Recovers the machine from sleep-mode. Sets status back to IN_USE.
+	 */
 	public void exitFromSleepMode() {
 		if (getRvmStatus().equals(ReverseVendingMachineStatus.IDLE)) {
 			System.out.println("\n\uD83D\uDD0B Machine: " + rvmId + " recovering from sleep mode:");
@@ -146,21 +222,42 @@ public class ReverseVendingMachine implements Recycle, Donate {
 		}
 	}
 
+	/**
+	 * Checks whether invalid option exception is raised during the machine was in sleep-mode.
+	 *
+	 * @param e The raised exception
+	 * @return Boolean value representing is the correct exception raised during sleep-mode.
+	 */
 	public boolean isValidSleepModeException(Exception e) {
 		// Used to identify exceptions that can be suppressed when recovering from sleepmode
 		return e instanceof InvalidOptionException && ReverseVendingMachineStatus.IDLE.equals(getRvmStatus());
 	}
 
+	/**
+	 * Checks whether the machine is usable by checking its statuses (Functional, Power, Default).
+	 *
+	 * @return Boolean value representing is the machine usable.
+	 */
 	public boolean machineIsUsable() {
 		return ReverseVendingMachineFunctionalStatus.OPERATIONAL.equals(rvmFnStatus)
 				&& ReverseVendingMachinePowerStatus.ON.equals(rvmPwStatus)
 				&& !ReverseVendingMachineStatus.FULL.equals(getRvmStatus());
 	}
 
+	/**
+	 * Checks whether the machine is full or not. Checks it from the RVM status.
+	 *
+	 * @return Boolean value representing is it full or not.
+	 */
 	public boolean IsMachineFull() {
 		return ReverseVendingMachineStatus.FULL.equals(getRvmStatus());
 	}
 
+	/**
+	 * Gets the first full pile that is countered.
+	 *
+	 * @return The full pile.
+	 */
 	public String getFullPile() {
 		return materialToPileMap.entrySet().stream()
 				.filter(entry -> recyclables.get(entry.getKey()).isLimitReached())
@@ -169,6 +266,12 @@ public class ReverseVendingMachine implements Recycle, Donate {
 				.orElse("");
 	}
 
+	/**
+	 * Checks whether the recycled item is wrinkled or not.
+	 *
+	 * @param item Recycled item.
+	 * @return Boolean value representing is the item wrinkled or not.
+	 */
 	public boolean wrinkledItemDetected(Item item) {
 		if (item == null) {
 			return false;
@@ -176,6 +279,10 @@ public class ReverseVendingMachine implements Recycle, Donate {
 		return ItemStatus.WRINKLED.equals(item.getItemStatus());
 	}
 
+	/**
+	 * Resets session counters to their starting values.
+	 * Used at the end of a session to make sure that next recycler has a fresh start.
+	 */
 	public void resetSessionCounters() {
 		recyclingSession.setRecyclingSessionTotalValue(BigDecimal.ZERO);
 		recyclingSession.setRecyclingSessionRecycledAmount((short) 0);
@@ -199,10 +306,20 @@ public class ReverseVendingMachine implements Recycle, Donate {
 				'}';
 	}
 
+	/**
+	 * Gets reverse vending machine status.
+	 *
+	 * @return Reverse vending machine status.
+	 */
 	public ReverseVendingMachineStatus getRvmStatus() {
 		return rvmStatus;
 	}
 
+	/**
+	 * Sets reverse vending machine status
+	 *
+	 * @param rvmStatus Status to be set
+	 */
 	public void setRvmStatus(ReverseVendingMachineStatus rvmStatus) {
 		this.rvmStatus = rvmStatus;
 	}

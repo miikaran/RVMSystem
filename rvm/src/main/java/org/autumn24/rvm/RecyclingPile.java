@@ -21,7 +21,16 @@ package org.autumn24.rvm;
  * Different types of piles for recycled item
  */
 public enum RecyclingPile {
+	/**
+	 * Metal pile for Aluminium cans.
+	 */
 	METAL,
+	/**
+	 * Plastic pile for plastic bottles.
+	 */
 	PLASTIC,
+	/**
+	 * Glass pile for glass bottles.
+	 */
 	GLASS
 }

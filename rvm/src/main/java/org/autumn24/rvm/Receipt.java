@@ -29,8 +29,19 @@ public class Receipt {
 	private final short numberOfProcessedAluminiumCans;
 	private final short numberOfProcessedGlassBottles;
 	private final short numberOfProcessedPlasticBottles;
+	/**
+	 * A unique id for each receipt.
+	 */
 	private final String receiptId;
 
+	/**
+	 * Creates a new receipt object from the given params.
+	 *
+	 * @param aluminiumCans  Amount of aluminium cans recycled.
+	 * @param glassBottles   Amount of glass bottles recycled.
+	 * @param plasticBottles Amount of plastic bottles recycled.
+	 * @param totalValue     Total value of all the bottles.
+	 */
 	public Receipt(short aluminiumCans, short glassBottles, short plasticBottles, BigDecimal totalValue) {
 		numberOfProcessedAluminiumCans = aluminiumCans;
 		numberOfProcessedGlassBottles = glassBottles;
@@ -39,22 +50,47 @@ public class Receipt {
 		receiptId = UUID.randomUUID().toString();
 	}
 
+	/**
+	 * Gets number of recycled aluminium cans.
+	 *
+	 * @return A number of recycled aluminium cans
+	 */
 	public short getNumberOfProcessedAluminiumCans() {
 		return numberOfProcessedAluminiumCans;
 	}
 
+	/**
+	 * Gets a number of recycled glass bottles.
+	 *
+	 * @return A numer of recycled glass bottles.
+	 */
 	public short getNumberOfProcessedGlassBottles() {
 		return numberOfProcessedGlassBottles;
 	}
 
+	/**
+	 * Gets a number of recycled plastic bottles.
+	 *
+	 * @return A number of recycled plastic bottles.
+	 */
 	public short getNumberOfProcessedPlasticBottles() {
 		return numberOfProcessedPlasticBottles;
 	}
 
+	/**
+	 * Gets the unique id set for each receipt.
+	 *
+	 * @return A string representing the unique id.
+	 */
 	public String getReceiptId() {
 		return receiptId;
 	}
 
+	/**
+	 * Gets the total value of all the recycled bottles.
+	 *
+	 * @return A BigDecimal value of the recycled bottles.
+	 */
 	public BigDecimal getTotalValue() {
 		return totalValue;
 	}

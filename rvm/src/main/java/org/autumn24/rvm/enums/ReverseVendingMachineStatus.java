@@ -35,13 +35,19 @@
 package org.autumn24.rvm.enums;
 
 /**
- * Different statuses a rvm can have
- *
- * @author miikaran
- * @since 1.0.0
+ * Different statuses a machine can have
  */
 public enum ReverseVendingMachineStatus {
+	/**
+	 * The machine is in use.
+	 */
 	IN_USE,
+	/**
+	 * The machine is in sleep-mode.
+	 */
 	IDLE,
+	/**
+	 * Atleast one of machines piles is full.
+	 */
 	FULL
 }
