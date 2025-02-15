@@ -1,11 +1,3 @@
-# RVMSystem
-
-This is the return assignment project for autumn 2024 Object-Oriented Programming course.
-The goal of this project was to fulfill the requirements which area defined else where.
-We have included diagrams for some of the curious ones out there. 
-
-> ♥ This project is under GNU GENERAL PUBLIC LICENSE Version 3 ♥
-
 ## RVMSystem Explained
 
 RVMSystem = Reverse Vending Machine (RVM) System, is mimicking the functionality of an
